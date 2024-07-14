@@ -36,6 +36,6 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.NCP_CONTAINER_REGISTRY }}/tag-name:latest
+          tags: ${{ secrets.NCP_CONTAINER_REGISTRY }}/gaetteok:latest
           secrets: |
             GIT_AUTH_TOKEN=${{ secrets.GIT_TOKEN }}
