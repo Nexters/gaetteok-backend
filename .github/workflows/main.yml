@@ -39,3 +39,22 @@ jobs:
           tags: ${{ secrets.NCP_CONTAINER_REGISTRY }}/gaetteok:latest
           secrets: |
             GIT_AUTH_TOKEN=${{ secrets.GIT_TOKEN }}
+
+  pull_from_registry:
+    name: Connect server ssh and pull from container registry
+    needs: push_to_registry
+    runs-on: ubuntu-latest
+    steps:
+      - name: connect ssh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEV_HOST }}
+          username: ${{ secrets.DEV_USERNAME }}
+          password: ${{ secrets.DEV_PASSWORD }}
+          port: ${{ secrets.DEV_PORT }}
+          script: |
+            docker pull ${{ secrets.NCP_CONTAINER_REGISTRY }}/latest
+            docker stop $(docker ps -a -q)
+            docker rm $(docker ps -a -q)
+            docker run -d -p 8080:80 ${{ secrets.NCP_CONTAINER_REGISTRY }}/latest
+            docker image prune -f
