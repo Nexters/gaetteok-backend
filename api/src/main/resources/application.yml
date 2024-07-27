@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: gaetteok
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:mysql://175.106.96.132:3306/gaetteok?useSSL=false&allowPublicKeyRetrieval=true
+    username: developer
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
