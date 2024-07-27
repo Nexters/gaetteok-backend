@@ -5,7 +5,7 @@ FROM azul/zulu-openjdk:21
 WORKDIR /app
 
 # Copy the JAR file into the container
-COPY build/libs/gaetteok-0.0.1-SNAPSHOT.jar /app/app.jar
+COPY api/build/libs/api-0.0.1-SNAPSHOT.jar /app/app.jar
 
 # Expose the port your Spring Boot app runs on
 EXPOSE 8080
