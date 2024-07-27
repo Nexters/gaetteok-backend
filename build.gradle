@@ -5,14 +5,14 @@ plugins {
 }
 
 subprojects {
-    group = 'com.nexters'
-    version = '0.0.1-SNAPSHOT'
+	group = 'com.nexters'
+	version = '0.0.1-SNAPSHOT'
 
-    java {
-        toolchain {
-            languageVersion = JavaLanguageVersion.of(21)
-        }
-    }
+	java {
+		toolchain {
+			languageVersion = JavaLanguageVersion.of(21)
+		}
+	}
 
     repositories {
         mavenCentral()
@@ -28,7 +28,7 @@ subprojects {
             extendsFrom annotationProcessor
         }
     }
-    
+
     dependencies {
         implementation 'org.springframework.boot:spring-boot-starter-web'
         developmentOnly 'org.springframework.boot:spring-boot-devtools'

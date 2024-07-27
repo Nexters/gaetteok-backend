@@ -5,12 +5,12 @@ spring:
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:mysql://175.106.96.132:3306/gaetteok?useSSL=false&allowPublicKeyRetrieval=true
-    username: developer
-    password: 1234
+    url: ${{ secrets.DB_URL }}
+    username: ${{ secrets.DB_USERNAME }}
+    password: ${{ secrets.DB_PASSWORD }}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 ncloud:
-  accessKey: hsXJqVWWclOLYEdIIAx8
-  secretKey: JNu8VDJVfLAeUGipPjF1WEuWUbhOtW2YbW6XhHRm
+  accessKey: ${{ secrets.NCP_ACCESS_KEY }}
+  secretKey: ${{ secrets.NCP_SECRET_KEY }}
   bucketName: gaetteok-image
