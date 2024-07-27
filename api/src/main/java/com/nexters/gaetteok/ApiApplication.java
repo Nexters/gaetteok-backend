@@ -4,10 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class GaetteokApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(GaetteokApplication.class, args);
-	}
-
+public class ApiApplication {
+  public static void main(String[] args) {
+    SpringApplication.run(ApiApplication.class, args);
+  }
 }
