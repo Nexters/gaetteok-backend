@@ -9,3 +9,8 @@ spring:
     username: developer
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+ncloud:
+  accessKey: hsXJqVWWclOLYEdIIAx8
+  secretKey: JNu8VDJVfLAeUGipPjF1WEuWUbhOtW2YbW6XhHRm
+  bucketName: gaetteok-image
