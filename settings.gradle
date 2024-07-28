@@ -1,3 +1,5 @@
 rootProject.name = 'gaetteok'
 
 include 'api'
+include 'infra'
+
