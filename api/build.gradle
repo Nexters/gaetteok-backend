@@ -10,6 +10,6 @@ dependencies {
     implementation project(':infra')
 }
 
-jar{
-    enabled=false
+jar {
+    enabled = false
 }
