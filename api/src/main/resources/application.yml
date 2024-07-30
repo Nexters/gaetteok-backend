@@ -14,3 +14,8 @@ ncloud:
   accessKey: ${NCP_ACCESS_KEY}
   secretKey: ${NCP_SECRET_KEY}
   bucketName: gaetteok-image
+
+springdoc:
+  swagger-ui:
+    url: /docs/openapi3.json
+    path: /docs/swagger
