@@ -14,3 +14,7 @@ Nexters 25기 멍멍이 산책 기록 및 공유 서비스의 백엔드 저장�
 ## How to run
 1. `docker-compose up`을 통해 mysql 컨테이너 실행
 2. spring boot application 실행
+
+## Create API Docs
+1. gradle > documentation > openapi3 (또는 ./gradlew :api:openapi3)
+2. 애플리케이션 실행 후 /docs/swagger 경로에서 API 문서 확인 가능
