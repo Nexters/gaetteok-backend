@@ -2,4 +2,6 @@ rootProject.name = 'gaetteok'
 
 include 'api'
 include 'infra'
+include 'domain'
+include 'domain:user'
 

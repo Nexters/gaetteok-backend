@@ -32,6 +32,7 @@ dependencies {
     testImplementation "com.epages:restdocs-api-spec-mockmvc:${restDocsVersion}"
 
     implementation project(':infra')
+    implementation project(':domain:user')
 }
 
 tasks.named('test') {
