@@ -1,9 +1,8 @@
-package com.nexters.gaetteok.user.model;
-
-import lombok.Builder;
-import lombok.Getter;
+package com.nexters.gaetteok.domain;
 
 import java.time.LocalDateTime;
+import lombok.Builder;
+import lombok.Getter;
 
 @Getter
 public class User {
@@ -25,6 +24,10 @@ public class User {
         this.profileUrl = profileUrl;
         this.code = code;
         this.createdAt = createdAt;
+    }
+
+    public void doUpdate() {
+        this.code = "A";
     }
 
 }

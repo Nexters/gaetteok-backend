@@ -1,10 +1,9 @@
-package com.nexters.gaetteok.user.controller.response;
+package com.nexters.gaetteok.user.presentation.response;
 
-import com.nexters.gaetteok.user.model.User;
+import com.nexters.gaetteok.domain.User;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
 
 @Getter
 public class GetUserResponse {
@@ -20,7 +19,8 @@ public class GetUserResponse {
     private final LocalDateTime createdAt;
 
     @Builder
-    public GetUserResponse(long id, String nickname, String profileUrl, String code, LocalDateTime createdAt) {
+    public GetUserResponse(long id, String nickname, String profileUrl, String code,
+        LocalDateTime createdAt) {
         this.id = id;
         this.nickname = nickname;
         this.profileUrl = profileUrl;
@@ -30,12 +30,12 @@ public class GetUserResponse {
 
     public static GetUserResponse of(User user) {
         return GetUserResponse.builder()
-                .id(user.getId())
-                .nickname(user.getNickname())
-                .profileUrl(user.getProfileUrl())
-                .code(user.getCode())
-                .createdAt(user.getCreatedAt())
-                .build();
+            .id(user.getId())
+            .nickname(user.getNickname())
+            .profileUrl(user.getProfileUrl())
+            .code(user.getCode())
+            .createdAt(user.getCreatedAt())
+            .build();
     }
 
 }
