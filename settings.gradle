@@ -4,5 +4,4 @@ include 'api'
 include 'infra'
 include 'domain'
 include 'domain:user'
-findProject(':domain:user')?.name = 'user'
 
