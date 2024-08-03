@@ -1,10 +1,13 @@
 dependencies {
     implementation platform('com.amazonaws:aws-java-sdk-bom:1.12.765')
     implementation 'com.amazonaws:aws-java-sdk-s3'
+    api 'org.springframework.boot:spring-boot-starter-data-jpa'
+    testRuntimeOnly 'com.h2database:h2'
+    runtimeOnly 'com.mysql:mysql-connector-j'
 }
 
 jar {
-    enabled = false
+    enabled = true
 }
 
 bootJar {

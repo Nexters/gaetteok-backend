@@ -17,17 +17,22 @@ public class User {
 
     private LocalDateTime createdAt;
 
+    private UserPushNotification userPushNotification;
+
     @Builder
-    public User(long id, String nickname, String profileUrl, String code, LocalDateTime createdAt) {
+    public User(
+        long id,
+        String nickname,
+        String profileUrl,
+        String code,
+        LocalDateTime createdAt,
+        UserPushNotification userPushNotification
+    ) {
         this.id = id;
         this.nickname = nickname;
         this.profileUrl = profileUrl;
         this.code = code;
         this.createdAt = createdAt;
+        this.userPushNotification = userPushNotification;
     }
-
-    public void doUpdate() {
-        this.code = "A";
-    }
-
 }
