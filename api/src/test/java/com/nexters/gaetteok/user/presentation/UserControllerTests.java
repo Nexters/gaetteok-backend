@@ -1,34 +1,21 @@
 package com.nexters.gaetteok.user.presentation;
 
-import static com.epages.restdocs.apispec.ResourceDocumentation.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.*;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-
 import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexters.gaetteok.common.presentation.AbstractControllerTests;
 import com.nexters.gaetteok.domain.User;
-import com.nexters.gaetteok.user.application.UserApplication;
-import java.time.LocalDateTime;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.restdocs.RestDocumentationContextProvider;
-import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
+
+import java.time.LocalDateTime;
+
+import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 
 public class UserControllerTests extends AbstractControllerTests {
@@ -48,7 +35,7 @@ public class UserControllerTests extends AbstractControllerTests {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            RestDocumentationRequestBuilders.get("/api/users/{id}", id)
+            RestDocumentationRequestBuilders.get("/api/users", id)
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(user)));
 
@@ -61,9 +48,6 @@ public class UserControllerTests extends AbstractControllerTests {
                 resource(ResourceSnippetParameters.builder()
                     .tag("User")
                     .summary("사용자 정보 조회 API")
-                    .pathParameters(
-                        parameterWithName("id").description("사용자 ID")
-                    )
                     .responseFields(
                         fieldWithPath("id").description("사용자 ID"),
                         fieldWithPath("nickname").description("사용자 닉네임"),

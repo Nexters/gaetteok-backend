@@ -34,7 +34,7 @@ jobs:
       - name: Set up Gradle
         run: |
           chmod +x gradlew
-          ./gradlew build -x test
+          ./gradlew build
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
