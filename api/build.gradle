@@ -45,8 +45,8 @@ openapi3 {
     servers = [
             { url = 'http://localhost:8080' },
     ]
-    title = '개떡 백엔드 API Docs'
-    description = '멍멍이 산책 기록 서비스(가제)의 API 문서 페이지입니다.'
+    title = 'Pawpaw 백엔드 API Docs'
+    description = '멍멍이 산책 기록 서비스 Pawpaw 의 API 문서 페이지입니다.'
     version = '1.0.0'
     format = 'json'
     outputDirectory = 'build/resources/main/static/docs'

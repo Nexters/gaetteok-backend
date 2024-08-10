@@ -11,6 +11,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexters.gaetteok.common.presentation.AbstractControllerTests;
 import com.nexters.gaetteok.domain.User;
 import com.nexters.gaetteok.user.application.UserApplication;
 import java.time.LocalDateTime;
@@ -29,18 +30,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-@WebMvcTest
-@ExtendWith(RestDocumentationExtension.class)
-public class UserControllerTests {
 
-    @Autowired
-    MockMvc mockMvc;
-
-    @Autowired
-    ObjectMapper objectMapper;
-
-    @MockBean
-    UserApplication userApplication;
+public class UserControllerTests extends AbstractControllerTests {
 
     @Test
     void getUser_correctId_success() throws Exception {
@@ -82,14 +73,6 @@ public class UserControllerTests {
                     )
                     .build())
             ));
-    }
-
-    @BeforeEach
-    void setUp(WebApplicationContext webApplicationContext,
-        RestDocumentationContextProvider restDocumentation) {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-            .apply(documentationConfiguration(restDocumentation))
-            .build();
     }
 
 }

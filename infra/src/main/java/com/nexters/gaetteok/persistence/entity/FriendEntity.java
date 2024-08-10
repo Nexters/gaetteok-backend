@@ -1,0 +1,42 @@
+package com.nexters.gaetteok.persistence.entity;
+
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "friend", indexes = {@Index(name = "my_user_id_idx", columnList = "my_user_id")})
+@Getter
+@EntityListeners(AuditingEntityListener.class)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class FriendEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @Column(name = "my_user_id")
+    private long myUserId;
+
+    @Column(name = "friend_user_id")
+    private long friendUserId;
+
+    @CreatedDate
+    @Column(insertable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @Builder
+    public FriendEntity(long id, long myUserId, long friendUserId, LocalDateTime createdAt) {
+        this.id = id;
+        this.myUserId = myUserId;
+        this.friendUserId = friendUserId;
+        this.createdAt = createdAt;
+    }
+
+}
