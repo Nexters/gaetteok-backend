@@ -20,14 +20,14 @@ public class FriendController {
 
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreateFriendResponse> create(@RequestBody CreateFriendRequest request) {
-        // TODO 토큰에서 꺼내온 사용자 고유값. 현재 로그인 기능 미구현으로 임시값 사용
+        // TODO 헤더 내 토큰에서 꺼내온 사용자 식별값. 현재 로그인 기능 미구현으로 임시값 사용
         long userId = 1L;
         return ResponseEntity.ok(CreateFriendResponse.of(friendApplication.create(userId, request.getCode())));
     }
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GetFriendListResponse> getList() {
-        // TODO 토큰에서 꺼내온 사용자 고유값. 현재 로그인 기능 미구현으로 임시값 사용
+        // TODO 헤더 내 토큰에서 꺼내온 사용자 식별값. 현재 로그인 기능 미구현으로 임시값 사용
         long userId = 1L;
         return ResponseEntity.ok(GetFriendListResponse.of(friendApplication.getMyFriendList(userId)));
     }

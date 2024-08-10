@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,9 +18,11 @@ public class UserController {
 
     private final UserApplication userApplication;
 
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetUserResponse> getUser(@PathVariable long id) {
-        return ResponseEntity.ok(GetUserResponse.of(userApplication.getUser(id)));
+    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GetUserResponse> getUser() {
+        // TODO 헤더 내 토큰에서 꺼내온 사용자 식별값. 현재 로그인 기능 미구현으로 임시값 사용
+        long userId = 1;
+        return ResponseEntity.ok(GetUserResponse.of(userApplication.getUser(userId)));
     }
 
 }
