@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "friend", indexes = {@Index(name = "my_user_id_idx", columnList = "my_user_id")})
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -20,23 +21,21 @@ public class FriendEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne
-    @JoinColumn(name = "my_user_id")
-    private UserEntity me;
+    @Column(name = "my_user_id")
+    private long myUserId;
 
-    @ManyToOne
-    @JoinColumn(name = "friend_user_id")
-    private UserEntity friend;
+    @Column(name = "friend_user_id")
+    private long friendUserId;
 
     @CreatedDate
     @Column(insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Builder
-    public FriendEntity(long id, UserEntity me, UserEntity friend, LocalDateTime createdAt) {
+    public FriendEntity(long id, long myUserId, long friendUserId, LocalDateTime createdAt) {
         this.id = id;
-        this.me = me;
-        this.friend = friend;
+        this.myUserId = myUserId;
+        this.friendUserId = friendUserId;
         this.createdAt = createdAt;
     }
 
