@@ -1,6 +1,7 @@
 package com.nexters.gaetteok.user.application;
 
 import com.nexters.gaetteok.domain.Friend;
+import com.nexters.gaetteok.domain.FriendWalkStatus;
 import com.nexters.gaetteok.persistence.entity.FriendEntity;
 import com.nexters.gaetteok.persistence.entity.UserEntity;
 import com.nexters.gaetteok.persistence.repository.FriendRepository;
@@ -9,6 +10,7 @@ import com.nexters.gaetteok.user.mapper.FriendMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -41,6 +43,10 @@ public class FriendApplication {
         List<Long> friendIdList = friendList.stream().map(FriendEntity::getFriendUserId).toList();
         Map<Long, UserEntity> friendUserMap = userRepository.findAllById(friendIdList).stream().collect(Collectors.toMap(UserEntity::getId, e -> e));
         return friendList.stream().map(friend -> FriendMapper.toDomain(friend, user, friendUserMap.get(friend.getFriendUserId()))).toList();
+    }
+
+    public List<FriendWalkStatus> getWalkStatusList(long userId) {
+        return friendRepository.getFriendWalkStatus(userId, LocalDate.now());
     }
 
 }

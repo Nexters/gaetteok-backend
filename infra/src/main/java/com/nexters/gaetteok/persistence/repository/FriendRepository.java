@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface FriendRepository extends JpaRepository<FriendEntity, Long> {
+public interface FriendRepository extends JpaRepository<FriendEntity, Long>, CustomFriendRepository {
 
     List<FriendEntity> findByMyUserId(long id);
 
