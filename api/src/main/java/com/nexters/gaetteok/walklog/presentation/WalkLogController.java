@@ -43,4 +43,13 @@ public class WalkLogController {
         return ResponseEntity.ok(GetWalkLogListResponse.of(walkLogList));
     }
 
+    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GetWalkLogListResponse> getList(@RequestParam(defaultValue = "0") long cursorId,
+                                                          @RequestParam(defaultValue = "10") int pageSize) {
+        // TODO 헤더 내 토큰에서 꺼내온 사용자 식별값. 현재 로그인 기능 미구현으로 임시값 사용
+        long userId = 1;
+        List<WalkLog> walkLogList = walkLogApplication.getList(userId, cursorId, pageSize);
+        return ResponseEntity.ok(GetWalkLogListResponse.of(walkLogList));
+    }
+
 }

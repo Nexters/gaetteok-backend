@@ -141,4 +141,63 @@ public class WalkLogControllerTests extends AbstractControllerTests {
                 ));
     }
 
+    @Test
+    void getList_correctId_success() throws Exception {
+        // given
+        WalkLog walkLog = WalkLog.builder()
+                .id(1L)
+                .title("산책굳")
+                .content("오늘 산책 짱 좋았당")
+                .photoUrl("https://photo-url/walklog/20240810.jpg")
+                .walkTime(WalkTime.BETWEEN_20_AND_40_MINUTES)
+                .writerNickname("뽀삐")
+                .writerProfileUrl("https://photo-url/walklog/20240810.jpg")
+                .createdAt(LocalDateTime.now())
+                .build();
+        WalkLog walkLog2 = WalkLog.builder()
+                .id(2L)
+                .title("나도 산책 굳")
+                .content("오늘 강아지 짱 많음")
+                .photoUrl("https://photo-url/walklog/20240810.jpg")
+                .walkTime(WalkTime.WITHIN_20_MINUTES)
+                .writerNickname("초코")
+                .writerProfileUrl("https://photo-url/walklog/20240810.jpg")
+                .createdAt(LocalDateTime.now())
+                .build();
+        given(walkLogApplication.getList(anyLong(), anyLong(), anyInt())).willReturn(List.of(walkLog, walkLog2));
+
+        // when
+        ResultActions resultActions = mockMvc.perform(RestDocumentationRequestBuilders.get("/api/walk-logs")
+                .param("cursorId", "15")
+                .param("pageSize", "10")
+                .contentType(MediaType.APPLICATION_JSON));
+
+        // then
+        resultActions
+                .andExpect(status().isOk())
+                .andDo(MockMvcRestDocumentationWrapper.document(
+                        "오늘의 산책 기록 목록 조회",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        resource(ResourceSnippetParameters.builder()
+                                .tag("WalkLog")
+                                .summary("오늘의 산책 기록 목록을 조회하는 API")
+                                .queryParameters(
+                                        parameterWithName("cursorId").description("커서. 해당 아이디값보다 아이디가 작은 산책 기록을 조회. 없으면 가장 최근 것부터 조회").optional(),
+                                        parameterWithName("pageSize").description("한 번에 조회할 산책 기록 수. 기본값은 10개").optional()
+                                )
+                                .responseFields(
+                                        fieldWithPath("walkLogList[0].id").description("산책 기록 ID"),
+                                        fieldWithPath("walkLogList[0].photoUrl").description("산책 기록 사진 URL"),
+                                        fieldWithPath("walkLogList[0].title").description("산책 기록 제목"),
+                                        fieldWithPath("walkLogList[0].content").description("산책 기록 내용"),
+                                        fieldWithPath("walkLogList[0].walkTime").description("산책한 시간"),
+                                        fieldWithPath("walkLogList[0].writerNickname").description("작성자 닉네임"),
+                                        fieldWithPath("walkLogList[0].writerProfileUrl").description("작성자 프로필 URL"),
+                                        fieldWithPath("walkLogList[0].createdAt").description("등록 시간")
+                                )
+                                .build())
+                ));
+    }
+
 }
