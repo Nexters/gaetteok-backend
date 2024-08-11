@@ -11,7 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "friend", indexes = {@Index(name = "my_user_id_idx", columnList = "my_user_id")})
+@Table(name = "friend", indexes = {@Index(name = "idx_friend_my_user_id", columnList = "my_user_id")})
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -28,7 +28,7 @@ public class FriendEntity {
     private long friendUserId;
 
     @CreatedDate
-    @Column(insertable = false, updatable = false)
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @Builder

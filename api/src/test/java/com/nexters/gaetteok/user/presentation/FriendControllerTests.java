@@ -5,11 +5,10 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.nexters.gaetteok.common.presentation.AbstractControllerTests;
 import com.nexters.gaetteok.domain.Friend;
 import com.nexters.gaetteok.domain.User;
-import com.nexters.gaetteok.user.application.FriendApplication;
 import com.nexters.gaetteok.user.presentation.request.CreateFriendRequest;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
@@ -18,8 +17,6 @@ import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -52,7 +49,7 @@ public class FriendControllerTests extends AbstractControllerTests {
         CreateFriendRequest request = new CreateFriendRequest(friendUser.getCode());
 
         // when
-        ResultActions resultActions = mockMvc.perform(post("/api/friends")
+        ResultActions resultActions = mockMvc.perform(RestDocumentationRequestBuilders.post("/api/friends")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
 
@@ -99,7 +96,7 @@ public class FriendControllerTests extends AbstractControllerTests {
         given(friendApplication.getMyFriendList(anyLong())).willReturn(List.of(friend));
 
         // when
-        ResultActions resultActions = mockMvc.perform(get("/api/friends")
+        ResultActions resultActions = mockMvc.perform(RestDocumentationRequestBuilders.get("/api/friends")
                 .contentType(MediaType.APPLICATION_JSON));
 
         resultActions

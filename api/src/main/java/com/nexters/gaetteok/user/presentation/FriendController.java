@@ -1,5 +1,6 @@
 package com.nexters.gaetteok.user.presentation;
 
+import com.nexters.gaetteok.domain.Friend;
 import com.nexters.gaetteok.user.application.FriendApplication;
 import com.nexters.gaetteok.user.presentation.request.CreateFriendRequest;
 import com.nexters.gaetteok.user.presentation.response.CreateFriendResponse;
@@ -9,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -22,14 +25,18 @@ public class FriendController {
     public ResponseEntity<CreateFriendResponse> create(@RequestBody CreateFriendRequest request) {
         // TODO 헤더 내 토큰에서 꺼내온 사용자 식별값. 현재 로그인 기능 미구현으로 임시값 사용
         long userId = 1L;
-        return ResponseEntity.ok(CreateFriendResponse.of(friendApplication.create(userId, request.getCode())));
+        log.info("[친구 관계 생성] userId={}, request={}", userId, request);
+        Friend friend = friendApplication.create(userId, request.getCode());
+        log.info("[친구 관계 생성 완료] friend={}", friend);
+        return ResponseEntity.ok(CreateFriendResponse.of(friend));
     }
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GetFriendListResponse> getList() {
         // TODO 헤더 내 토큰에서 꺼내온 사용자 식별값. 현재 로그인 기능 미구현으로 임시값 사용
         long userId = 1L;
-        return ResponseEntity.ok(GetFriendListResponse.of(friendApplication.getMyFriendList(userId)));
+        List<Friend> friendList = friendApplication.getMyFriendList(userId);
+        return ResponseEntity.ok(GetFriendListResponse.of(friendList));
     }
 
 }
