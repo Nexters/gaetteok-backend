@@ -29,6 +29,7 @@ dependencies {
 
     implementation project(':infra')
     implementation project(':domain:user')
+    implementation project(':domain:walklog')
 }
 
 tasks.named('test') {
