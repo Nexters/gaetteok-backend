@@ -67,6 +67,7 @@ public class FriendControllerTests extends AbstractControllerTests {
                                         fieldWithPath("code").description("친구 코드")
                                 )
                                 .responseFields(
+                                        fieldWithPath("friendId").description("추가된 친구의 아이디"),
                                         fieldWithPath("friendNickname").description("추가된 친구의 닉네임"),
                                         fieldWithPath("friendProfileUrl").description("추가된 친구의 프로필 이미지 URL")
                                 )
@@ -110,6 +111,7 @@ public class FriendControllerTests extends AbstractControllerTests {
                                 .tag("Friend")
                                 .summary("내 친구 목록을 조회하는 API")
                                 .responseFields(
+                                        fieldWithPath("friendList[0].id").description("친구의 아이디"),
                                         fieldWithPath("friendList[0].nickname").description("친구의 닉네임"),
                                         fieldWithPath("friendList[0].profileUrl").description("친구의 프로필 이미지 URL")
                                 )
@@ -121,11 +123,13 @@ public class FriendControllerTests extends AbstractControllerTests {
     void getWalkStatusList_correctId_success() throws Exception {
         // given
         FriendWalkStatus walkStatus = FriendWalkStatus.builder()
+                .id(1L)
                 .nickname("뽀삐")
                 .profileUrl("https://profile-image.jpg")
                 .done(true)
                 .build();
         FriendWalkStatus walkStatus2 = FriendWalkStatus.builder()
+                .id(2L)
                 .nickname("초코")
                 .profileUrl("https://profile-image.jpg")
                 .done(false)
@@ -148,6 +152,7 @@ public class FriendControllerTests extends AbstractControllerTests {
                                 .tag("Friend")
                                 .summary("내 친구들의 오늘 산책 완료 여부를 조회 API")
                                 .responseFields(
+                                        fieldWithPath("friendWalkStatusList[0].id").description("친구의 아이디"),
                                         fieldWithPath("friendWalkStatusList[0].nickname").description("친구의 닉네임"),
                                         fieldWithPath("friendWalkStatusList[0].profileUrl").description("친구의 프로필 이미지 URL"),
                                         fieldWithPath("friendWalkStatusList[0].done").description("친구의 오늘 산책 완료 여부")

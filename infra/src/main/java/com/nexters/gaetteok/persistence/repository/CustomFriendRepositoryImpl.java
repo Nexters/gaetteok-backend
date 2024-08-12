@@ -32,6 +32,7 @@ public class CustomFriendRepositoryImpl implements CustomFriendRepository {
         return jpaQueryFactory
                 .select(Projections.constructor(
                         FriendWalkStatus.class,
+                        userEntity.id,
                         userEntity.nickname,
                         userEntity.profileUrl,
                         walkLogEntity.count().gt(0).as("done")
@@ -42,7 +43,7 @@ public class CustomFriendRepositoryImpl implements CustomFriendRepository {
                         dateTimeOperation(LocalDate.class, Ops.DateTimeOps.DATE, walkLogEntity.createdAt).eq(date)
                 )
                 .where(userEntity.id.in(friendIdList))
-                .groupBy(userEntity.nickname, userEntity.profileUrl)
+                .groupBy(userEntity.id, userEntity.nickname, userEntity.profileUrl)
                 .orderBy(walkLogEntity.createdAt.max().desc())
                 .fetch();
     }

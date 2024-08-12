@@ -39,16 +39,23 @@ public class WalkLogController {
                                                             @RequestParam(defaultValue = "10") int pageSize) {
         // TODO 헤더 내 토큰에서 꺼내온 사용자 식별값. 현재 로그인 기능 미구현으로 임시값 사용
         long userId = 1;
-        List<WalkLog> walkLogList = walkLogApplication.getMyList(userId, cursorId, pageSize);
+        List<WalkLog> walkLogList = walkLogApplication.getListById(userId, cursorId, pageSize);
         return ResponseEntity.ok(GetWalkLogListResponse.of(walkLogList));
     }
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetWalkLogListResponse> getList(@RequestParam(defaultValue = "0") long cursorId,
+    public ResponseEntity<GetWalkLogListResponse> getList(@RequestParam(required = false, defaultValue = "0") long userId,
+                                                          @RequestParam(defaultValue = "0") long cursorId,
                                                           @RequestParam(defaultValue = "10") int pageSize) {
         // TODO 헤더 내 토큰에서 꺼내온 사용자 식별값. 현재 로그인 기능 미구현으로 임시값 사용
-        long userId = 1;
-        List<WalkLog> walkLogList = walkLogApplication.getList(userId, cursorId, pageSize);
+        List<WalkLog> walkLogList;
+        if (userId > 0) {
+            walkLogList = walkLogApplication.getListById(userId, cursorId, pageSize);
+        } else {
+            // TODO 헤더 내 토큰에서 꺼내온 사용자 식별값. 현재 로그인 기능 미구현으로 임시값 사용
+            userId = 1;
+            walkLogList = walkLogApplication.getList(userId, cursorId, pageSize);
+        }
         return ResponseEntity.ok(GetWalkLogListResponse.of(walkLogList));
     }
 

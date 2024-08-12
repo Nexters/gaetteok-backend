@@ -105,7 +105,7 @@ public class WalkLogControllerTests extends AbstractControllerTests {
                 .writerProfileUrl("https://photo-url/walklog/20240810.jpg")
                 .createdAt(LocalDateTime.now())
                 .build();
-        given(walkLogApplication.getMyList(anyLong(), anyLong(), anyInt())).willReturn(List.of(walkLog, walkLog2));
+        given(walkLogApplication.getListById(anyLong(), anyLong(), anyInt())).willReturn(List.of(walkLog, walkLog2));
 
         // when
         ResultActions resultActions = mockMvc.perform(RestDocumentationRequestBuilders.get("/api/walk-logs/me")
@@ -142,32 +142,33 @@ public class WalkLogControllerTests extends AbstractControllerTests {
     }
 
     @Test
-    void getList_correctId_success() throws Exception {
+    void getListById_correctId_success() throws Exception {
         // given
         WalkLog walkLog = WalkLog.builder()
-                .id(1L)
+                .id(2L)
                 .title("산책굳")
                 .content("오늘 산책 짱 좋았당")
                 .photoUrl("https://photo-url/walklog/20240810.jpg")
                 .walkTime(WalkTime.BETWEEN_20_AND_40_MINUTES)
-                .writerNickname("뽀삐")
+                .writerNickname("초코")
                 .writerProfileUrl("https://photo-url/walklog/20240810.jpg")
                 .createdAt(LocalDateTime.now())
                 .build();
         WalkLog walkLog2 = WalkLog.builder()
                 .id(2L)
-                .title("나도 산책 굳")
-                .content("오늘 강아지 짱 많음")
+                .title("산책 또 굳")
+                .content("오늘 산책도 짱 좋았당")
                 .photoUrl("https://photo-url/walklog/20240810.jpg")
                 .walkTime(WalkTime.WITHIN_20_MINUTES)
                 .writerNickname("초코")
                 .writerProfileUrl("https://photo-url/walklog/20240810.jpg")
                 .createdAt(LocalDateTime.now())
                 .build();
-        given(walkLogApplication.getList(anyLong(), anyLong(), anyInt())).willReturn(List.of(walkLog, walkLog2));
+        given(walkLogApplication.getListById(anyLong(), anyLong(), anyInt())).willReturn(List.of(walkLog, walkLog2));
 
         // when
         ResultActions resultActions = mockMvc.perform(RestDocumentationRequestBuilders.get("/api/walk-logs")
+                .param("userId", "2")
                 .param("cursorId", "15")
                 .param("pageSize", "10")
                 .contentType(MediaType.APPLICATION_JSON));
@@ -176,13 +177,14 @@ public class WalkLogControllerTests extends AbstractControllerTests {
         resultActions
                 .andExpect(status().isOk())
                 .andDo(MockMvcRestDocumentationWrapper.document(
-                        "오늘의 산책 기록 목록 조회",
+                        "산책 기록 목록 조회",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         resource(ResourceSnippetParameters.builder()
                                 .tag("WalkLog")
-                                .summary("오늘의 산책 기록 목록을 조회하는 API")
+                                .summary("산책 기록 목록을 조회하는 API")
                                 .queryParameters(
+                                        parameterWithName("userId").description("사용자 아이디. 생략하면 나 포함 모든 친구의 산책 기록 조회").optional(),
                                         parameterWithName("cursorId").description("커서. 해당 아이디값보다 아이디가 작은 산책 기록을 조회. 없으면 가장 최근 것부터 조회").optional(),
                                         parameterWithName("pageSize").description("한 번에 조회할 산책 기록 수. 기본값은 10개").optional()
                                 )

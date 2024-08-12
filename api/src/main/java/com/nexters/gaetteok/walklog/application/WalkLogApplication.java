@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,7 +43,7 @@ public class WalkLogApplication {
         return WalkLogMapper.toDomain(walkLog, me);
     }
 
-    public List<WalkLog> getMyList(long userId, long cursorId, int pageSize) {
+    public List<WalkLog> getListById(long userId, long cursorId, int pageSize) {
         UserEntity me = userRepository.getById(userId);
         return walkLogRepository.getMyList(userId, cursorId, pageSize).stream()
                 .map(walkLogEntity -> WalkLogMapper.toDomain(walkLogEntity, me))
@@ -52,7 +51,7 @@ public class WalkLogApplication {
     }
 
     public List<WalkLog> getList(long userId, long cursorId, int pageSize) {
-        return walkLogRepository.getList(userId, cursorId, pageSize, LocalDate.now());
+        return walkLogRepository.getList(userId, cursorId, pageSize);
     }
 
 }

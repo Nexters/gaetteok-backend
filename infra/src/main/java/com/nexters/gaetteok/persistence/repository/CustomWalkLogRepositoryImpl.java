@@ -2,19 +2,16 @@ package com.nexters.gaetteok.persistence.repository;
 
 import com.nexters.gaetteok.domain.WalkLog;
 import com.nexters.gaetteok.persistence.entity.WalkLogEntity;
-import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static com.nexters.gaetteok.persistence.entity.QFriendEntity.friendEntity;
 import static com.nexters.gaetteok.persistence.entity.QUserEntity.userEntity;
 import static com.nexters.gaetteok.persistence.entity.QWalkLogEntity.walkLogEntity;
-import static com.querydsl.core.types.dsl.Expressions.dateTimeOperation;
 
 @Repository
 @RequiredArgsConstructor
@@ -32,7 +29,7 @@ public class CustomWalkLogRepositoryImpl implements CustomWalkLogRepository {
     }
 
     @Override
-    public List<WalkLog> getList(long userId, long cursorId, int pageSize, LocalDate date) {
+    public List<WalkLog> getList(long userId, long cursorId, int pageSize) {
         List<Long> friendIdList = jpaQueryFactory
                 .select(friendEntity.friendUserId)
                 .from(friendEntity)
@@ -57,7 +54,6 @@ public class CustomWalkLogRepositoryImpl implements CustomWalkLogRepository {
                 .on(userEntity.id.eq(walkLogEntity.userId))
                 .where(
                         cursorId > 0 ? walkLogEntity.id.lt(cursorId) : null,
-                        dateTimeOperation(LocalDate.class, Ops.DateTimeOps.DATE, walkLogEntity.createdAt).eq(date),
                         userEntity.id.in(friendIdList)
                 )
                 .limit(pageSize)
