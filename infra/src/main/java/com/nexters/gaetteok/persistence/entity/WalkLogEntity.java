@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -16,7 +15,8 @@ import java.time.LocalDateTime;
         @Index(name = "idx_walk_log_user_id", columnList = "user_id")
 })
 @Getter
-@EntityListeners(AuditingEntityListener.class)
+// FIXME : 테스트 데이터 주입 때문에 임시로 생성일자 직접 주입 방식으로 돌림 (테스트 데이터 주입 코드 제거할 때 주석 해제)
+//@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class WalkLogEntity {
 
