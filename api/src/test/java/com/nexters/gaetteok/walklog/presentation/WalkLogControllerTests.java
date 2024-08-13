@@ -128,14 +128,14 @@ public class WalkLogControllerTests extends AbstractControllerTests {
                                         parameterWithName("pageSize").description("한 번에 조회할 산책 기록 수. 기본값은 10개").optional()
                                 )
                                 .responseFields(
-                                        fieldWithPath("walkLogList[0].id").description("산책 기록 ID"),
-                                        fieldWithPath("walkLogList[0].photoUrl").description("산책 기록 사진 URL"),
-                                        fieldWithPath("walkLogList[0].title").description("산책 기록 제목"),
-                                        fieldWithPath("walkLogList[0].content").description("산책 기록 내용"),
-                                        fieldWithPath("walkLogList[0].walkTime").description("산책한 시간"),
-                                        fieldWithPath("walkLogList[0].writerNickname").description("작성자 닉네임"),
-                                        fieldWithPath("walkLogList[0].writerProfileUrl").description("작성자 프로필 URL"),
-                                        fieldWithPath("walkLogList[0].createdAt").description("등록 시간")
+                                        fieldWithPath("items[0].id").description("산책 기록 ID"),
+                                        fieldWithPath("items[0].photoUrl").description("산책 기록 사진 URL"),
+                                        fieldWithPath("items[0].title").description("산책 기록 제목"),
+                                        fieldWithPath("items[0].content").description("산책 기록 내용"),
+                                        fieldWithPath("items[0].walkTime").description("산책한 시간"),
+                                        fieldWithPath("items[0].writerNickname").description("작성자 닉네임"),
+                                        fieldWithPath("items[0].writerProfileUrl").description("작성자 프로필 URL"),
+                                        fieldWithPath("items[0].createdAt").description("등록 시간")
                                 )
                                 .build())
                 ));
@@ -189,14 +189,14 @@ public class WalkLogControllerTests extends AbstractControllerTests {
                                         parameterWithName("pageSize").description("한 번에 조회할 산책 기록 수. 기본값은 10개").optional()
                                 )
                                 .responseFields(
-                                        fieldWithPath("walkLogList[0].id").description("산책 기록 ID"),
-                                        fieldWithPath("walkLogList[0].photoUrl").description("산책 기록 사진 URL"),
-                                        fieldWithPath("walkLogList[0].title").description("산책 기록 제목"),
-                                        fieldWithPath("walkLogList[0].content").description("산책 기록 내용"),
-                                        fieldWithPath("walkLogList[0].walkTime").description("산책한 시간"),
-                                        fieldWithPath("walkLogList[0].writerNickname").description("작성자 닉네임"),
-                                        fieldWithPath("walkLogList[0].writerProfileUrl").description("작성자 프로필 URL"),
-                                        fieldWithPath("walkLogList[0].createdAt").description("등록 시간")
+                                        fieldWithPath("items[0].id").description("산책 기록 ID"),
+                                        fieldWithPath("items[0].photoUrl").description("산책 기록 사진 URL"),
+                                        fieldWithPath("items[0].title").description("산책 기록 제목"),
+                                        fieldWithPath("items[0].content").description("산책 기록 내용"),
+                                        fieldWithPath("items[0].walkTime").description("산책한 시간"),
+                                        fieldWithPath("items[0].writerNickname").description("작성자 닉네임"),
+                                        fieldWithPath("items[0].writerProfileUrl").description("작성자 프로필 URL"),
+                                        fieldWithPath("items[0].createdAt").description("등록 시간")
                                 )
                                 .build())
                 ));

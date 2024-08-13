@@ -111,9 +111,9 @@ public class FriendControllerTests extends AbstractControllerTests {
                                 .tag("Friend")
                                 .summary("내 친구 목록을 조회하는 API")
                                 .responseFields(
-                                        fieldWithPath("friendList[0].id").description("친구의 아이디"),
-                                        fieldWithPath("friendList[0].nickname").description("친구의 닉네임"),
-                                        fieldWithPath("friendList[0].profileUrl").description("친구의 프로필 이미지 URL")
+                                        fieldWithPath("items[0].id").description("친구의 아이디"),
+                                        fieldWithPath("items[0].nickname").description("친구의 닉네임"),
+                                        fieldWithPath("items[0].profileUrl").description("친구의 프로필 이미지 URL")
                                 )
                                 .build())
                 ));
@@ -152,10 +152,10 @@ public class FriendControllerTests extends AbstractControllerTests {
                                 .tag("Friend")
                                 .summary("내 친구들의 오늘 산책 완료 여부를 조회 API")
                                 .responseFields(
-                                        fieldWithPath("friendWalkStatusList[0].id").description("친구의 아이디"),
-                                        fieldWithPath("friendWalkStatusList[0].nickname").description("친구의 닉네임"),
-                                        fieldWithPath("friendWalkStatusList[0].profileUrl").description("친구의 프로필 이미지 URL"),
-                                        fieldWithPath("friendWalkStatusList[0].done").description("친구의 오늘 산책 완료 여부")
+                                        fieldWithPath("items[0].id").description("친구의 아이디"),
+                                        fieldWithPath("items[0].nickname").description("친구의 닉네임"),
+                                        fieldWithPath("items[0].profileUrl").description("친구의 프로필 이미지 URL"),
+                                        fieldWithPath("items[0].done").description("친구의 오늘 산책 완료 여부")
                                 )
                                 .build())
                 ));

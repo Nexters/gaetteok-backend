@@ -1,5 +1,6 @@
 package com.nexters.gaetteok.walklog.presentation.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nexters.gaetteok.domain.WalkLog;
 import lombok.Getter;
 
@@ -8,6 +9,7 @@ import java.util.List;
 @Getter
 public class GetWalkLogListResponse {
 
+    @JsonProperty("items")
     private List<GetWalkLogResponse> walkLogList;
 
     public GetWalkLogListResponse(List<GetWalkLogResponse> walkLogList) {
