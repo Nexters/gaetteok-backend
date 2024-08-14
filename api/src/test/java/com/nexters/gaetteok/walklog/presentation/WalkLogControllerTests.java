@@ -123,7 +123,7 @@ public class WalkLogControllerTests extends AbstractControllerTests {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            RestDocumentationRequestBuilders.get("/api/walk-logs")
+            RestDocumentationRequestBuilders.get("/api/walk-logs/calendar")
                 .param("userId", "2")
                 .param("year", "2024")
                 .param("month", "8")
