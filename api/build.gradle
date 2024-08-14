@@ -29,6 +29,7 @@ dependencies {
 
     implementation project(':infra')
     implementation project(':domain:user')
+    implementation project(':domain:walklog')
 }
 
 tasks.named('test') {
@@ -43,7 +44,8 @@ tasks.named('asciidoctor') {
 
 openapi3 {
     servers = [
-            { url = 'http://localhost:8080' },
+            { url = 'http://175.106.99.165:80'; description = 'Production 문서용' },
+            { url = 'http://localhost:8080'; description = 'Local 테스트용' }
     ]
     title = 'Pawpaw 백엔드 API Docs'
     description = '멍멍이 산책 기록 서비스 Pawpaw 의 API 문서 페이지입니다.'

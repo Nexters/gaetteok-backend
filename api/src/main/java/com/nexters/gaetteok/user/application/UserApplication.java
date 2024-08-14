@@ -6,7 +6,7 @@ import com.nexters.gaetteok.persistence.entity.UserEntity;
 import com.nexters.gaetteok.persistence.entity.UserPushNotificationEntity;
 import com.nexters.gaetteok.persistence.repository.UserPushNotificationRepository;
 import com.nexters.gaetteok.persistence.repository.UserRepository;
-import java.time.LocalDateTime;
+import com.nexters.gaetteok.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,20 +23,6 @@ public class UserApplication {
             userPushNotificationDomain.getId(),
             userPushNotificationDomain.getUserId(),
             userPushNotificationDomain.getPushNotificationTime()
-        );
-    }
-
-    private User toUserDomain(
-        UserEntity userEntity,
-        UserPushNotificationEntity userPushNotificationEntity
-    ) {
-        return new User(
-            userEntity.getId(),
-            null,
-            null,
-            null,
-            LocalDateTime.now(),
-            toUserPushNotificationDomain(userPushNotificationEntity)
         );
     }
 
@@ -57,7 +43,8 @@ public class UserApplication {
     }
 
     public User getUser(long id) {
-        return null;
+        UserEntity userEntity = userRepository.getById(id);
+        return UserMapper.toDomain(userEntity);
     }
 
     public void updatePushNotificationTime(long id, long timeToBeUpdated) {

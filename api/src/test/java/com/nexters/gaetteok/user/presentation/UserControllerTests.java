@@ -34,10 +34,8 @@ public class UserControllerTests extends AbstractControllerTests {
         given(userApplication.getUser(anyLong())).willReturn(user);
 
         // when
-        ResultActions resultActions = mockMvc.perform(
-            RestDocumentationRequestBuilders.get("/api/users", id)
-                .contentType("application/json")
-                .content(objectMapper.writeValueAsString(user)));
+        ResultActions resultActions = mockMvc.perform(RestDocumentationRequestBuilders.get("/api/users", id)
+                        .contentType("application/json"));
 
         // then
         resultActions.andExpect(MockMvcResultMatchers.status().isOk())

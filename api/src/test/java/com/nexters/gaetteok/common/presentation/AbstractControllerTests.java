@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexters.gaetteok.image.service.ImageUploader;
 import com.nexters.gaetteok.user.application.FriendApplication;
 import com.nexters.gaetteok.user.application.UserApplication;
+import com.nexters.gaetteok.walklog.application.WalkLogApplication;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class AbstractControllerTests {
 
     @MockBean
     protected FriendApplication friendApplication;
+
+    @MockBean
+    protected WalkLogApplication walkLogApplication;
 
     @MockBean
     protected ImageUploader imageUploader;
