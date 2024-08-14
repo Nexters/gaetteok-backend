@@ -11,21 +11,21 @@ public class GetFriendResponse {
 
     private String nickname;
 
-    private String profileUrl;
+    private String profileImageUrl;
 
     @Builder
-    public GetFriendResponse(long id, String nickname, String profileUrl) {
+    public GetFriendResponse(long id, String nickname, String profileImageUrl) {
         this.id = id;
         this.nickname = nickname;
-        this.profileUrl = profileUrl;
+        this.profileImageUrl = profileImageUrl;
     }
 
     public static GetFriendResponse of(Friend friend) {
         return GetFriendResponse.builder()
-                .id(friend.getFriend().getId())
-                .nickname(friend.getFriend().getNickname())
-                .profileUrl(friend.getFriend().getProfileUrl())
-                .build();
+            .id(friend.getFriend().getId())
+            .nickname(friend.getFriend().getNickname())
+            .profileImageUrl(friend.getFriend().getProfileUrl())
+            .build();
     }
 
 }

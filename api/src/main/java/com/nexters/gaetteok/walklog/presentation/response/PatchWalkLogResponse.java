@@ -17,13 +17,13 @@ public class PatchWalkLogResponse {
     private final String content;
     private final WalkTime walkTime;
     private final String writerNickname;
-    private final String writerProfileUrl;
+    private final String writerProfileImageUrl;
     private final LocalDateTime createdAt;
     private String title;
 
     @Builder
     public PatchWalkLogResponse(long id, String photoUrl, String title, String content,
-        WalkTime walkTime, String writerNickname, String writerProfileUrl,
+        WalkTime walkTime, String writerNickname, String writerProfileImageUrl,
         LocalDateTime createdAt) {
         this.id = id;
         this.photoUrl = photoUrl;
@@ -31,7 +31,7 @@ public class PatchWalkLogResponse {
         this.content = content;
         this.walkTime = walkTime;
         this.writerNickname = writerNickname;
-        this.writerProfileUrl = writerProfileUrl;
+        this.writerProfileImageUrl = writerProfileImageUrl;
         this.createdAt = createdAt;
     }
 
@@ -43,7 +43,7 @@ public class PatchWalkLogResponse {
             .content(walkLog.getContent())
             .walkTime(walkLog.getWalkTime())
             .writerNickname(walkLog.getWriterNickname())
-            .writerProfileUrl(walkLog.getWriterProfileUrl())
+            .writerProfileImageUrl(walkLog.getWriterProfileImageUrl())
             .createdAt(walkLog.getCreatedAt())
             .build();
     }

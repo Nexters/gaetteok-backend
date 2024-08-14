@@ -12,11 +12,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.nexters.gaetteok.common.presentation.AbstractControllerTests;
+import com.nexters.gaetteok.domain.Comment;
 import com.nexters.gaetteok.domain.WalkLog;
 import com.nexters.gaetteok.domain.WalkTime;
 import com.nexters.gaetteok.walklog.presentation.request.CreateWalkLogRequest;
 import com.nexters.gaetteok.walklog.presentation.request.PatchWalkLogRequest;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +42,7 @@ public class WalkLogControllerTests extends AbstractControllerTests {
             .photoUrl("https://photo-url/walklog/20240810.jpg")
             .walkTime(WalkTime.BETWEEN_20_AND_40_MINUTES)
             .writerNickname("뽀삐")
-            .writerProfileUrl("https://photo-url/walklog/20240810.jpg")
+            .writerProfileImageUrl("https://photo-url/walklog/20240810.jpg")
             .createdAt(LocalDateTime.now())
             .build();
         CreateWalkLogRequest request = new CreateWalkLogRequest(
@@ -80,7 +82,7 @@ public class WalkLogControllerTests extends AbstractControllerTests {
                     fieldWithPath("content").description("산책 기록 내용"),
                     fieldWithPath("walkTime").description("산책한 시간"),
                     fieldWithPath("writerNickname").description("작성자 닉네임"),
-                    fieldWithPath("writerProfileUrl").description("작성자 프로필 URL"),
+                    fieldWithPath("writerProfileImageUrl").description("작성자 프로필 URL"),
                     fieldWithPath("createdAt").description("등록 시간")
                 ),
                 resource(ResourceSnippetParameters.builder()
@@ -101,7 +103,7 @@ public class WalkLogControllerTests extends AbstractControllerTests {
             .photoUrl("https://photo-url/walklog/20240810.jpg")
             .walkTime(WalkTime.BETWEEN_20_AND_40_MINUTES)
             .writerNickname("초코")
-            .writerProfileUrl("https://photo-url/walklog/20240810.jpg")
+            .writerProfileImageUrl("https://photo-url/walklog/20240810.jpg")
             .createdAt(LocalDateTime.now())
             .build();
         WalkLog walkLog2 = WalkLog.builder()
@@ -111,7 +113,7 @@ public class WalkLogControllerTests extends AbstractControllerTests {
             .photoUrl("https://photo-url/walklog/20240810.jpg")
             .walkTime(WalkTime.WITHIN_20_MINUTES)
             .writerNickname("초코")
-            .writerProfileUrl("https://photo-url/walklog/20240810.jpg")
+            .writerProfileImageUrl("https://photo-url/walklog/20240810.jpg")
             .createdAt(LocalDateTime.now())
             .build();
 
@@ -151,6 +153,15 @@ public class WalkLogControllerTests extends AbstractControllerTests {
     @Test
     void getListById_correctId_success() throws Exception {
         // given
+        Comment comment = Comment.builder()
+            .id(1L)
+            .walkLogId(2L)
+            .writerNickname("초코")
+            .writerProfileImageUrl("https://photo-url/walklog/20240810.jpg")
+            .content("댓글댓글댓글")
+            .createdAt(LocalDateTime.now())
+            .build();
+
         WalkLog walkLog = WalkLog.builder()
             .id(2L)
             .title("산책굳")
@@ -158,19 +169,24 @@ public class WalkLogControllerTests extends AbstractControllerTests {
             .photoUrl("https://photo-url/walklog/20240810.jpg")
             .walkTime(WalkTime.BETWEEN_20_AND_40_MINUTES)
             .writerNickname("초코")
-            .writerProfileUrl("https://photo-url/walklog/20240810.jpg")
+            .writerProfileImageUrl("https://photo-url/walklog/20240810.jpg")
             .createdAt(LocalDateTime.now())
             .build();
         WalkLog walkLog2 = WalkLog.builder()
-            .id(2L)
+            .id(3L)
             .title("산책 또 굳")
             .content("오늘 산책도 짱 좋았당")
             .photoUrl("https://photo-url/walklog/20240810.jpg")
             .walkTime(WalkTime.WITHIN_20_MINUTES)
             .writerNickname("초코")
-            .writerProfileUrl("https://photo-url/walklog/20240810.jpg")
+            .writerProfileImageUrl("https://photo-url/walklog/20240810.jpg")
             .createdAt(LocalDateTime.now())
             .build();
+
+        ArrayList<Comment> comments = new ArrayList<>();
+        comments.add(comment);
+        walkLog.setComments(comments);
+        walkLog2.setComments(comments);
         given(walkLogApplication.getListById(anyLong(), anyLong(), anyInt())).willReturn(
             List.of(walkLog, walkLog2));
 
@@ -207,8 +223,17 @@ public class WalkLogControllerTests extends AbstractControllerTests {
                         fieldWithPath("items[0].content").description("산책 기록 내용"),
                         fieldWithPath("items[0].walkTime").description("산책한 시간"),
                         fieldWithPath("items[0].writerNickname").description("작성자 닉네임"),
-                        fieldWithPath("items[0].writerProfileUrl").description("작성자 프로필 URL"),
-                        fieldWithPath("items[0].createdAt").description("등록 시간")
+                        fieldWithPath("items[0].writerProfileImageUrl").description("작성자 프로필 URL"),
+                        fieldWithPath("items[0].createdAt").description("등록 시간"),
+                        fieldWithPath("items[0].comments[0].id").description("댓글 고유 id"),
+                        fieldWithPath("items[0].comments[0].content").description("내용"),
+                        fieldWithPath("items[0].comments[0].writerNickname").description("작성자 닉네임"),
+                        fieldWithPath("items[0].comments[0].writerProfileImageUrl").description(
+                            "작성자 프로필 이미지"),
+                        fieldWithPath("items[0].comments[0].walkLogId").description(
+                            "게시글 ID"),
+                        fieldWithPath("items[0].comments[0].createdAt").description(
+                            "댓글 등록 시간")
                     )
                     .build())
             ));
@@ -217,6 +242,14 @@ public class WalkLogControllerTests extends AbstractControllerTests {
     @Test
     void getMyList_correctId_success() throws Exception {
         // given
+        Comment comment = Comment.builder()
+            .id(1L)
+            .walkLogId(2L)
+            .writerNickname("초코")
+            .writerProfileImageUrl("https://photo-url/walklog/20240810.jpg")
+            .content("댓글댓글댓글")
+            .createdAt(LocalDateTime.now())
+            .build();
         WalkLog walkLog = WalkLog.builder()
             .id(1L)
             .title("산책굳")
@@ -224,7 +257,7 @@ public class WalkLogControllerTests extends AbstractControllerTests {
             .photoUrl("https://photo-url/walklog/20240810.jpg")
             .walkTime(WalkTime.BETWEEN_20_AND_40_MINUTES)
             .writerNickname("뽀삐")
-            .writerProfileUrl("https://photo-url/walklog/20240810.jpg")
+            .writerProfileImageUrl("https://photo-url/walklog/20240810.jpg")
             .createdAt(LocalDateTime.now())
             .build();
         WalkLog walkLog2 = WalkLog.builder()
@@ -234,9 +267,13 @@ public class WalkLogControllerTests extends AbstractControllerTests {
             .photoUrl("https://photo-url/walklog/20240810.jpg")
             .walkTime(WalkTime.WITHIN_20_MINUTES)
             .writerNickname("뽀삐")
-            .writerProfileUrl("https://photo-url/walklog/20240810.jpg")
+            .writerProfileImageUrl("https://photo-url/walklog/20240810.jpg")
             .createdAt(LocalDateTime.now())
             .build();
+        ArrayList<Comment> comments = new ArrayList<>();
+        comments.add(comment);
+        walkLog.setComments(comments);
+        walkLog2.setComments(comments);
         given(walkLogApplication.getListById(anyLong(), anyLong(), anyInt())).willReturn(
             List.of(walkLog, walkLog2));
 
@@ -270,8 +307,17 @@ public class WalkLogControllerTests extends AbstractControllerTests {
                         fieldWithPath("items[0].content").description("산책 기록 내용"),
                         fieldWithPath("items[0].walkTime").description("산책한 시간"),
                         fieldWithPath("items[0].writerNickname").description("작성자 닉네임"),
-                        fieldWithPath("items[0].writerProfileUrl").description("작성자 프로필 URL"),
-                        fieldWithPath("items[0].createdAt").description("등록 시간")
+                        fieldWithPath("items[0].writerProfileImageUrl").description("작성자 프로필 URL"),
+                        fieldWithPath("items[0].createdAt").description("등록 시간"),
+                        fieldWithPath("items[0].comments[0].id").description("댓글 고유 id"),
+                        fieldWithPath("items[0].comments[0].content").description("내용"),
+                        fieldWithPath("items[0].comments[0].writerNickname").description("작성자 닉네임"),
+                        fieldWithPath("items[0].comments[0].writerProfileImageUrl").description(
+                            "작성자 프로필 이미지"),
+                        fieldWithPath("items[0].comments[0].walkLogId").description(
+                            "게시글 ID"),
+                        fieldWithPath("items[0].comments[0].createdAt").description(
+                            "댓글 등록 시간")
                     )
                     .build())
             ));
@@ -287,7 +333,7 @@ public class WalkLogControllerTests extends AbstractControllerTests {
             .photoUrl("https://photo-url/walklog/20240810.jpg")
             .walkTime(WalkTime.BETWEEN_20_AND_40_MINUTES)
             .writerNickname("뽀삐")
-            .writerProfileUrl("https://photo-url/walklog/20240810.jpg")
+            .writerProfileImageUrl("https://photo-url/walklog/20240810.jpg")
             .createdAt(LocalDateTime.now())
             .build();
         PatchWalkLogRequest request = new PatchWalkLogRequest(
@@ -335,7 +381,7 @@ public class WalkLogControllerTests extends AbstractControllerTests {
                     fieldWithPath("content").description("산책 기록 내용"),
                     fieldWithPath("walkTime").description("산책한 시간"),
                     fieldWithPath("writerNickname").description("작성자 닉네임"),
-                    fieldWithPath("writerProfileUrl").description("작성자 프로필 URL"),
+                    fieldWithPath("writerProfileImageUrl").description("작성자 프로필 URL"),
                     fieldWithPath("createdAt").description("등록 시간")
                 ),
                 resource(ResourceSnippetParameters.builder()

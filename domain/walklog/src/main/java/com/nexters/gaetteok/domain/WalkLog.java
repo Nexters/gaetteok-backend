@@ -1,10 +1,10 @@
 package com.nexters.gaetteok.domain;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
-
-import java.time.LocalDateTime;
 
 @Getter
 @ToString
@@ -22,20 +22,26 @@ public class WalkLog {
 
     private String writerNickname;
 
-    private String writerProfileUrl;
+    private String writerProfileImageUrl;
+
+    private List<Comment> comments;
 
     private LocalDateTime createdAt;
 
     @Builder
-    public WalkLog(long id, String photoUrl, String title, String content, WalkTime walkTime, String writerNickname, String writerProfileUrl, LocalDateTime createdAt) {
+    public WalkLog(long id, String photoUrl, String title, String content, WalkTime walkTime,
+        String writerNickname, String writerProfileImageUrl, LocalDateTime createdAt) {
         this.id = id;
         this.photoUrl = photoUrl;
         this.title = title;
         this.content = content;
         this.walkTime = walkTime;
         this.writerNickname = writerNickname;
-        this.writerProfileUrl = writerProfileUrl;
+        this.writerProfileImageUrl = writerProfileImageUrl;
         this.createdAt = createdAt;
     }
 
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 }

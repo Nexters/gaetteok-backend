@@ -1,21 +1,27 @@
 package com.nexters.gaetteok.walklog.application;
 
+import com.nexters.gaetteok.domain.Comment;
 import com.nexters.gaetteok.domain.WalkLog;
 import com.nexters.gaetteok.image.model.File;
 import com.nexters.gaetteok.image.service.ImageUploader;
+import com.nexters.gaetteok.persistence.entity.CommentEntity;
 import com.nexters.gaetteok.persistence.entity.UserEntity;
 import com.nexters.gaetteok.persistence.entity.WalkLogEntity;
+import com.nexters.gaetteok.persistence.repository.CommentRepository;
 import com.nexters.gaetteok.persistence.repository.UserRepository;
 import com.nexters.gaetteok.persistence.repository.WalkLogRepository;
+import com.nexters.gaetteok.walklog.mapper.CommentMapper;
 import com.nexters.gaetteok.walklog.mapper.WalkLogMapper;
 import com.nexters.gaetteok.walklog.presentation.request.CreateWalkLogRequest;
 import com.nexters.gaetteok.walklog.presentation.request.PatchWalkLogRequest;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,6 +35,7 @@ public class WalkLogApplication {
     private final ImageUploader imageUploader;
     private final UserRepository userRepository;
     private final WalkLogRepository walkLogRepository;
+    private final CommentRepository commentRepository;
 
     private String getKey(WalkLog walkLogEntity) {
         return
@@ -74,15 +81,44 @@ public class WalkLogApplication {
         return calendar;
     }
 
+    // 이건 나중에 지워도 되는건가?
     public List<WalkLog> getList(long userId, long cursorId, int pageSize) {
         return walkLogRepository.getList(userId, cursorId, pageSize);
     }
 
     public List<WalkLog> getListById(long userId, long cursorId, int pageSize) {
         UserEntity me = userRepository.getById(userId);
-        return walkLogRepository.getMyList(userId, cursorId, pageSize).stream()
+        List<WalkLog> walkLogs = walkLogRepository.getMyList(userId, cursorId, pageSize).stream()
             .map(walkLogEntity -> WalkLogMapper.toDomain(walkLogEntity, me))
             .toList();
+
+        List<Long> walkLogIds = walkLogs.stream()
+            .map(WalkLog::getId)
+            .toList();
+
+        List<Long> writerIds = commentRepository.findByWalkLogIdIn(walkLogIds)
+            .stream().map(
+                CommentEntity::getWriterId
+            )
+            .toList();
+
+        Map<Long, UserEntity> users = new HashMap<>();
+        userRepository.findAllById(writerIds)
+            .forEach(
+                user -> users.put(user.getId(), user)
+            );
+
+        Map<Long, List<Comment>> comments = commentRepository.findByWalkLogIdIn(walkLogIds)
+            .stream().map(commentEntity -> CommentMapper.toDomain(commentEntity,
+                users.get(commentEntity.getWriterId())
+            ))
+            .collect(Collectors.groupingBy(Comment::getWalkLogId));
+
+        walkLogs.forEach(
+            walkLog -> walkLog.setComments(comments.get(walkLog.getId()))
+        );
+
+        return walkLogs;
     }
 
     public WalkLog update(long id, long userId, PatchWalkLogRequest request, MultipartFile photo)

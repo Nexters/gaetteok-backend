@@ -122,7 +122,7 @@ public class TestDataInjector {
                 .walkLogId(walkLogEntity.getId())
                 .createdAt(LocalDateTime.now().minusDays(20 - i))
                 .build());
-            comments.add(CommentMapper.toDomain(commentEntity));
+            comments.add(CommentMapper.toDomain(commentEntity, poppy));
         }
         log.info("뽀삐 산책 기록 저장: {}", walkLogList);
         log.info("뽀삐 산책 기록에 대한 댓글 저장: {}", comments);
