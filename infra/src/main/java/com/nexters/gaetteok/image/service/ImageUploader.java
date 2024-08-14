@@ -55,7 +55,7 @@ public class ImageUploader {
                         .withCannedAcl(CannedAccessControlList.PublicRead));
 
                 uploadFileUrl =
-                    bucketConfig.getEndPoint() + bucketConfig.getBucketName() + "/" + keyName;
+                    bucketConfig.getEndPoint() + "/" + bucketConfig.getBucketName() + "/" + keyName;
 
             } catch (IOException e) {
                 e.printStackTrace();
