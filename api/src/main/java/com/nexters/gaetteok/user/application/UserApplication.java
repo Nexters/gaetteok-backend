@@ -62,4 +62,11 @@ public class UserApplication {
         userPushNotificationRepository.save(updatedEntity);
     }
 
+    public User updateUser(long id, String city) {
+        UserEntity userEntity = userRepository.getById(id);
+        User user = UserMapper.toDomain(userEntity);
+        user.updateLocation(city);
+        return UserMapper.toDomain(UserMapper.toEntity(user));
+    }
+
 }

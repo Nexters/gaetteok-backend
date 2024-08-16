@@ -57,4 +57,40 @@ public class UserControllerTests extends AbstractControllerTests {
             ));
     }
 
+    @Test
+    void patchUser_location_success() throws Exception {
+        // given
+        long id = 1L;
+        User user = User.builder()
+            .id(id)
+            .nickname("test")
+            .code("123456")
+            .location("daegu")
+            .profileUrl("https://profile-image.jpg")
+            .createdAt(LocalDateTime.now())
+            .build();
+        given(userApplication.updateUser(anyLong(), anyString())).willReturn(user);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+            RestDocumentationRequestBuilders.patch("/api/users/location")
+                .param("location", "seoul")
+                .contentType("application/json"));
+
+        // then
+        resultActions.andExpect(MockMvcResultMatchers.status().isOk())
+            .andDo(MockMvcRestDocumentationWrapper.document(
+                "사용자 위치 정보 변경",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                resource(ResourceSnippetParameters.builder()
+                    .tag("User")
+                    .summary("사용자 위치 정보 변경 API")
+                    .responseFields(
+                        fieldWithPath("location").description("변경된 location 정보")
+                    )
+                    .build())
+            ));
+    }
+
 }
