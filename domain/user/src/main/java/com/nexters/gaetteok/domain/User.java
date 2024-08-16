@@ -1,10 +1,9 @@
 package com.nexters.gaetteok.domain;
 
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
-
-import java.time.LocalDateTime;
 
 @Getter
 @ToString
@@ -18,6 +17,8 @@ public class User {
 
     private String code;
 
+    private String location;
+
     private LocalDateTime createdAt;
 
     private UserPushNotification userPushNotification;
@@ -28,6 +29,7 @@ public class User {
         String nickname,
         String profileUrl,
         String code,
+        String location,
         LocalDateTime createdAt,
         UserPushNotification userPushNotification
     ) {
@@ -35,7 +37,12 @@ public class User {
         this.nickname = nickname;
         this.profileUrl = profileUrl;
         this.code = code;
+        this.location = location;
         this.createdAt = createdAt;
         this.userPushNotification = userPushNotification;
+    }
+
+    public void updateLocation(String location) {
+        this.location = location;
     }
 }
