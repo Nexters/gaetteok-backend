@@ -3,10 +3,7 @@ package com.nexters.gaetteok.walklog.presentation;
 import com.nexters.gaetteok.common.auth.UserInfo;
 import com.nexters.gaetteok.walklog.presentation.request.CreateWalkLogRequest;
 import com.nexters.gaetteok.walklog.presentation.request.PatchWalkLogRequest;
-import com.nexters.gaetteok.walklog.presentation.response.CreateWalkLogResponse;
-import com.nexters.gaetteok.walklog.presentation.response.GetWalkLogListResponse;
-import com.nexters.gaetteok.walklog.presentation.response.PatchWalkLogResponse;
-import com.nexters.gaetteok.walklog.presentation.response.WalkLogCalendarResponse;
+import com.nexters.gaetteok.walklog.presentation.response.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -53,7 +50,7 @@ public interface WalkLogSpecification {
         @Parameter(hidden = true) UserInfo userInfo
     );
 
-    @Operation(summary = "산책 기록 목록 조회", description = "전체 또는 특정 사용자의 산책 기록 목록을 조회하는 API")
+    @Operation(summary = "산책 기록 목록 조회 - 피드용 최신순 조회", description = "전체 또는 특정 사용자의 산책 기록 목록을 최신순으로 조회하는 API")
     @ApiResponse(
         responseCode = "200",
         description = "산책 기록 리스트 조회 성공",
@@ -63,10 +60,24 @@ public interface WalkLogSpecification {
         )
     )
     ResponseEntity<GetWalkLogListResponse> getList(
-        @Parameter(description = "사용자 아이디") long userId,
         @Parameter(description = "커서. 해당 아이디값보다 아이디가 작은 산책 기록을 조회. 없으면 가장 최근 것부터 조회") long cursorId,
-        @Parameter(example = "한 번에 조회할 산책 기록 수. 기본값은 10개") int pageSize,
+        @Parameter(description = "한 번에 조회할 산책 기록 수. 기본값은 10개", example = "10") int pageSize,
         @Parameter(hidden = true) UserInfo userInfo
+    );
+
+    @Operation(summary = "산책 기록 목록 조회 - 포커스 유저용 월별 그룹 조회", description = "전체 또는 특정 사용자의 산책 기록 목록을 월별 그룹화로 조회하는 API")
+    @ApiResponse(
+        responseCode = "200",
+        description = "산책 기록 리스트 조회 성공",
+        content = @Content(
+            mediaType = MediaType.APPLICATION_JSON_VALUE,
+            schema = @Schema(implementation = GetWalkLogListResponse.class)
+        )
+    )
+    ResponseEntity<GetWalkLogListGroupByMonthResponse> getListByUserIdAndMonth(
+        @Parameter(description = "사용자 아이디") long userId,
+        @Parameter(description = "년도") int year,
+        @Parameter(description = "월") int month
     );
 
     @Operation(summary = "내 산책 기록 리스트 조회", description = "내 산책 기록 리스트를 조회합니다.")
@@ -75,12 +86,12 @@ public interface WalkLogSpecification {
         description = "내 산책 기록 리스트 조회 성공",
         content = @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = GetWalkLogListResponse.class)
+            schema = @Schema(implementation = GetWalkLogListGroupByMonthResponse.class)
         )
     )
-    ResponseEntity<GetWalkLogListResponse> getMyList(
-        @Parameter(description = "커서. 해당 아이디값보다 아이디가 작은 산책 기록을 조회. 없으면 가장 최근 것부터 조회") long cursorId,
-        @Parameter(example = "한 번에 조회할 산책 기록 수. 기본값은 10개") int pageSize,
+    ResponseEntity<GetWalkLogListGroupByMonthResponse> getMyList(
+        @Parameter(description = "년도") int year,
+        @Parameter(description = "월") int month,
         @Parameter(hidden = true) UserInfo userInfo
     );
 

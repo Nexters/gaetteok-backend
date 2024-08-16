@@ -82,9 +82,9 @@ public class WalkLogApplication {
         return walkLogRepository.getList(userId, cursorId, pageSize);
     }
 
-    public List<WalkLog> getListById(long userId, long cursorId, int pageSize) {
+    public List<WalkLog> getListById(long userId, int year, int month) {
         UserEntity me = userRepository.getById(userId);
-        List<WalkLog> walkLogs = walkLogRepository.getMyList(userId, cursorId, pageSize).stream()
+        List<WalkLog> walkLogs = walkLogRepository.getMyList(userId, year, month).stream()
             .map(walkLogEntity -> WalkLogMapper.toDomain(walkLogEntity, me))
             .toList();
 
@@ -141,6 +141,15 @@ public class WalkLogApplication {
         );
 
         return WalkLogMapper.toDomain(walkLog, me);
+    }
+
+    public WalkLog getNextData(long walkLogId) {
+        WalkLogEntity entity = walkLogRepository.getMaxIdLessThan(walkLogId);
+        if (entity == null) {
+            return null;
+        }
+        UserEntity me = userRepository.getById(entity.getUserId());
+        return WalkLogMapper.toDomain(entity, me);
     }
 
 }

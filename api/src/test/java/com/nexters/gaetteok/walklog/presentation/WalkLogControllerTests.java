@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -99,7 +100,7 @@ public class WalkLogControllerTests extends AbstractControllerTests {
     }
 
     @Test
-    void getListById_correctId_success() throws Exception {
+    void getList_correctId_success() throws Exception {
         // given
         Comment comment = Comment.builder()
             .id(1L)
@@ -135,7 +136,7 @@ public class WalkLogControllerTests extends AbstractControllerTests {
         comments.add(comment);
         walkLog.setComments(comments);
         walkLog2.setComments(comments);
-        given(walkLogApplication.getListById(anyLong(), anyLong(), anyInt())).willReturn(
+        given(walkLogApplication.getList(anyLong(), anyLong(), anyInt())).willReturn(
             List.of(walkLog, walkLog2));
 
         // when
@@ -185,14 +186,14 @@ public class WalkLogControllerTests extends AbstractControllerTests {
         comments.add(comment);
         walkLog.setComments(comments);
         walkLog2.setComments(comments);
-        given(walkLogApplication.getListById(anyLong(), anyLong(), anyInt())).willReturn(
+        given(walkLogApplication.getListById(anyLong(), anyInt(), anyInt())).willReturn(
             List.of(walkLog, walkLog2));
 
         // when
         ResultActions resultActions = mockMvc.perform(
             MockMvcRequestBuilders.get("/api/walk-logs/me")
-                .param("cursorId", "15")
-                .param("pageSize", "10")
+                .param("year", String.valueOf(LocalDate.now().getYear()))
+                .param("month", String.valueOf(LocalDate.now().getMonthValue()))
                 .contentType(MediaType.APPLICATION_JSON));
 
         // then

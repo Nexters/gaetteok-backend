@@ -5,10 +5,7 @@ import com.nexters.gaetteok.domain.WalkLog;
 import com.nexters.gaetteok.walklog.application.WalkLogApplication;
 import com.nexters.gaetteok.walklog.presentation.request.CreateWalkLogRequest;
 import com.nexters.gaetteok.walklog.presentation.request.PatchWalkLogRequest;
-import com.nexters.gaetteok.walklog.presentation.response.CreateWalkLogResponse;
-import com.nexters.gaetteok.walklog.presentation.response.GetWalkLogListResponse;
-import com.nexters.gaetteok.walklog.presentation.response.PatchWalkLogResponse;
-import com.nexters.gaetteok.walklog.presentation.response.WalkLogCalendarResponse;
+import com.nexters.gaetteok.walklog.presentation.response.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -58,26 +55,40 @@ public class WalkLogController implements WalkLogSpecification {
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GetWalkLogListResponse> getList(
-        @RequestParam(required = false, defaultValue = "0") long userId,
-        @RequestParam(defaultValue = "0") long cursorId,
-        @RequestParam(defaultValue = "10") int pageSize,
+        @RequestParam(required = false, defaultValue = "0") long cursorId,
+        @RequestParam(required = false, defaultValue = "10") int pageSize,
         UserInfo userInfo) {
-        List<WalkLog> walkLogList;
-        if (userId > 0) {
-            walkLogList = walkLogApplication.getListById(userId, cursorId, pageSize);
-        } else {
-            walkLogList = walkLogApplication.getList(userInfo.getUserId(), cursorId, pageSize);
-        }
+        List<WalkLog> walkLogList = walkLogApplication.getList(userInfo.getUserId(), cursorId, pageSize);
         return ResponseEntity.ok(GetWalkLogListResponse.of(walkLogList));
     }
 
-    @GetMapping(value = "/me", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetWalkLogListResponse> getMyList(
-        @RequestParam(defaultValue = "0") long cursorId,
-        @RequestParam(defaultValue = "10") int pageSize,
+    @GetMapping(value = "/monthly", produces = MediaType.APPLICATION_JSON_VALUE, params = {"userId", "year", "month"})
+    public ResponseEntity<GetWalkLogListGroupByMonthResponse> getListByUserIdAndMonth(
+        @RequestParam long userId,
+        @RequestParam int year,
+        @RequestParam int month
+    ) {
+        List<WalkLog> walkLogList = walkLogApplication.getListById(userId, year, month);
+        WalkLog nextData = null;
+        if (walkLogList.size() > 0) {
+            WalkLog lastData = walkLogList.get(walkLogList.size() - 1);
+            nextData = walkLogApplication.getNextData(lastData.getId());
+        }
+        return ResponseEntity.ok(GetWalkLogListGroupByMonthResponse.of(year, month, nextData, walkLogList));
+    }
+
+    @GetMapping(value = "/me", produces = MediaType.APPLICATION_JSON_VALUE, params = {"year", "month"})
+    public ResponseEntity<GetWalkLogListGroupByMonthResponse> getMyList(
+        @RequestParam int year,
+        @RequestParam int month,
         UserInfo userInfo) {
-        List<WalkLog> walkLogList = walkLogApplication.getListById(userInfo.getUserId(), cursorId, pageSize);
-        return ResponseEntity.ok(GetWalkLogListResponse.of(walkLogList));
+        List<WalkLog> walkLogList = walkLogApplication.getListById(userInfo.getUserId(), year, month);
+        WalkLog nextData = null;
+        if (walkLogList.size() > 0) {
+            WalkLog lastData = walkLogList.get(walkLogList.size() - 1);
+            nextData = walkLogApplication.getNextData(lastData.getId());
+        }
+        return ResponseEntity.ok(GetWalkLogListGroupByMonthResponse.of(year, month, nextData, walkLogList));
     }
 
     @PatchMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
