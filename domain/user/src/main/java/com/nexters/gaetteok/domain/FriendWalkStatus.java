@@ -10,15 +10,15 @@ public class FriendWalkStatus {
 
     private String nickname;
 
-    private String profileUrl;
+    private String profileImageUrl;
 
     private boolean done;
 
     @Builder
-    public FriendWalkStatus(long id, String nickname, String profileUrl, boolean done) {
+    public FriendWalkStatus(long id, String nickname, String profileImageUrl, boolean done) {
         this.id = id;
         this.nickname = nickname;
-        this.profileUrl = profileUrl;
+        this.profileImageUrl = profileImageUrl;
         this.done = done;
     }
 

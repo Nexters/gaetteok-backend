@@ -1,38 +1,29 @@
 package com.nexters.gaetteok.walklog.presentation.response;
 
-import com.nexters.gaetteok.domain.Comment;
 import com.nexters.gaetteok.domain.WalkLog;
 import com.nexters.gaetteok.domain.WalkTime;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
-public class GetWalkLogResponse {
+@ToString
+public class PatchWalkLogResponse {
 
-    private long id;
+    private final long id;
 
-    private String photoUrl;
-
+    private final String photoUrl;
+    private final String content;
+    private final WalkTime walkTime;
+    private final String writerNickname;
+    private final String writerProfileImageUrl;
+    private final LocalDateTime createdAt;
     private String title;
 
-    private String content;
-
-    private WalkTime walkTime;
-
-    private String writerNickname;
-
-    private String writerProfileImageUrl;
-
-    private List<Comment> comments;
-
-    private LocalDateTime createdAt;
-
     @Builder
-    public GetWalkLogResponse(long id, String photoUrl, String title, String content,
+    public PatchWalkLogResponse(long id, String photoUrl, String title, String content,
         WalkTime walkTime, String writerNickname, String writerProfileImageUrl,
-        List<Comment> comments,
         LocalDateTime createdAt) {
         this.id = id;
         this.photoUrl = photoUrl;
@@ -41,12 +32,11 @@ public class GetWalkLogResponse {
         this.walkTime = walkTime;
         this.writerNickname = writerNickname;
         this.writerProfileImageUrl = writerProfileImageUrl;
-        this.comments = comments;
         this.createdAt = createdAt;
     }
 
-    public static GetWalkLogResponse of(WalkLog walkLog) {
-        return GetWalkLogResponse.builder()
+    public static PatchWalkLogResponse of(WalkLog walkLog) {
+        return PatchWalkLogResponse.builder()
             .id(walkLog.getId())
             .photoUrl(walkLog.getPhotoUrl())
             .title(walkLog.getTitle())
@@ -54,7 +44,6 @@ public class GetWalkLogResponse {
             .walkTime(walkLog.getWalkTime())
             .writerNickname(walkLog.getWriterNickname())
             .writerProfileImageUrl(walkLog.getWriterProfileImageUrl())
-            .comments(walkLog.getComments())
             .createdAt(walkLog.getCreatedAt())
             .build();
     }
