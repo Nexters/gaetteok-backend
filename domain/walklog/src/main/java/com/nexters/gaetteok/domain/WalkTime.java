@@ -1,6 +1,9 @@
 package com.nexters.gaetteok.domain;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import jakarta.annotation.Nonnull;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -15,7 +18,7 @@ public enum WalkTime {
 
     private final String description;
     private static final Map<String, WalkTime> descriptionMap = Arrays.stream(values())
-            .collect(Collectors.toMap(WalkTime::getDescription, e -> e));
+        .collect(Collectors.toMap(WalkTime::getDescription, e -> e));
 
     WalkTime(String description) {
         this.description = description;
@@ -28,6 +31,14 @@ public enum WalkTime {
 
     public static WalkTime findByDescription(String description) {
         return descriptionMap.get(description);
+    }
+
+    @Component
+    public static class WalkTimeConverter implements Converter<String, WalkTime> {
+        @Override
+        public WalkTime convert(@Nonnull String source) {
+            return WalkTime.findByDescription(source);
+        }
     }
 
 }

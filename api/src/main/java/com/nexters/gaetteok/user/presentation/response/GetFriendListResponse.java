@@ -2,6 +2,7 @@ package com.nexters.gaetteok.user.presentation.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nexters.gaetteok.domain.Friend;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 public class GetFriendListResponse {
 
     @JsonProperty("items")
+    @Schema(description = "친구 목록")
     private List<GetFriendResponse> friendList;
 
     public GetFriendListResponse(List<GetFriendResponse> friendList) {

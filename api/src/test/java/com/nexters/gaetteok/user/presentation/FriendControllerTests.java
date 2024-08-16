@@ -1,24 +1,21 @@
 package com.nexters.gaetteok.user.presentation;
 
-import static com.epages.restdocs.apispec.ResourceDocumentation.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.*;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
-import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.nexters.gaetteok.common.presentation.AbstractControllerTests;
 import com.nexters.gaetteok.domain.Friend;
 import com.nexters.gaetteok.domain.FriendWalkStatus;
 import com.nexters.gaetteok.domain.User;
 import com.nexters.gaetteok.user.presentation.request.CreateFriendRequest;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 public class FriendControllerTests extends AbstractControllerTests {
@@ -49,29 +46,12 @@ public class FriendControllerTests extends AbstractControllerTests {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            RestDocumentationRequestBuilders.post("/api/friends")
+            MockMvcRequestBuilders.post("/api/friends")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
 
-        resultActions
-            .andExpect(status().isOk())
-            .andDo(MockMvcRestDocumentationWrapper.document(
-                "친구 추가",
-                preprocessRequest(prettyPrint()),
-                preprocessResponse(prettyPrint()),
-                resource(ResourceSnippetParameters.builder()
-                    .tag("Friend")
-                    .summary("친구 코드로 친구를 추가하는 API")
-                    .requestFields(
-                        fieldWithPath("code").description("친구 코드")
-                    )
-                    .responseFields(
-                        fieldWithPath("friendId").description("추가된 친구의 아이디"),
-                        fieldWithPath("friendNickname").description("추가된 친구의 닉네임"),
-                        fieldWithPath("friendProfileImageUrl").description("추가된 친구의 프로필 이미지 URL")
-                    )
-                    .build())
-            ));
+        // then
+        resultActions.andExpect(status().isOk());
     }
 
     @Test
@@ -98,25 +78,11 @@ public class FriendControllerTests extends AbstractControllerTests {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            RestDocumentationRequestBuilders.get("/api/friends")
+            MockMvcRequestBuilders.get("/api/friends")
                 .contentType(MediaType.APPLICATION_JSON));
 
-        resultActions
-            .andExpect(status().isOk())
-            .andDo(MockMvcRestDocumentationWrapper.document(
-                "친구 목록 조회",
-                preprocessRequest(prettyPrint()),
-                preprocessResponse(prettyPrint()),
-                resource(ResourceSnippetParameters.builder()
-                    .tag("Friend")
-                    .summary("내 친구 목록을 조회하는 API")
-                    .responseFields(
-                        fieldWithPath("items[0].id").description("친구의 아이디"),
-                        fieldWithPath("items[0].nickname").description("친구의 닉네임"),
-                        fieldWithPath("items[0].profileImageUrl").description("친구의 프로필 이미지 URL")
-                    )
-                    .build())
-            ));
+        // then
+        resultActions.andExpect(status().isOk());
     }
 
     @Test
@@ -139,27 +105,11 @@ public class FriendControllerTests extends AbstractControllerTests {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            RestDocumentationRequestBuilders.get("/api/friends/walk-status")
+            MockMvcRequestBuilders.get("/api/friends/walk-status")
                 .contentType(MediaType.APPLICATION_JSON));
 
         // then
-        resultActions
-            .andExpect(status().isOk())
-            .andDo(MockMvcRestDocumentationWrapper.document(
-                "내 친구들의 오늘 산책 완료 여부 조회",
-                preprocessRequest(prettyPrint()),
-                preprocessResponse(prettyPrint()),
-                resource(ResourceSnippetParameters.builder()
-                    .tag("Friend")
-                    .summary("내 친구들의 오늘 산책 완료 여부를 조회 API")
-                    .responseFields(
-                        fieldWithPath("items[0].id").description("친구의 아이디"),
-                        fieldWithPath("items[0].nickname").description("친구의 닉네임"),
-                        fieldWithPath("items[0].profileImageUrl").description("친구의 프로필 이미지 URL"),
-                        fieldWithPath("items[0].done").description("친구의 오늘 산책 완료 여부")
-                    )
-                    .build())
-            ));
+        resultActions.andExpect(status().isOk());
     }
 
 }

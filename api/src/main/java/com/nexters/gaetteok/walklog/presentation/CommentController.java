@@ -5,24 +5,19 @@ import com.nexters.gaetteok.domain.Comment;
 import com.nexters.gaetteok.walklog.application.CommentApplication;
 import com.nexters.gaetteok.walklog.presentation.request.CreateCommentRequest;
 import com.nexters.gaetteok.walklog.presentation.response.CreateCommentResponse;
-
-import java.io.IOException;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/walk-logs/{id}/comments")
 @RequiredArgsConstructor
-public class CommentController {
+public class CommentController implements CommentSpecification {
 
     private final CommentApplication commentApplication;
 

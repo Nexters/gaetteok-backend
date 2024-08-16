@@ -3,6 +3,7 @@ package com.nexters.gaetteok.user.presentation;
 import com.nexters.gaetteok.common.auth.UserInfo;
 import com.nexters.gaetteok.domain.Friend;
 import com.nexters.gaetteok.domain.FriendWalkStatus;
+import com.nexters.gaetteok.user.FriendSpecification;
 import com.nexters.gaetteok.user.application.FriendApplication;
 import com.nexters.gaetteok.user.presentation.request.CreateFriendRequest;
 import com.nexters.gaetteok.user.presentation.response.CreateFriendResponse;
@@ -20,7 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/friends")
 @RequiredArgsConstructor
-public class FriendController {
+public class FriendController implements FriendSpecification {
 
     private final FriendApplication friendApplication;
 
@@ -28,7 +29,7 @@ public class FriendController {
     public ResponseEntity<CreateFriendResponse> create(@RequestBody CreateFriendRequest request,
                                                        UserInfo userInfo) {
         long userId = userInfo.getUserId();
-        log.info("[친구 관계 생성] userId={}, request={}", userId, request);
+        log.info("[친구 관계 생성] userInfo={}, request={}", userInfo, request);
         Friend friend = friendApplication.create(userId, request.getCode());
         log.info("[친구 관계 생성 완료] friend={}", friend);
         return ResponseEntity.ok(CreateFriendResponse.of(friend));

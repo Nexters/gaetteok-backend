@@ -24,11 +24,11 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/walk-logs")
 @RequiredArgsConstructor
-public class WalkLogController {
+public class WalkLogController implements WalkLogSpecification {
 
     private final WalkLogApplication walkLogApplication;
 
-    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreateWalkLogResponse> create(
         @RequestPart CreateWalkLogRequest request,
         @RequestPart(name = "photo") MultipartFile photo,
@@ -87,7 +87,7 @@ public class WalkLogController {
         @RequestPart(name = "photo", required = false) MultipartFile photo,
         UserInfo userInfo) throws IOException {
         log.info(
-            "[산책 기록 변경] userInfo={}, request={}, hasPhoto={}", userInfo, request, !photo.isEmpty());
+            "[산책 기록 변경] userInfo={}, request={}, photo={}", userInfo, request, photo);
         WalkLog walkLog = walkLogApplication.update(id, userInfo.getUserId(), request, photo);
         log.info("[산책 기록 변경 완료] walkLog={}", walkLog);
         return ResponseEntity.ok(PatchWalkLogResponse.of(walkLog));

@@ -14,18 +14,14 @@ import com.nexters.gaetteok.walklog.mapper.CommentMapper;
 import com.nexters.gaetteok.walklog.mapper.WalkLogMapper;
 import com.nexters.gaetteok.walklog.presentation.request.CreateWalkLogRequest;
 import com.nexters.gaetteok.walklog.presentation.request.PatchWalkLogRequest;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -127,7 +123,7 @@ public class WalkLogApplication {
         WalkLogEntity walkLog = walkLogRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("walkLog does not exist"));
         File file = null;
-        if (!photo.isEmpty()) {
+        if (photo != null && !photo.isEmpty()) {
             long startTime = System.currentTimeMillis();
             file = imageUploader.uploadFiles(Collections.singletonList(photo), "walk-log/images")
                 .get(0);
