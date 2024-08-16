@@ -5,10 +5,10 @@ import com.nexters.gaetteok.domain.Friend;
 import com.nexters.gaetteok.domain.FriendWalkStatus;
 import com.nexters.gaetteok.user.FriendSpecification;
 import com.nexters.gaetteok.user.application.FriendApplication;
+import com.nexters.gaetteok.user.constant.SortCondition;
 import com.nexters.gaetteok.user.presentation.request.CreateFriendRequest;
 import com.nexters.gaetteok.user.presentation.response.CreateFriendResponse;
 import com.nexters.gaetteok.user.presentation.response.GetFriendListResponse;
-import com.nexters.gaetteok.user.presentation.response.GetFriendWalkStatusListResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -36,15 +36,10 @@ public class FriendController implements FriendSpecification {
     }
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetFriendListResponse> getList(UserInfo userInfo) {
-        List<Friend> friendList = friendApplication.getMyFriendList(userInfo.getUserId());
-        return ResponseEntity.ok(GetFriendListResponse.of(friendList));
-    }
-
-    @GetMapping(value = "/walk-status", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetFriendWalkStatusListResponse> getWalkStatusList(UserInfo userInfo) {
-        List<FriendWalkStatus> friendWalkStatusList = friendApplication.getWalkStatusList(userInfo.getUserId());
-        return ResponseEntity.ok(new GetFriendWalkStatusListResponse(friendWalkStatusList));
+    public ResponseEntity<GetFriendListResponse> getList(@RequestParam(name = "sort") SortCondition sortCondition,
+                                                         UserInfo userInfo) {
+        List<FriendWalkStatus> friendList = friendApplication.getWalkStatusList(userInfo.getUserId());
+        return ResponseEntity.ok(GetFriendListResponse.of(friendList, sortCondition));
     }
 
 }

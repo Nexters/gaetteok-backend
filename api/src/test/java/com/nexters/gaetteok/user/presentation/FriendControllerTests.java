@@ -2,7 +2,6 @@ package com.nexters.gaetteok.user.presentation;
 
 import com.nexters.gaetteok.common.presentation.AbstractControllerTests;
 import com.nexters.gaetteok.domain.Friend;
-import com.nexters.gaetteok.domain.FriendWalkStatus;
 import com.nexters.gaetteok.domain.User;
 import com.nexters.gaetteok.user.presentation.request.CreateFriendRequest;
 import org.junit.jupiter.api.Test;
@@ -79,33 +78,7 @@ public class FriendControllerTests extends AbstractControllerTests {
         // when
         ResultActions resultActions = mockMvc.perform(
             MockMvcRequestBuilders.get("/api/friends")
-                .contentType(MediaType.APPLICATION_JSON));
-
-        // then
-        resultActions.andExpect(status().isOk());
-    }
-
-    @Test
-    void getWalkStatusList_correctId_success() throws Exception {
-        // given
-        FriendWalkStatus walkStatus = FriendWalkStatus.builder()
-            .id(1L)
-            .nickname("뽀삐")
-            .profileImageUrl("https://profile-image.jpg")
-            .done(true)
-            .build();
-        FriendWalkStatus walkStatus2 = FriendWalkStatus.builder()
-            .id(2L)
-            .nickname("초코")
-            .profileImageUrl("https://profile-image.jpg")
-            .done(false)
-            .build();
-        List<FriendWalkStatus> walkStatusList = List.of(walkStatus, walkStatus2);
-        given(friendApplication.getWalkStatusList(anyLong())).willReturn(walkStatusList);
-
-        // when
-        ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.get("/api/friends/walk-status")
+                .queryParam("sort", "FRIEND_DESC")
                 .contentType(MediaType.APPLICATION_JSON));
 
         // then

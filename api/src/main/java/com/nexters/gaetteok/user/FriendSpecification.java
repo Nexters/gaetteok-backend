@@ -1,13 +1,14 @@
 package com.nexters.gaetteok.user;
 
 import com.nexters.gaetteok.common.auth.UserInfo;
+import com.nexters.gaetteok.user.constant.SortCondition;
 import com.nexters.gaetteok.user.presentation.request.CreateFriendRequest;
 import com.nexters.gaetteok.user.presentation.response.CreateFriendResponse;
 import com.nexters.gaetteok.user.presentation.response.GetFriendListResponse;
-import com.nexters.gaetteok.user.presentation.response.GetFriendWalkStatusListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -42,19 +43,10 @@ public interface FriendSpecification {
         )
     )
     ResponseEntity<GetFriendListResponse> getList(
-        @Parameter(hidden = true) UserInfo userInfo
-    );
-
-    @Operation(summary = "친구 산책 상태 목록 조회", description = "내 친구들의 산책 상태 목록을 조회하는 API")
-    @ApiResponse(
-        responseCode = "200",
-        description = "친구 산책 상태 목록 조회 성공",
-        content = @Content(
-            mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = GetFriendWalkStatusListResponse.class)
-        )
-    )
-    ResponseEntity<GetFriendWalkStatusListResponse> getWalkStatusList(
+        @Parameter(description = "정렬 조건", examples = {
+            @ExampleObject(name = "FRIEND_DESC", value = "친구 등록 내림차순"),
+            @ExampleObject(name = "WALK_DONE_DESC", value = "산책 완료 시간 내림차순")
+        }) SortCondition sortCondition,
         @Parameter(hidden = true) UserInfo userInfo
     );
 

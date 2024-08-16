@@ -1,6 +1,6 @@
 package com.nexters.gaetteok.user.presentation.response;
 
-import com.nexters.gaetteok.domain.Friend;
+import com.nexters.gaetteok.domain.FriendWalkStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,18 +17,23 @@ public class GetFriendResponse {
     @Schema(description = "친구의 프로필 이미지 URL", example = "https://profile-image.jpg")
     private String profileImageUrl;
 
+    @Schema(description = "산책 완료 여부", example = "true")
+    private boolean walkDone;
+
     @Builder
-    public GetFriendResponse(long id, String nickname, String profileImageUrl) {
+    public GetFriendResponse(long id, String nickname, String profileImageUrl, boolean walkDone) {
         this.id = id;
         this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
+        this.walkDone = walkDone;
     }
 
-    public static GetFriendResponse of(Friend friend) {
+    public static GetFriendResponse of(FriendWalkStatus friendWalkStatus) {
         return GetFriendResponse.builder()
-            .id(friend.getFriend().getId())
-            .nickname(friend.getFriend().getNickname())
-            .profileImageUrl(friend.getFriend().getProfileUrl())
+            .id(friendWalkStatus.getId())
+            .nickname(friendWalkStatus.getNickname())
+            .profileImageUrl(friendWalkStatus.getProfileImageUrl())
+            .walkDone(friendWalkStatus.isDone())
             .build();
     }
 

@@ -1,10 +1,12 @@
 package com.nexters.gaetteok.user.presentation.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.nexters.gaetteok.domain.Friend;
+import com.nexters.gaetteok.domain.FriendWalkStatus;
+import com.nexters.gaetteok.user.constant.SortCondition;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Getter
@@ -18,9 +20,10 @@ public class GetFriendListResponse {
         this.friendList = friendList;
     }
 
-    public static GetFriendListResponse of(List<Friend> myFriendList) {
+    public static GetFriendListResponse of(List<FriendWalkStatus> myFriendList, SortCondition sortCondition) {
         return new GetFriendListResponse(myFriendList.stream()
-                .map(GetFriendResponse::of)
-                .toList());
+            .sorted(Comparator.comparing(sortCondition.getComparator()).reversed())
+            .map(GetFriendResponse::of)
+            .toList());
     }
 }
