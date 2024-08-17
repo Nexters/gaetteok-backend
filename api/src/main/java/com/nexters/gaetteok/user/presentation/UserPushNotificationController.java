@@ -1,39 +1,37 @@
 package com.nexters.gaetteok.user.presentation;
 
+import com.nexters.gaetteok.domain.UserPushNotification;
+import com.nexters.gaetteok.jwt.UserInfo;
 import com.nexters.gaetteok.user.application.UserApplication;
 import com.nexters.gaetteok.user.presentation.response.GetUserPushNotificationResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/api/users", produces = MediaType.APPLICATION_JSON_VALUE)
-public class UserPushNotificationController {
+@RequestMapping(path = "/api/users/push-notification", produces = MediaType.APPLICATION_JSON_VALUE)
+public class UserPushNotificationController implements UserPushNotificationSpecification {
 
     private final UserApplication userApplication;
 
-    @GetMapping(value = "/{userId}/push")
-    public GetUserPushNotificationResponse get(@PathVariable long userId) {
-
-        long pushNotificationTime = userApplication.getPushNotificationTime(userId);
-
-        return GetUserPushNotificationResponse.of(pushNotificationTime);
+    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GetUserPushNotificationResponse> get(UserInfo userInfo) {
+        int pushNotificationTime = userApplication.getPushNotificationTime(userInfo.getUserId());
+        return ResponseEntity.ok(GetUserPushNotificationResponse.of(pushNotificationTime));
     }
 
-    @PatchMapping(value = "/{userId}/push")
-    public ResponseEntity<?> update(
-        @PathVariable long userId,
-        @RequestParam("time") long pushNotificationTime) {
-        userApplication.updatePushNotificationTime(userId, pushNotificationTime);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @PatchMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GetUserPushNotificationResponse> update(
+        @RequestParam("time") int pushNotificationTime,
+        UserInfo userInfo) {
+        log.info("[푸시 알림 시간 변경] userInfo={}, pushNotificationTime={}", userInfo, pushNotificationTime);
+        UserPushNotification userPushNotification = userApplication.updatePushNotificationTime(userInfo.getUserId(), pushNotificationTime);
+        log.info("[푸시 알림 시간 변경 완료] userPushNotification={}", userPushNotification);
+        return ResponseEntity.ok(GetUserPushNotificationResponse.of(userPushNotification.getPushNotificationTime()));
     }
 
 }
