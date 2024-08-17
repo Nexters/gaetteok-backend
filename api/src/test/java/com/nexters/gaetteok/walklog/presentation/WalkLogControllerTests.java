@@ -186,7 +186,7 @@ public class WalkLogControllerTests extends AbstractControllerTests {
         comments.add(comment);
         walkLog.setComments(comments);
         walkLog2.setComments(comments);
-        given(walkLogApplication.getListById(anyLong(), anyInt(), anyInt())).willReturn(
+        given(walkLogApplication.getListByIdAndMonth(anyLong(), anyInt(), anyInt())).willReturn(
             List.of(walkLog, walkLog2));
 
         // when

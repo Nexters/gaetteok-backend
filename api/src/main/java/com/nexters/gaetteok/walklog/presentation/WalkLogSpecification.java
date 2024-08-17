@@ -60,6 +60,7 @@ public interface WalkLogSpecification {
         )
     )
     ResponseEntity<GetWalkLogListResponse> getList(
+        @Parameter(description = "사용자 아이디") long userId,
         @Parameter(description = "커서. 해당 아이디값보다 아이디가 작은 산책 기록을 조회. 없으면 가장 최근 것부터 조회") long cursorId,
         @Parameter(description = "한 번에 조회할 산책 기록 수. 기본값은 10개", example = "10") int pageSize,
         @Parameter(hidden = true) UserInfo userInfo

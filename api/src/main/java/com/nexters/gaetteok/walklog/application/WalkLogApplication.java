@@ -17,18 +17,15 @@ import com.nexters.gaetteok.walklog.mapper.ReactionMapper;
 import com.nexters.gaetteok.walklog.mapper.WalkLogMapper;
 import com.nexters.gaetteok.walklog.presentation.request.CreateWalkLogRequest;
 import com.nexters.gaetteok.walklog.presentation.request.PatchWalkLogRequest;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -118,7 +115,7 @@ public class WalkLogApplication {
     @Transactional(readOnly = true)
     public List<WalkLog> getList(long userId, long cursorId, int pageSize) {
         UserEntity me = userRepository.getById(userId);
-        List<WalkLog> walkLogs = walkLogRepository.getList(userId, cursorId, pageSize);
+        List<WalkLog> walkLogs = walkLogRepository.getListOfMeAndMyFriend(userId, cursorId, pageSize);
 
         List<Long> walkLogIds = walkLogs.stream()
             .map(WalkLog::getId)
@@ -142,9 +139,34 @@ public class WalkLogApplication {
     }
 
     @Transactional(readOnly = true)
-    public List<WalkLog> getListById(long userId, int year, int month) {
+    public List<WalkLog> getListById(long userId, long cursorId, int pageSize) {
+        List<WalkLog> walkLogs = walkLogRepository.getListOnlyMe(userId, cursorId, pageSize);
+
+        List<Long> walkLogIds = walkLogs.stream()
+            .map(WalkLog::getId)
+            .toList();
+
+        List<Long> writerIds = commentRepository.findByWalkLogIdIn(walkLogIds)
+            .stream().map(
+                CommentEntity::getWriterId
+            )
+            .toList();
+
+        Map<Long, UserEntity> userEntityMap = userRepository.findAllById(writerIds)
+            .stream().collect(
+                Collectors.toMap(UserEntity::getId, user -> user)
+            );
+
+        setComments(walkLogs, walkLogIds, userEntityMap);
+        setReactions(walkLogs, walkLogIds, userEntityMap);
+
+        return walkLogs;
+    }
+
+    @Transactional(readOnly = true)
+    public List<WalkLog> getListByIdAndMonth(long userId, int year, int month) {
         UserEntity me = userRepository.getById(userId);
-        List<WalkLog> walkLogs = walkLogRepository.getMyList(userId, year, month).stream()
+        List<WalkLog> walkLogs = walkLogRepository.getListByUserIdAndMonth(userId, year, month).stream()
             .map(walkLogEntity -> WalkLogMapper.toDomain(walkLogEntity, me))
             .toList();
 
