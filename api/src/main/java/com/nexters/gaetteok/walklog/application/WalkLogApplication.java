@@ -1,6 +1,7 @@
 package com.nexters.gaetteok.walklog.application;
 
 import com.nexters.gaetteok.domain.Comment;
+import com.nexters.gaetteok.domain.Reaction;
 import com.nexters.gaetteok.domain.WalkLog;
 import com.nexters.gaetteok.image.model.File;
 import com.nexters.gaetteok.image.service.ImageUploader;
@@ -8,9 +9,11 @@ import com.nexters.gaetteok.persistence.entity.CommentEntity;
 import com.nexters.gaetteok.persistence.entity.UserEntity;
 import com.nexters.gaetteok.persistence.entity.WalkLogEntity;
 import com.nexters.gaetteok.persistence.repository.CommentRepository;
+import com.nexters.gaetteok.persistence.repository.ReactionRepository;
 import com.nexters.gaetteok.persistence.repository.UserRepository;
 import com.nexters.gaetteok.persistence.repository.WalkLogRepository;
 import com.nexters.gaetteok.walklog.mapper.CommentMapper;
+import com.nexters.gaetteok.walklog.mapper.ReactionMapper;
 import com.nexters.gaetteok.walklog.mapper.WalkLogMapper;
 import com.nexters.gaetteok.walklog.presentation.request.CreateWalkLogRequest;
 import com.nexters.gaetteok.walklog.presentation.request.PatchWalkLogRequest;
@@ -32,6 +35,7 @@ public class WalkLogApplication {
     private final UserRepository userRepository;
     private final WalkLogRepository walkLogRepository;
     private final CommentRepository commentRepository;
+    private final ReactionRepository reactionRepository;
 
     private String getKey(WalkLog walkLogEntity) {
         return
@@ -79,7 +83,28 @@ public class WalkLogApplication {
 
     // 이건 나중에 지워도 되는건가?
     public List<WalkLog> getList(long userId, long cursorId, int pageSize) {
-        return walkLogRepository.getList(userId, cursorId, pageSize);
+        UserEntity me = userRepository.getById(userId);
+        List<WalkLog> walkLogs = walkLogRepository.getList(userId, cursorId, pageSize);
+
+        List<Long> walkLogIds = walkLogs.stream()
+            .map(WalkLog::getId)
+            .toList();
+
+        List<Long> writerIds = commentRepository.findByWalkLogIdIn(walkLogIds)
+            .stream().map(
+                CommentEntity::getWriterId
+            )
+            .toList();
+
+        Map<Long, UserEntity> userEntityMap = userRepository.findAllById(writerIds)
+            .stream().collect(
+                Collectors.toMap(UserEntity::getId, user -> user)
+            );
+
+        setComments(walkLogs, walkLogIds, userEntityMap);
+        setReactions(walkLogs, walkLogIds, userEntityMap);
+
+        return walkLogs;
     }
 
     public List<WalkLog> getListById(long userId, int year, int month) {
@@ -98,23 +123,39 @@ public class WalkLogApplication {
             )
             .toList();
 
-        Map<Long, UserEntity> users = new HashMap<>();
-        userRepository.findAllById(writerIds)
-            .forEach(
-                user -> users.put(user.getId(), user)
+        Map<Long, UserEntity> userEntityMap = userRepository.findAllById(writerIds)
+            .stream().collect(
+                Collectors.toMap(UserEntity::getId, user -> user)
             );
 
-        Map<Long, List<Comment>> comments = commentRepository.findByWalkLogIdIn(walkLogIds)
+        setComments(walkLogs, walkLogIds, userEntityMap);
+        setReactions(walkLogs, walkLogIds, userEntityMap);
+
+        return walkLogs;
+    }
+
+    private void setComments(List<WalkLog> walkLogs, List<Long> walkLogIds, Map<Long, UserEntity> userEntityMap) {
+        Map<Long, List<Comment>> commentMap = commentRepository.findByWalkLogIdIn(walkLogIds)
             .stream().map(commentEntity -> CommentMapper.toDomain(commentEntity,
-                users.get(commentEntity.getWriterId())
+                userEntityMap.get(commentEntity.getWriterId())
             ))
             .collect(Collectors.groupingBy(Comment::getWalkLogId));
 
         walkLogs.forEach(
-            walkLog -> walkLog.setComments(comments.get(walkLog.getId()))
+            walkLog -> walkLog.setComments(commentMap.get(walkLog.getId()))
         );
+    }
 
-        return walkLogs;
+    private void setReactions(List<WalkLog> walkLogs, List<Long> walkLogIds, Map<Long, UserEntity> userEntityMap) {
+        Map<Long, List<Reaction>> reactionMap = reactionRepository.findByWalkLogIdIn(walkLogIds)
+            .stream().map(reactionEntity -> ReactionMapper.toDomain(reactionEntity,
+                userEntityMap.get(reactionEntity.getUserId())
+            ))
+            .collect(Collectors.groupingBy(Reaction::getWalkLogId));
+
+        walkLogs.forEach(
+            walkLog -> walkLog.setReactions(reactionMap.get(walkLog.getId()))
+        );
     }
 
     public WalkLog update(long id, long userId, PatchWalkLogRequest request, MultipartFile photo)

@@ -1,10 +1,11 @@
 package com.nexters.gaetteok.domain;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @ToString
@@ -26,6 +27,8 @@ public class WalkLog {
 
     private List<Comment> comments;
 
+    private List<Reaction> reactions;
+
     private LocalDateTime createdAt;
 
     @Builder
@@ -44,4 +47,9 @@ public class WalkLog {
     public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
+
+    public void setReactions(List<Reaction> reactions) {
+        this.reactions = reactions;
+    }
+
 }

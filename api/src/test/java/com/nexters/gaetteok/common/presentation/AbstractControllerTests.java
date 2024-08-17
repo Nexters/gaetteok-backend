@@ -5,6 +5,7 @@ import com.nexters.gaetteok.image.service.ImageUploader;
 import com.nexters.gaetteok.user.application.FriendApplication;
 import com.nexters.gaetteok.user.application.UserApplication;
 import com.nexters.gaetteok.walklog.application.CommentApplication;
+import com.nexters.gaetteok.walklog.application.ReactionApplication;
 import com.nexters.gaetteok.walklog.application.WalkLogApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -30,9 +31,12 @@ public class AbstractControllerTests {
     protected WalkLogApplication walkLogApplication;
 
     @MockBean
-    protected ImageUploader imageUploader;
+    protected CommentApplication commentApplication;
 
     @MockBean
-    protected CommentApplication commentApplication;
+    protected ReactionApplication reactionApplication;
+
+    @MockBean
+    protected ImageUploader imageUploader;
 
 }
