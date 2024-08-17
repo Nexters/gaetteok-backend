@@ -9,11 +9,11 @@ public class GetUserPushNotificationResponse {
     private long pushNotificationTime;
 
     @Builder
-    public GetUserPushNotificationResponse(long pushNotificationTime) {
+    public GetUserPushNotificationResponse(int pushNotificationTime) {
         this.pushNotificationTime = pushNotificationTime;
     }
 
-    public static GetUserPushNotificationResponse of(long pushNotificationTime) {
+    public static GetUserPushNotificationResponse of(int pushNotificationTime) {
         return GetUserPushNotificationResponse.builder()
             .pushNotificationTime(pushNotificationTime)
             .build();

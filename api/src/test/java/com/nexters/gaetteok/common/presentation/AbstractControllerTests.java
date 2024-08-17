@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexters.gaetteok.image.service.ImageUploader;
 import com.nexters.gaetteok.jwt.JwtTokenValidator;
 import com.nexters.gaetteok.jwt.UserInfo;
+import com.nexters.gaetteok.persistence.repository.UserRepository;
 import com.nexters.gaetteok.user.application.AuthApplication;
 import com.nexters.gaetteok.user.application.FriendApplication;
 import com.nexters.gaetteok.user.application.UserApplication;
@@ -17,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
@@ -56,10 +58,15 @@ public class AbstractControllerTests {
     @MockBean
     protected WeatherService weatherService;
 
+    @MockBean
+    protected UserRepository userRepository;
+
     @BeforeEach
     void mockingTokenValidate() {
         given(jwtTokenValidator.decodeToken(anyString()))
             .willReturn(UserInfo.builder().userId(1L).build());
+        given(userRepository.existsById(anyLong()))
+            .willReturn(true);
     }
 
 }

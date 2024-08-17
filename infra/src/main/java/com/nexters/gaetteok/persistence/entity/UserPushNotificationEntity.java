@@ -20,5 +20,5 @@ public class UserPushNotificationEntity {
     private long userId;
 
     @Column(name = "push_notification_time")
-    private long pushNotificationTime;
+    private int pushNotificationTime;
 }

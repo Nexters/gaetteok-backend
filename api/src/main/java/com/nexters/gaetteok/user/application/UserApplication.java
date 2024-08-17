@@ -9,6 +9,7 @@ import com.nexters.gaetteok.persistence.entity.UserPushNotificationEntity;
 import com.nexters.gaetteok.persistence.repository.UserPushNotificationRepository;
 import com.nexters.gaetteok.persistence.repository.UserRepository;
 import com.nexters.gaetteok.user.mapper.UserMapper;
+import com.nexters.gaetteok.user.mapper.UserPushNotificationMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,32 +26,6 @@ public class UserApplication {
 
     private final UserRepository userRepository;
     private final UserPushNotificationRepository userPushNotificationRepository;
-
-    private UserPushNotificationEntity toPushNotificationEntity(
-        UserPushNotification userPushNotificationDomain) {
-        return new UserPushNotificationEntity(
-            userPushNotificationDomain.getId(),
-            userPushNotificationDomain.getUserId(),
-            userPushNotificationDomain.getPushNotificationTime()
-        );
-    }
-
-    private UserPushNotification toUserPushNotificationDomain(
-        UserPushNotificationEntity userPushNotificationEntity) {
-        return new UserPushNotification(
-            userPushNotificationEntity.getId(),
-            userPushNotificationEntity.getUserId(),
-            userPushNotificationEntity.getPushNotificationTime()
-        );
-    }
-
-    @Transactional(readOnly = true)
-    public long getPushNotificationTime(long id) {
-        UserPushNotificationEntity userPushNotification = userPushNotificationRepository.findByUserId(
-            id);
-
-        return userPushNotification.getPushNotificationTime();
-    }
 
     @Transactional(readOnly = true)
     public User getUser(long id) {
@@ -87,20 +62,22 @@ public class UserApplication {
         return UserMapper.toDomain(userEntity);
     }
 
-    @Transactional
-    public void updatePushNotificationTime(long id, long timeToBeUpdated) {
+    @Transactional(readOnly = true)
+    public int getPushNotificationTime(long id) {
         UserPushNotificationEntity userPushNotification = userPushNotificationRepository.findByUserId(
             id);
 
-        UserPushNotification userPushNotificationDomain = toUserPushNotificationDomain(
-            userPushNotification);
+        return userPushNotification.getPushNotificationTime();
+    }
 
-        userPushNotificationDomain.setPushNotificationTime(timeToBeUpdated);
+    @Transactional
+    public UserPushNotification updatePushNotificationTime(long id, int timeToBeUpdated) {
+        UserPushNotificationEntity userPushNotificationEntity = userPushNotificationRepository.findByUserId(id);
+        UserPushNotification userPushNotification = UserPushNotificationMapper.toDomain(userPushNotificationEntity);
+        userPushNotification.setPushNotificationTime(timeToBeUpdated);
 
-        UserPushNotificationEntity updatedEntity = toPushNotificationEntity(
-            userPushNotificationDomain);
-
-        userPushNotificationRepository.save(updatedEntity);
+        userPushNotificationEntity = userPushNotificationRepository.save(UserPushNotificationMapper.toEntity(userPushNotification));
+        return UserPushNotificationMapper.toDomain(userPushNotificationEntity);
     }
 
 }

@@ -1,18 +1,26 @@
 package com.nexters.gaetteok.domain;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
-@AllArgsConstructor
 @Getter
-@Setter
 public class UserPushNotification {
 
     private long id;
 
     private long userId;
 
-    private long pushNotificationTime;
+    private int pushNotificationTime;
+
+    public void setPushNotificationTime(int pushNotificationTime) {
+        this.pushNotificationTime = pushNotificationTime;
+    }
+
+    @Builder
+    public UserPushNotification(long id, long userId, int pushNotificationTime) {
+        this.id = id;
+        this.userId = userId;
+        this.pushNotificationTime = pushNotificationTime;
+    }
 
 }

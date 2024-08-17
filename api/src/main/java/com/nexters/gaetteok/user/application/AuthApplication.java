@@ -7,6 +7,7 @@ import com.nexters.gaetteok.user.mapper.UserMapper;
 import com.nexters.gaetteok.user.presentation.request.SignupRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.Random;
@@ -21,10 +22,18 @@ public class AuthApplication {
     private static final int MAX_ATTEMPT = 10;
     private static final int USER_CODE_LENGTH = 6;
 
+    @Transactional
     public String signup(SignupRequest request) {
         Optional<UserEntity> userEntityOptional = userRepository.findByOauthIdentifier(request.getOauthIdentifier());
         UserEntity userEntity = userEntityOptional.orElseGet(() -> createUser(request));
         return tokenGenerator.generateToken(UserMapper.toDomain(userEntity));
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<String> getUserToken(String token) {
+        Optional<UserEntity> userEntityOptional = userRepository.findByOauthIdentifier(token);
+        return userEntityOptional
+            .map(userEntity -> tokenGenerator.generateToken(UserMapper.toDomain(userEntity)));
     }
 
     private UserEntity createUser(SignupRequest request) {
@@ -60,12 +69,6 @@ public class AuthApplication {
         }
 
         return code.toString();
-    }
-
-    public Optional<String> getUserToken(String token) {
-        Optional<UserEntity> userEntityOptional = userRepository.findByOauthIdentifier(token);
-        return userEntityOptional
-            .map(userEntity -> tokenGenerator.generateToken(UserMapper.toDomain(userEntity)));
     }
 
 }
