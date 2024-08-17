@@ -32,11 +32,10 @@ public class WeatherController implements WeatherSpecification {
             weatherApiResponse.getWeather().get(0).getMain().toUpperCase());
 
         double celsius = weatherApiResponse.getMain().getTemp() - KELVIN_TEMP;
-        
+
         return ResponseEntity.ok(WeatherResponse.builder()
             .weather(weather)
             .temp((int) celsius)
             .build());
     }
-
 }

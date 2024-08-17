@@ -1,17 +1,15 @@
 package com.nexters.gaetteok.user.presentation;
 
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import com.nexters.gaetteok.common.presentation.AbstractControllerTests;
 import com.nexters.gaetteok.domain.User;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.time.LocalDateTime;
-
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 public class UserControllerTests extends AbstractControllerTests {
@@ -68,7 +66,7 @@ public class UserControllerTests extends AbstractControllerTests {
             .id(id)
             .nickname("test")
             .code("123456")
-            .location("daegu")
+            .location("Daegu")
             .profileUrl("https://profile-image.jpg")
             .createdAt(LocalDateTime.now())
             .build();
@@ -77,7 +75,7 @@ public class UserControllerTests extends AbstractControllerTests {
         // when
         ResultActions resultActions = mockMvc.perform(
             MockMvcRequestBuilders.patch("/api/users/location")
-                .param("location", "seoul")
+                .param("city", "SEOUL")
                 .contentType("application/json"));
 
         // then
