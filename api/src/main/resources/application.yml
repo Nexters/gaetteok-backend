@@ -29,8 +29,8 @@ springdoc:
   cache:
     disabled: true
 weather:
-  api-key: ${WEATHER_API_KEY}
-  api-path: ${WEATHER_API_PATH}
+  apiKey: ${WEATHER_API_KEY}
+  apiPath: ${WEATHER_API_PATH}
 
 swagger:
   server:
