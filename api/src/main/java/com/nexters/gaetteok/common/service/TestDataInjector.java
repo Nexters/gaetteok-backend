@@ -11,6 +11,7 @@ import com.nexters.gaetteok.user.mapper.FriendMapper;
 import com.nexters.gaetteok.user.mapper.UserMapper;
 import com.nexters.gaetteok.walklog.mapper.CommentMapper;
 import com.nexters.gaetteok.walklog.mapper.WalkLogMapper;
+import com.nexters.gaetteok.weather.enums.City;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.time.LocalDateTime;
@@ -53,16 +54,19 @@ public class TestDataInjector {
             .nickname("뽀삐")
             .profileUrl("https://placehold.co/400.png")
             .code("1a2b3c")
+            .city(City.SEJONG)
             .build());
         UserEntity choco = entityManager.merge(UserEntity.builder()
             .nickname("초코")
             .profileUrl("https://placehold.co/400.png")
             .code("4d5e6f")
+            .city(City.SEOUL)
             .build());
         UserEntity happy = entityManager.merge(UserEntity.builder()
             .nickname("해피")
             .profileUrl("https://placehold.co/400.png")
             .code("7g8h9i")
+            .city(City.BUSAN)
             .build());
         log.info(
             "사용자 데이터 주입 뽀삐={} 초코={} 해피={}", UserMapper.toDomain(poppy), UserMapper.toDomain(choco),
