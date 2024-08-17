@@ -3,6 +3,7 @@ package com.nexters.gaetteok.user.presentation;
 import com.nexters.gaetteok.common.auth.UserInfo;
 import com.nexters.gaetteok.user.presentation.response.GetUserResponse;
 import com.nexters.gaetteok.user.presentation.response.UpdateUserLocationResponse;
+import com.nexters.gaetteok.weather.enums.City;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -52,7 +53,7 @@ public interface UserSpecification {
         )
     )
     ResponseEntity<UpdateUserLocationResponse> updateLocation(
-        @Parameter(description = "변경할 위치 정보", example = "서울") String location,
+        @Parameter(description = "변경할 위치 정보", example = "SEOUL") City location,
         @Parameter(hidden = true) UserInfo userInfo
     );
 
