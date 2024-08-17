@@ -55,10 +55,16 @@ public class WalkLogController implements WalkLogSpecification {
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GetWalkLogListResponse> getList(
+        @RequestParam(required = false, defaultValue = "0") long userId,
         @RequestParam(required = false, defaultValue = "0") long cursorId,
         @RequestParam(required = false, defaultValue = "10") int pageSize,
         UserInfo userInfo) {
-        List<WalkLog> walkLogList = walkLogApplication.getList(userInfo.getUserId(), cursorId, pageSize);
+        List<WalkLog> walkLogList;
+        if (userId > 0) {
+            walkLogList = walkLogApplication.getListById(userId, cursorId, pageSize);
+        } else {
+            walkLogList = walkLogApplication.getList(userInfo.getUserId(), cursorId, pageSize);
+        }
         return ResponseEntity.ok(GetWalkLogListResponse.of(walkLogList));
     }
 
@@ -68,7 +74,7 @@ public class WalkLogController implements WalkLogSpecification {
         @RequestParam int year,
         @RequestParam int month
     ) {
-        List<WalkLog> walkLogList = walkLogApplication.getListById(userId, year, month);
+        List<WalkLog> walkLogList = walkLogApplication.getListByIdAndMonth(userId, year, month);
         WalkLog nextData = null;
         if (walkLogList.size() > 0) {
             WalkLog lastData = walkLogList.get(walkLogList.size() - 1);
@@ -82,7 +88,7 @@ public class WalkLogController implements WalkLogSpecification {
         @RequestParam int year,
         @RequestParam int month,
         UserInfo userInfo) {
-        List<WalkLog> walkLogList = walkLogApplication.getListById(userInfo.getUserId(), year, month);
+        List<WalkLog> walkLogList = walkLogApplication.getListByIdAndMonth(userInfo.getUserId(), year, month);
         WalkLog nextData = null;
         if (walkLogList.size() > 0) {
             WalkLog lastData = walkLogList.get(walkLogList.size() - 1);

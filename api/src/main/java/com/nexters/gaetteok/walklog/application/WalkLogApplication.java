@@ -48,8 +48,8 @@ public class WalkLogApplication {
                 walkLogEntity.getCreatedAt().getDayOfMonth();
     }
 
-    private void setComments(List<WalkLog> walkLogs, List<Long> walkLogIds,
-        Map<Long, UserEntity> userEntityMap) {
+    private void setComments(List<WalkLog> walkLogs, Map<Long, UserEntity> userEntityMap) {
+        List<Long> walkLogIds = walkLogs.stream().map(WalkLog::getId).toList();
         Map<Long, List<Comment>> commentMap = commentRepository.findByWalkLogIdIn(walkLogIds)
             .stream().map(commentEntity -> CommentMapper.toDomain(
                 commentEntity,
@@ -62,8 +62,8 @@ public class WalkLogApplication {
         );
     }
 
-    private void setReactions(List<WalkLog> walkLogs, List<Long> walkLogIds,
-        Map<Long, UserEntity> userEntityMap) {
+    private void setReactions(List<WalkLog> walkLogs, Map<Long, UserEntity> userEntityMap) {
+        List<Long> walkLogIds = walkLogs.stream().map(WalkLog::getId).toList();
         Map<Long, List<Reaction>> reactionMap = reactionRepository.findByWalkLogIdIn(walkLogIds)
             .stream().map(reactionEntity -> ReactionMapper.toDomain(
                 reactionEntity,
@@ -118,7 +118,8 @@ public class WalkLogApplication {
     @Transactional(readOnly = true)
     public List<WalkLog> getList(long userId, long cursorId, int pageSize) {
         UserEntity me = userRepository.getById(userId);
-        List<WalkLog> walkLogs = walkLogRepository.getList(userId, cursorId, pageSize);
+        List<WalkLog> walkLogs = walkLogRepository.getListOfMeAndMyFriend(
+            userId, cursorId, pageSize);
 
         List<Long> walkLogIds = walkLogs.stream()
             .map(WalkLog::getId)
@@ -135,16 +136,42 @@ public class WalkLogApplication {
                 Collectors.toMap(UserEntity::getId, user -> user)
             );
 
-        setComments(walkLogs, walkLogIds, userEntityMap);
-        setReactions(walkLogs, walkLogIds, userEntityMap);
+        setComments(walkLogs, userEntityMap);
+        setReactions(walkLogs, userEntityMap);
 
         return walkLogs;
     }
 
     @Transactional(readOnly = true)
-    public List<WalkLog> getListById(long userId, int year, int month) {
+    public List<WalkLog> getListById(long userId, long cursorId, int pageSize) {
+        List<WalkLog> walkLogs = walkLogRepository.getListOnlyMe(userId, cursorId, pageSize);
+
+        List<Long> walkLogIds = walkLogs.stream()
+            .map(WalkLog::getId)
+            .toList();
+
+        List<Long> writerIds = commentRepository.findByWalkLogIdIn(walkLogIds)
+            .stream().map(
+                CommentEntity::getWriterId
+            )
+            .toList();
+
+        Map<Long, UserEntity> userEntityMap = userRepository.findAllById(writerIds)
+            .stream().collect(
+                Collectors.toMap(UserEntity::getId, user -> user)
+            );
+
+        setComments(walkLogs, userEntityMap);
+        setReactions(walkLogs, userEntityMap);
+
+        return walkLogs;
+    }
+
+    @Transactional(readOnly = true)
+    public List<WalkLog> getListByIdAndMonth(long userId, int year, int month) {
         UserEntity me = userRepository.getById(userId);
-        List<WalkLog> walkLogs = walkLogRepository.getMyList(userId, year, month).stream()
+        List<WalkLog> walkLogs = walkLogRepository.getListByUserIdAndMonth(userId, year, month)
+            .stream()
             .map(walkLogEntity -> WalkLogMapper.toDomain(walkLogEntity, me))
             .toList();
 
@@ -163,8 +190,8 @@ public class WalkLogApplication {
                 Collectors.toMap(UserEntity::getId, user -> user)
             );
 
-        setComments(walkLogs, walkLogIds, userEntityMap);
-        setReactions(walkLogs, walkLogIds, userEntityMap);
+        setComments(walkLogs, userEntityMap);
+        setReactions(walkLogs, userEntityMap);
 
         return walkLogs;
     }

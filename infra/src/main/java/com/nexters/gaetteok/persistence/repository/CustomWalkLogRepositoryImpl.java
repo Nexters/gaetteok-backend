@@ -32,7 +32,7 @@ public class CustomWalkLogRepositoryImpl implements CustomWalkLogRepository {
     }
 
     @Override
-    public List<WalkLog> getList(long userId, long cursorId, int pageSize) {
+    public List<WalkLog> getListOfMeAndMyFriend(long userId, long cursorId, int pageSize) {
         List<Long> friendIdList = jpaQueryFactory
             .select(friendEntity.friendUserId)
             .from(friendEntity)
@@ -65,7 +65,32 @@ public class CustomWalkLogRepositoryImpl implements CustomWalkLogRepository {
     }
 
     @Override
-    public List<WalkLogEntity> getMyList(long userId, int year, int month) {
+    public List<WalkLog> getListOnlyMe(long userId, long cursorId, int pageSize) {
+        return jpaQueryFactory.select(Projections.constructor(
+                WalkLog.class,
+                walkLogEntity.id,
+                walkLogEntity.photoUrl,
+                walkLogEntity.title,
+                walkLogEntity.content,
+                walkLogEntity.walkTime,
+                userEntity.nickname,
+                userEntity.profileUrl,
+                walkLogEntity.createdAt
+            ))
+            .from(walkLogEntity)
+            .join(userEntity)
+            .on(userEntity.id.eq(walkLogEntity.userId))
+            .where(
+                cursorId > 0 ? walkLogEntity.id.lt(cursorId) : null,
+                userEntity.id.eq(userId)
+            )
+            .limit(pageSize)
+            .orderBy(walkLogEntity.id.desc())
+            .fetch();
+    }
+
+    @Override
+    public List<WalkLogEntity> getListByUserIdAndMonth(long userId, int year, int month) {
         return jpaQueryFactory.selectFrom(walkLogEntity)
             .where(
                 walkLogEntity.userId.eq(userId),
