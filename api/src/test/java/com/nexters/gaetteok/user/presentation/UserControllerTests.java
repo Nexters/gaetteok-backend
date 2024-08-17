@@ -38,6 +38,29 @@ public class UserControllerTests extends AbstractControllerTests {
     }
 
     @Test
+    void patchUser_nickname_success() throws Exception {
+        // given
+        long id = 1L;
+        User user = User.builder()
+            .id(id)
+            .nickname("test")
+            .code("123456")
+            .profileUrl("https://profile-image.jpg")
+            .createdAt(LocalDateTime.now())
+            .build();
+        given(userApplication.updateNickname(anyLong(), anyString())).willReturn(user);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+            MockMvcRequestBuilders.patch("/api/users/nickname")
+                .param("nickname", "test")
+                .contentType("application/json"));
+
+        // then
+        resultActions.andExpect(status().isOk());
+    }
+
+    @Test
     void patchUser_location_success() throws Exception {
         // given
         long id = 1L;
@@ -49,7 +72,7 @@ public class UserControllerTests extends AbstractControllerTests {
             .profileUrl("https://profile-image.jpg")
             .createdAt(LocalDateTime.now())
             .build();
-        given(userApplication.updateUser(anyLong(), anyString())).willReturn(user);
+        given(userApplication.updateLocation(anyLong(), anyString())).willReturn(user);
 
         // when
         ResultActions resultActions = mockMvc.perform(

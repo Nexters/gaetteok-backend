@@ -9,9 +9,11 @@ import com.nexters.gaetteok.persistence.repository.UserRepository;
 import com.nexters.gaetteok.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserApplication {
 
     private final UserRepository userRepository;
@@ -62,11 +64,22 @@ public class UserApplication {
         userPushNotificationRepository.save(updatedEntity);
     }
 
-    public User updateUser(long id, String city) {
+    @Transactional
+    public User updateNickname(long id, String nickname) {
+        UserEntity userEntity = userRepository.getById(id);
+        User user = UserMapper.toDomain(userEntity);
+        user.updateNickname(nickname);
+        userEntity = userRepository.save(UserMapper.toEntity(user));
+        return UserMapper.toDomain(userEntity);
+    }
+
+    @Transactional
+    public User updateLocation(long id, String city) {
         UserEntity userEntity = userRepository.getById(id);
         User user = UserMapper.toDomain(userEntity);
         user.updateLocation(city);
-        return UserMapper.toDomain(UserMapper.toEntity(user));
+        userEntity = userRepository.save(UserMapper.toEntity(user));
+        return UserMapper.toDomain(userEntity);
     }
 
 }

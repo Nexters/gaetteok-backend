@@ -1,9 +1,10 @@
 package com.nexters.gaetteok.domain;
 
-import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+
+import java.time.LocalDateTime;
 
 @Getter
 @ToString
@@ -42,7 +43,12 @@ public class User {
         this.userPushNotification = userPushNotification;
     }
 
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
     public void updateLocation(String location) {
         this.location = location;
     }
+
 }

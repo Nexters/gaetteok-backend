@@ -9,6 +9,7 @@ import com.nexters.gaetteok.persistence.repository.UserRepository;
 import com.nexters.gaetteok.user.mapper.FriendMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,11 +18,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class FriendApplication {
 
     private final UserRepository userRepository;
     private final FriendRepository friendRepository;
 
+    @Transactional
     public Friend create(long userId, String code) {
         UserEntity me = userRepository.getById(userId);
         UserEntity friend = userRepository.findByCode(code)
@@ -49,4 +52,11 @@ public class FriendApplication {
         return friendRepository.getFriendWalkStatus(userId, LocalDate.now());
     }
 
+    @Transactional
+    public void delete(long userId, long friendUserId) {
+        FriendEntity meToFriend = friendRepository.getByMyUserIdAndFriendUserId(userId, friendUserId);
+        FriendEntity friendToMe = friendRepository.getByMyUserIdAndFriendUserId(friendUserId, userId);
+        friendRepository.delete(meToFriend);
+        friendRepository.delete(friendToMe);
+    }
 }

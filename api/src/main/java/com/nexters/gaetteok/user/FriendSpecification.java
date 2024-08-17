@@ -50,4 +50,14 @@ public interface FriendSpecification {
         @Parameter(hidden = true) UserInfo userInfo
     );
 
+    @Operation(summary = "친구 삭제", description = "친구를 삭제하는 API")
+    @ApiResponse(
+        responseCode = "204",
+        description = "친구 삭제 성공"
+    )
+    ResponseEntity<Void> delete(
+        @Parameter(description = "친구의 사용자 아이디") long friendUserId,
+        @Parameter(hidden = true) UserInfo userInfo
+    );
+
 }
