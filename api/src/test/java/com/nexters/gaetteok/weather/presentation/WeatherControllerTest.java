@@ -22,6 +22,7 @@ class WeatherControllerTest extends AbstractControllerTests {
         ArrayList<WeatherField> weatherFields = new ArrayList<>();
         weatherFields.add(weatherField);
         MainField mainField = new MainField(301.0);
+
         WeatherApiResponse weatherApiResponse = new WeatherApiResponse(weatherFields, mainField);
 
         given(weatherService.getWeather(any())).willReturn(weatherApiResponse);
