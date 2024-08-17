@@ -1,17 +1,18 @@
 package com.nexters.gaetteok.persistence.repository;
 
-import static com.nexters.gaetteok.persistence.entity.QFriendEntity.*;
-import static com.nexters.gaetteok.persistence.entity.QUserEntity.*;
-import static com.nexters.gaetteok.persistence.entity.QWalkLogEntity.*;
-
 import com.nexters.gaetteok.domain.WalkLog;
 import com.nexters.gaetteok.persistence.entity.WalkLogEntity;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.time.LocalDateTime;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static com.nexters.gaetteok.persistence.entity.QFriendEntity.friendEntity;
+import static com.nexters.gaetteok.persistence.entity.QUserEntity.userEntity;
+import static com.nexters.gaetteok.persistence.entity.QWalkLogEntity.walkLogEntity;
 
 @Repository
 @RequiredArgsConstructor
@@ -64,14 +65,22 @@ public class CustomWalkLogRepositoryImpl implements CustomWalkLogRepository {
     }
 
     @Override
-    public List<WalkLogEntity> getMyList(long userId, long cursorId, int pageSize) {
+    public List<WalkLogEntity> getMyList(long userId, int year, int month) {
         return jpaQueryFactory.selectFrom(walkLogEntity)
             .where(
                 walkLogEntity.userId.eq(userId),
-                cursorId > 0 ? walkLogEntity.id.lt(cursorId) : null
+                walkLogEntity.createdAt.year().eq(year),
+                walkLogEntity.createdAt.month().eq(month)
             )
             .orderBy(walkLogEntity.id.desc())
-            .limit(pageSize)
             .fetch();
+    }
+
+    @Override
+    public WalkLogEntity getMaxIdLessThan(long walkLogId) {
+        return jpaQueryFactory.selectFrom(walkLogEntity)
+            .where(walkLogEntity.id.lt(walkLogId))
+            .orderBy(walkLogEntity.id.desc())
+            .fetchFirst();
     }
 }

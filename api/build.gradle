@@ -6,26 +6,15 @@ buildscript {
 
 plugins {
     id 'io.spring.dependency-management' version '1.1.5'
-    id 'org.asciidoctor.jvm.convert' version '3.3.2'
-    id 'com.epages.restdocs-api-spec' version "${restDocsVersion}"
-    id "org.hidetake.swagger.generator" version "2.19.2"
-}
-
-ext {
-    set('snippetsDir', file("build/generated-snippets"))
 }
 
 dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    
-    // swagger ui
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 
-    // restdocs
-    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-    testImplementation "com.epages:restdocs-api-spec-mockmvc:${restDocsVersion}"
+    // swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 
     implementation project(':infra')
     implementation project(':domain:user')
@@ -33,41 +22,9 @@ dependencies {
 }
 
 tasks.named('test') {
-    outputs.dir snippetsDir
     useJUnitPlatform()
-}
-
-tasks.named('asciidoctor') {
-    inputs.dir snippetsDir
-    dependsOn test
-}
-
-openapi3 {
-    servers = [
-            { url = 'http://175.106.99.165:80'; description = 'Production 문서용' },
-            { url = 'http://localhost:8080'; description = 'Local 테스트용' }
-    ]
-    title = 'Pawpaw 백엔드 API Docs'
-    description = '멍멍이 산책 기록 서비스 Pawpaw 의 API 문서 페이지입니다.'
-    version = '1.0.0'
-    format = 'json'
-    outputDirectory = 'build/resources/main/static/docs'
-}
-
-tasks.withType(GenerateSwaggerUI) {
-    dependsOn 'openapi3'
-
-    delete file("src/main/resources/static/docs/")
-    copy {
-        from 'build/resources/main/static/docs'
-        into "src/main/resources/static/docs/"
-    }
 }
 
 jar {
     enabled = false
-}
-
-bootJar {
-    dependsOn 'openapi3'
 }

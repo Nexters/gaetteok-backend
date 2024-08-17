@@ -17,6 +17,18 @@ ncloud:
   bucketName: gaetteok-image
 
 springdoc:
+  api-docs:
+    path: /docs
+    groups:
+      enabled: true
   swagger-ui:
-    url: /docs/openapi3.json
     path: /docs/swagger
+    enabled: true
+    groups-order: asc
+    tags-sorter: alpha
+  cache:
+    disabled: true
+
+swagger:
+  server:
+    url: ${SWAGGER_SERVER_URL}

@@ -1,12 +1,14 @@
 package com.nexters.gaetteok.user.presentation.response;
 
 import com.nexters.gaetteok.domain.User;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 public class UpdateUserLocationResponse {
 
+    @Schema(description = "변경된 위치 정보", example = "서울")
     private final String location;
 
     @Builder

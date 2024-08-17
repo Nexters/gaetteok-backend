@@ -23,29 +23,28 @@ public class CustomFriendRepositoryImpl implements CustomFriendRepository {
 
     @Override
     public List<FriendWalkStatus> getFriendWalkStatus(long userId, LocalDate date) {
-        List<Long> friendIdList = jpaQueryFactory
-                .select(friendEntity.friendUserId)
-                .from(friendEntity)
-                .where(friendEntity.myUserId.eq(userId))
-                .fetch();
-
         return jpaQueryFactory
-                .select(Projections.constructor(
-                        FriendWalkStatus.class,
-                        userEntity.id,
-                        userEntity.nickname,
-                        userEntity.profileUrl,
-                        walkLogEntity.count().gt(0).as("done")
-                ))
-                .from(userEntity)
-                .leftJoin(walkLogEntity).on(
-                        userEntity.id.eq(walkLogEntity.userId),
-                        dateTimeOperation(LocalDate.class, Ops.DateTimeOps.DATE, walkLogEntity.createdAt).eq(date)
-                )
-                .where(userEntity.id.in(friendIdList))
-                .groupBy(userEntity.id, userEntity.nickname, userEntity.profileUrl)
-                .orderBy(walkLogEntity.createdAt.max().desc())
-                .fetch();
+            .select(Projections.constructor(
+                FriendWalkStatus.class,
+                userEntity.id,
+                userEntity.nickname,
+                userEntity.profileUrl,
+                walkLogEntity.count().gt(0).as("done"),
+                friendEntity.createdAt.as("friendCreatedAt"),
+                // 마지막 걸음 날짜가 없으면 가장 마지막 시간으로 설정
+                walkLogEntity.createdAt.max()
+                    .coalesce(date.atTime(23, 59, 59, 999))
+                    .as("lastWalkDate")
+            ))
+            .from(friendEntity)
+            .leftJoin(userEntity).on(friendEntity.friendUserId.eq(userEntity.id))
+            .leftJoin(walkLogEntity).on(
+                userEntity.id.eq(walkLogEntity.userId),
+                dateTimeOperation(LocalDate.class, Ops.DateTimeOps.DATE, walkLogEntity.createdAt).eq(date)
+            )
+            .groupBy(userEntity.id, userEntity.nickname, userEntity.profileUrl, friendEntity.createdAt)
+            .where(friendEntity.myUserId.eq(userId))
+            .fetch();
     }
 
 }
