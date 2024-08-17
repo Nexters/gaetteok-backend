@@ -46,7 +46,8 @@ public interface AuthSpecification {
         )
     })
     ResponseEntity<LoginResponse> login(
-        @Parameter(description = "사용자 토큰") String oauthIdentifier
+        @Parameter(description = "사용자 토큰") String oauthIdentifier,
+        @Parameter(description = "디바이스 토큰") String deviceToken
     );
 
 }

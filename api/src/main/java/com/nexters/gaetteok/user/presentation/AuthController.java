@@ -27,8 +27,8 @@ public class AuthController implements AuthSpecification {
     }
 
     @GetMapping(value = "/login")
-    public ResponseEntity<LoginResponse> login(@RequestParam String oauthIdentifier) {
-        Optional<String> userTokenOptional = authApplication.getUserToken(oauthIdentifier);
+    public ResponseEntity<LoginResponse> login(@RequestParam String oauthIdentifier, @RequestParam String deviceToken) {
+        Optional<String> userTokenOptional = authApplication.getUserToken(oauthIdentifier, deviceToken);
         return userTokenOptional
             .map(s -> ResponseEntity.ok(new LoginResponse(s))).orElseGet(() -> ResponseEntity.noContent().build());
     }

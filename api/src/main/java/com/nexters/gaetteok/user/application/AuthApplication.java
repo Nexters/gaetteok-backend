@@ -1,5 +1,6 @@
 package com.nexters.gaetteok.user.application;
 
+import com.nexters.gaetteok.domain.User;
 import com.nexters.gaetteok.jwt.JwtTokenGenerator;
 import com.nexters.gaetteok.persistence.entity.UserEntity;
 import com.nexters.gaetteok.persistence.repository.UserRepository;
@@ -29,16 +30,23 @@ public class AuthApplication {
         return tokenGenerator.generateToken(UserMapper.toDomain(userEntity));
     }
 
-    @Transactional(readOnly = true)
-    public Optional<String> getUserToken(String token) {
-        Optional<UserEntity> userEntityOptional = userRepository.findByOauthIdentifier(token);
-        return userEntityOptional
-            .map(userEntity -> tokenGenerator.generateToken(UserMapper.toDomain(userEntity)));
+    @Transactional
+    public Optional<String> getUserToken(String oauthIdentifier, String deviceToken) {
+        Optional<UserEntity> userEntityOptional = userRepository.findByOauthIdentifier(oauthIdentifier);
+        if (userEntityOptional.isEmpty()) {
+            return Optional.empty();
+        }
+        UserEntity userEntity = userEntityOptional.get();
+        User user = UserMapper.toDomain(userEntity);
+        user.setDeviceToken(deviceToken);
+        userEntity = userRepository.save(UserMapper.toEntity(user));
+        return Optional.of(tokenGenerator.generateToken(UserMapper.toDomain(userEntity)));
     }
 
     private UserEntity createUser(SignupRequest request) {
         UserEntity userEntity = UserEntity.builder()
             .oauthIdentifier(request.getOauthIdentifier())
+            .deviceToken(request.getDeviceToken())
             .nickname(request.getNickname())
             .profileUrl(request.getProfileUrl())
             .code(createUserCode())
