@@ -3,6 +3,7 @@ package com.nexters.gaetteok.common.auth;
 import com.nexters.gaetteok.common.exception.InvalidTokenException;
 import com.nexters.gaetteok.jwt.JwtTokenValidator;
 import com.nexters.gaetteok.jwt.UserInfo;
+import com.nexters.gaetteok.persistence.repository.UserRepository;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import java.util.Objects;
 public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final JwtTokenValidator jwtTokenValidator;
+    private final UserRepository userRepository;
 
     @Override
     public boolean supportsParameter(@Nonnull MethodParameter parameter) {
@@ -31,7 +33,12 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(@Nonnull MethodParameter parameter, ModelAndViewContainer mavContainer, @Nonnull NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String authorization = Objects.requireNonNull(webRequest.getNativeRequest(HttpServletRequest.class)).getHeader("Authorization");
         String token = getTokenFromAuthorizationHeader(authorization);
-        return getUserInfoFromToken(token);
+        UserInfo userInfo = getUserInfoFromToken(token);
+        boolean userExists = userRepository.existsById(userInfo.getUserId());
+        if (!userExists) {
+            throw new InvalidTokenException("존재하지 않는 사용자입니다. userId=" + userInfo.getUserId());
+        }
+        return userInfo;
     }
 
     private String getTokenFromAuthorizationHeader(String authorization) {
