@@ -14,6 +14,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -83,6 +84,20 @@ public class FriendControllerTests extends AbstractControllerTests {
 
         // then
         resultActions.andExpect(status().isOk());
+    }
+
+    @Test
+    void delete_correctId_success() throws Exception {
+        // given
+        doNothing().when(friendApplication).delete(anyLong(), anyLong());
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+            MockMvcRequestBuilders.delete("/api/friends/1")
+                .contentType(MediaType.APPLICATION_JSON));
+
+        // then
+        resultActions.andExpect(status().isNoContent());
     }
 
 }

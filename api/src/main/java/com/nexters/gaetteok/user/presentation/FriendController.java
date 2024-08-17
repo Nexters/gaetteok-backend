@@ -42,4 +42,11 @@ public class FriendController implements FriendSpecification {
         return ResponseEntity.ok(GetFriendListResponse.of(friendList, sortCondition));
     }
 
+    @DeleteMapping(value = "/{friendUserId}")
+    public ResponseEntity<Void> delete(@PathVariable long friendUserId, UserInfo userInfo) {
+        log.info("[친구 관계 삭제] userInfo={}, friendUserId={}", userInfo, friendUserId);
+        friendApplication.delete(userInfo.getUserId(), friendUserId);
+        return ResponseEntity.noContent().build();
+    }
+
 }
