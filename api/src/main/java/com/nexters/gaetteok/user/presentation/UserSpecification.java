@@ -3,6 +3,7 @@ package com.nexters.gaetteok.user.presentation;
 import com.nexters.gaetteok.jwt.UserInfo;
 import com.nexters.gaetteok.user.presentation.request.ReportUserRequest;
 import com.nexters.gaetteok.user.presentation.response.GetUserResponse;
+import com.nexters.gaetteok.user.presentation.response.GetUserStatusResponse;
 import com.nexters.gaetteok.user.presentation.response.ReportUserResponse;
 import com.nexters.gaetteok.user.presentation.response.UpdateUserLocationResponse;
 import com.nexters.gaetteok.weather.enums.City;
@@ -28,10 +29,10 @@ public interface UserSpecification {
         description = "유저 조회 성공",
         content = @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = GetUserResponse.class)
+            schema = @Schema(implementation = GetUserStatusResponse.class)
         )
     )
-    ResponseEntity<GetUserResponse> getUser(
+    ResponseEntity<GetUserStatusResponse> getUser(
         @Parameter(hidden = true) UserInfo userInfo
     );
 

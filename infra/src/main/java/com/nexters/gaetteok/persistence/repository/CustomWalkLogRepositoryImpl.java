@@ -2,17 +2,20 @@ package com.nexters.gaetteok.persistence.repository;
 
 import com.nexters.gaetteok.domain.WalkLog;
 import com.nexters.gaetteok.persistence.entity.WalkLogEntity;
+import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.nexters.gaetteok.persistence.entity.QFriendEntity.friendEntity;
 import static com.nexters.gaetteok.persistence.entity.QUserEntity.userEntity;
 import static com.nexters.gaetteok.persistence.entity.QWalkLogEntity.walkLogEntity;
+import static com.querydsl.core.types.dsl.Expressions.dateTimeOperation;
 
 @Repository
 @RequiredArgsConstructor
@@ -108,4 +111,20 @@ public class CustomWalkLogRepositoryImpl implements CustomWalkLogRepository {
             .orderBy(walkLogEntity.id.desc())
             .fetchFirst();
     }
+
+    @Override
+    public boolean isTodayWalkLogExists(long userId, LocalDate date) {
+        Long id = jpaQueryFactory
+            .select(walkLogEntity.id)
+            .from(walkLogEntity)
+            .where(
+                walkLogEntity.userId.eq(userId),
+                dateTimeOperation(LocalDate.class, Ops.DateTimeOps.DATE, walkLogEntity.createdAt).eq(date)
+            )
+            .fetchFirst();
+
+        return id != null;
+    }
+
+
 }

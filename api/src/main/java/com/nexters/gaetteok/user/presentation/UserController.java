@@ -3,10 +3,13 @@ package com.nexters.gaetteok.user.presentation;
 import com.nexters.gaetteok.domain.User;
 import com.nexters.gaetteok.jwt.UserInfo;
 import com.nexters.gaetteok.user.application.UserApplication;
+import com.nexters.gaetteok.user.constant.MainScreenImage;
 import com.nexters.gaetteok.user.presentation.request.ReportUserRequest;
 import com.nexters.gaetteok.user.presentation.response.GetUserResponse;
+import com.nexters.gaetteok.user.presentation.response.GetUserStatusResponse;
 import com.nexters.gaetteok.user.presentation.response.ReportUserResponse;
 import com.nexters.gaetteok.user.presentation.response.UpdateUserLocationResponse;
+import com.nexters.gaetteok.walklog.application.WalkLogApplication;
 import com.nexters.gaetteok.weather.enums.City;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,11 +29,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class UserController implements UserSpecification {
 
     private final UserApplication userApplication;
+    private final WalkLogApplication walkLogApplication;
     private final AtomicInteger atomicInteger = new AtomicInteger(1);
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetUserResponse> getUser(UserInfo userInfo) {
-        return ResponseEntity.ok(GetUserResponse.of(userApplication.getUser(userInfo.getUserId())));
+    public ResponseEntity<GetUserStatusResponse> getUser(UserInfo userInfo) {
+        User user = userApplication.getUser(userInfo.getUserId());
+        boolean todayWalkLogExists = walkLogApplication.isTodayWalkLogExists(userInfo.getUserId());
+        return ResponseEntity.ok(GetUserStatusResponse.of(user, todayWalkLogExists, MainScreenImage.getImageUrl(todayWalkLogExists)));
     }
 
     @PatchMapping(value = "/nickname", produces = MediaType.APPLICATION_JSON_VALUE)

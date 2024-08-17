@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
@@ -41,8 +42,11 @@ public class WalkLogEntity {
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
+
     @Builder
-    public WalkLogEntity(long id, String photoUrl, String title, String content, WalkTime walkTime, long userId, LocalDateTime createdAt) {
+    public WalkLogEntity(long id, String photoUrl, String title, String content, WalkTime walkTime, long userId, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.photoUrl = photoUrl;
         this.title = title;
@@ -50,6 +54,7 @@ public class WalkLogEntity {
         this.walkTime = walkTime;
         this.userId = userId;
         this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
 }

@@ -3,6 +3,7 @@ package com.nexters.gaetteok.persistence.repository;
 import com.nexters.gaetteok.domain.WalkLog;
 import com.nexters.gaetteok.persistence.entity.WalkLogEntity;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface CustomWalkLogRepository {
@@ -16,5 +17,7 @@ public interface CustomWalkLogRepository {
     List<WalkLogEntity> getListByUserIdAndMonth(long userId, int year, int month);
 
     WalkLogEntity getMaxIdLessThan(long walkLogId);
+
+    boolean isTodayWalkLogExists(long walkLogId, LocalDate date);
 
 }
