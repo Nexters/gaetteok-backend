@@ -1,8 +1,11 @@
 package com.nexters.gaetteok.persistence.entity;
 
+import com.nexters.gaetteok.weather.enums.City;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -34,20 +37,21 @@ public class UserEntity {
     private String code;
 
     @Column
-    private String location;
+    @Enumerated(EnumType.STRING)
+    private City location;
 
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @Builder
-    public UserEntity(long id, String nickname, String profileUrl, String code, String location,
+    public UserEntity(long id, String nickname, String profileUrl, String code, City city,
         LocalDateTime createdAt) {
         this.id = id;
         this.nickname = nickname;
         this.profileUrl = profileUrl;
         this.code = code;
-        this.location = location;
+        this.location = city;
         this.createdAt = createdAt;
     }
 
