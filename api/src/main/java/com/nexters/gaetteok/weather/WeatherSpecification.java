@@ -23,7 +23,7 @@ public interface WeatherSpecification {
         )
     )
     ResponseEntity<WeatherResponse> getWeather(
-        @Parameter(description = "날씨를 조회할 도시명") String city
+        @Parameter(description = "날씨를 조회할 도시명, ") String city
     );
 
 }

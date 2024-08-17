@@ -5,6 +5,6 @@ import lombok.Getter;
 @Getter
 public class MainField {
 
-    private Integer temp;
+    private Double temp;
 
 }

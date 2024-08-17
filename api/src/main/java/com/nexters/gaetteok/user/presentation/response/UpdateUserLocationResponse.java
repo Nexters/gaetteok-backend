@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 public class UpdateUserLocationResponse {
 
-    @Schema(description = "변경된 위치 정보", example = "서울")
+    @Schema(description = "변경된 위치 정보", example = "SEOUL")
     private final String location;
 
     @Builder
