@@ -1,5 +1,6 @@
 package com.nexters.gaetteok.weather;
 
+import com.nexters.gaetteok.weather.enums.City;
 import com.nexters.gaetteok.weather.presentation.response.WeatherResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -23,7 +24,7 @@ public interface WeatherSpecification {
         )
     )
     ResponseEntity<WeatherResponse> getWeather(
-        @Parameter(description = "날씨를 조회할 도시명, ") String city
+        @Parameter(description = "날씨를 조회할 도시명, ") City city
     );
 
 }

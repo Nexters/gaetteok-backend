@@ -24,9 +24,8 @@ public class WeatherController implements WeatherSpecification {
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WeatherResponse> getWeather(
-        @RequestParam(value = "city") String cityName
+        @RequestParam City city
     ) {
-        City city = City.valueOf(cityName);
         WeatherApiResponse weatherApiResponse = weatherService.getWeather(city);
         Weather weather = Weather.valueOf(
             weatherApiResponse.getWeather().get(0).getMain().toUpperCase());
