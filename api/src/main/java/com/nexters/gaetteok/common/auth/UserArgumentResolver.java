@@ -1,5 +1,6 @@
 package com.nexters.gaetteok.common.auth;
 
+import com.nexters.gaetteok.common.exception.InvalidTokenException;
 import com.nexters.gaetteok.jwt.JwtTokenValidator;
 import com.nexters.gaetteok.jwt.UserInfo;
 import jakarta.annotation.Nonnull;
@@ -35,7 +36,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
     private String getTokenFromAuthorizationHeader(String authorization) {
         if (!StringUtils.hasText(authorization) || !authorization.startsWith("Bearer ")) {
-            throw new IllegalArgumentException("올바르지 않은 형식의 토큰입니다. Authorization=" + authorization);
+            throw new InvalidTokenException("올바르지 않은 형식의 토큰입니다. Authorization=" + authorization);
         }
         return authorization.substring(7);
     }
@@ -44,7 +45,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         try {
             return jwtTokenValidator.decodeToken(token);
         } catch (Exception e) {
-            throw new IllegalArgumentException("토큰 디코딩에 실패했습니다. token=" + token);
+            throw new InvalidTokenException("토큰 디코딩에 실패했습니다. token=" + token);
         }
     }
 

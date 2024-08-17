@@ -67,7 +67,8 @@ public class ReactionControllerTests extends AbstractControllerTests {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.delete("/api/walk-logs/1/reaction/1"));
+            MockMvcRequestBuilders.delete("/api/walk-logs/1/reaction/1")
+                .header("Authorization", "Bearer token"));
 
         // then
         resultActions.andExpect(status().isBadRequest());
