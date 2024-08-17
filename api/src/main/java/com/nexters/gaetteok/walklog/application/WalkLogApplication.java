@@ -17,14 +17,18 @@ import com.nexters.gaetteok.walklog.mapper.ReactionMapper;
 import com.nexters.gaetteok.walklog.mapper.WalkLogMapper;
 import com.nexters.gaetteok.walklog.presentation.request.CreateWalkLogRequest;
 import com.nexters.gaetteok.walklog.presentation.request.PatchWalkLogRequest;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -44,6 +48,35 @@ public class WalkLogApplication {
                 walkLogEntity.getCreatedAt().getDayOfMonth();
     }
 
+    private void setComments(List<WalkLog> walkLogs, List<Long> walkLogIds,
+        Map<Long, UserEntity> userEntityMap) {
+        Map<Long, List<Comment>> commentMap = commentRepository.findByWalkLogIdIn(walkLogIds)
+            .stream().map(commentEntity -> CommentMapper.toDomain(
+                commentEntity,
+                userEntityMap.get(commentEntity.getWriterId())
+            ))
+            .collect(Collectors.groupingBy(Comment::getWalkLogId));
+
+        walkLogs.forEach(
+            walkLog -> walkLog.setComments(commentMap.get(walkLog.getId()))
+        );
+    }
+
+    private void setReactions(List<WalkLog> walkLogs, List<Long> walkLogIds,
+        Map<Long, UserEntity> userEntityMap) {
+        Map<Long, List<Reaction>> reactionMap = reactionRepository.findByWalkLogIdIn(walkLogIds)
+            .stream().map(reactionEntity -> ReactionMapper.toDomain(
+                reactionEntity,
+                userEntityMap.get(reactionEntity.getUserId())
+            ))
+            .collect(Collectors.groupingBy(Reaction::getWalkLogId));
+
+        walkLogs.forEach(
+            walkLog -> walkLog.setReactions(reactionMap.get(walkLog.getId()))
+        );
+    }
+
+    @Transactional
     public WalkLog create(long userId, CreateWalkLogRequest request, MultipartFile photo)
         throws IOException {
         long startTime = System.currentTimeMillis();
@@ -62,6 +95,7 @@ public class WalkLogApplication {
         return WalkLogMapper.toDomain(walkLog, me);
     }
 
+    @Transactional(readOnly = true)
     public Map<String, WalkLog> getCalendar(long userId, int year, int month) {
         UserEntity me = userRepository.getById(userId);
         List<WalkLog> walkLogs = walkLogRepository.getCalendar(userId, year, month)
@@ -81,7 +115,7 @@ public class WalkLogApplication {
         return calendar;
     }
 
-    // 이건 나중에 지워도 되는건가?
+    @Transactional(readOnly = true)
     public List<WalkLog> getList(long userId, long cursorId, int pageSize) {
         UserEntity me = userRepository.getById(userId);
         List<WalkLog> walkLogs = walkLogRepository.getList(userId, cursorId, pageSize);
@@ -107,6 +141,7 @@ public class WalkLogApplication {
         return walkLogs;
     }
 
+    @Transactional(readOnly = true)
     public List<WalkLog> getListById(long userId, int year, int month) {
         UserEntity me = userRepository.getById(userId);
         List<WalkLog> walkLogs = walkLogRepository.getMyList(userId, year, month).stream()
@@ -134,30 +169,16 @@ public class WalkLogApplication {
         return walkLogs;
     }
 
-    private void setComments(List<WalkLog> walkLogs, List<Long> walkLogIds, Map<Long, UserEntity> userEntityMap) {
-        Map<Long, List<Comment>> commentMap = commentRepository.findByWalkLogIdIn(walkLogIds)
-            .stream().map(commentEntity -> CommentMapper.toDomain(commentEntity,
-                userEntityMap.get(commentEntity.getWriterId())
-            ))
-            .collect(Collectors.groupingBy(Comment::getWalkLogId));
-
-        walkLogs.forEach(
-            walkLog -> walkLog.setComments(commentMap.get(walkLog.getId()))
-        );
+    public WalkLog getNextData(long walkLogId) {
+        WalkLogEntity entity = walkLogRepository.getMaxIdLessThan(walkLogId);
+        if (entity == null) {
+            return null;
+        }
+        UserEntity me = userRepository.getById(entity.getUserId());
+        return WalkLogMapper.toDomain(entity, me);
     }
 
-    private void setReactions(List<WalkLog> walkLogs, List<Long> walkLogIds, Map<Long, UserEntity> userEntityMap) {
-        Map<Long, List<Reaction>> reactionMap = reactionRepository.findByWalkLogIdIn(walkLogIds)
-            .stream().map(reactionEntity -> ReactionMapper.toDomain(reactionEntity,
-                userEntityMap.get(reactionEntity.getUserId())
-            ))
-            .collect(Collectors.groupingBy(Reaction::getWalkLogId));
-
-        walkLogs.forEach(
-            walkLog -> walkLog.setReactions(reactionMap.get(walkLog.getId()))
-        );
-    }
-
+    @Transactional
     public WalkLog update(long id, long userId, PatchWalkLogRequest request, MultipartFile photo)
         throws IOException {
         UserEntity me = userRepository.getById(userId);
@@ -182,15 +203,6 @@ public class WalkLogApplication {
         );
 
         return WalkLogMapper.toDomain(walkLog, me);
-    }
-
-    public WalkLog getNextData(long walkLogId) {
-        WalkLogEntity entity = walkLogRepository.getMaxIdLessThan(walkLogId);
-        if (entity == null) {
-            return null;
-        }
-        UserEntity me = userRepository.getById(entity.getUserId());
-        return WalkLogMapper.toDomain(entity, me);
     }
 
 }

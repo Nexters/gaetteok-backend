@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class UserApplication {
 
     private final UserRepository userRepository;
@@ -37,6 +36,7 @@ public class UserApplication {
         );
     }
 
+    @Transactional(readOnly = true)
     public long getPushNotificationTime(long id) {
         UserPushNotificationEntity userPushNotification = userPushNotificationRepository.findByUserId(
             id);
@@ -44,11 +44,31 @@ public class UserApplication {
         return userPushNotification.getPushNotificationTime();
     }
 
+    @Transactional(readOnly = true)
     public User getUser(long id) {
         UserEntity userEntity = userRepository.getById(id);
         return UserMapper.toDomain(userEntity);
     }
 
+    @Transactional
+    public User updateLocation(long id, String city) {
+        UserEntity userEntity = userRepository.getById(id);
+        User user = UserMapper.toDomain(userEntity);
+        user.updateLocation(city);
+        userEntity = userRepository.save(UserMapper.toEntity(user));
+        return UserMapper.toDomain(userEntity);
+    }
+
+    @Transactional
+    public User updateNickname(long id, String nickname) {
+        UserEntity userEntity = userRepository.getById(id);
+        User user = UserMapper.toDomain(userEntity);
+        user.updateNickname(nickname);
+        userEntity = userRepository.save(UserMapper.toEntity(user));
+        return UserMapper.toDomain(userEntity);
+    }
+
+    @Transactional
     public void updatePushNotificationTime(long id, long timeToBeUpdated) {
         UserPushNotificationEntity userPushNotification = userPushNotificationRepository.findByUserId(
             id);
@@ -62,24 +82,6 @@ public class UserApplication {
             userPushNotificationDomain);
 
         userPushNotificationRepository.save(updatedEntity);
-    }
-
-    @Transactional
-    public User updateNickname(long id, String nickname) {
-        UserEntity userEntity = userRepository.getById(id);
-        User user = UserMapper.toDomain(userEntity);
-        user.updateNickname(nickname);
-        userEntity = userRepository.save(UserMapper.toEntity(user));
-        return UserMapper.toDomain(userEntity);
-    }
-
-    @Transactional
-    public User updateLocation(long id, String city) {
-        UserEntity userEntity = userRepository.getById(id);
-        User user = UserMapper.toDomain(userEntity);
-        user.updateLocation(city);
-        userEntity = userRepository.save(UserMapper.toEntity(user));
-        return UserMapper.toDomain(userEntity);
     }
 
 }
