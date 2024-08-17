@@ -28,6 +28,20 @@ public interface UserSpecification {
         @Parameter(hidden = true) UserInfo userInfo
     );
 
+    @Operation(summary = "유저 닉네임 수정", description = "유저의 닉네임을 수정하는 API")
+    @ApiResponse(
+        responseCode = "200",
+        description = "유저 닉네임 수정 성공",
+        content = @Content(
+            mediaType = MediaType.APPLICATION_JSON_VALUE,
+            schema = @Schema(implementation = GetUserResponse.class)
+        )
+    )
+    ResponseEntity<GetUserResponse> updateNickname(
+        @Parameter(description = "변경할 닉네임", example = "닉네임") String nickname,
+        @Parameter(hidden = true) UserInfo userInfo
+    );
+
     @Operation(summary = "유저 위치 수정", description = "유저의 위치를 수정하는 API")
     @ApiResponse(
         responseCode = "200",
