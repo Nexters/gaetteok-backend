@@ -1,6 +1,6 @@
 package com.nexters.gaetteok.user.presentation;
 
-import com.nexters.gaetteok.common.auth.UserInfo;
+import com.nexters.gaetteok.jwt.UserInfo;
 import com.nexters.gaetteok.user.presentation.response.GetUserResponse;
 import com.nexters.gaetteok.user.presentation.response.UpdateUserLocationResponse;
 import com.nexters.gaetteok.weather.enums.City;

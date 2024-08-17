@@ -1,22 +1,16 @@
 package com.nexters.gaetteok.persistence.entity;
 
+import com.nexters.gaetteok.domain.AuthProvider;
 import com.nexters.gaetteok.weather.enums.City;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user")
@@ -29,6 +23,9 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(name = "oauth_identifier", unique = true)
+    private String oauthIdentifier;
+
     private String nickname;
 
     private String profileUrl;
@@ -40,18 +37,23 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     private City location;
 
+    @Column
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
+
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @Builder
-    public UserEntity(long id, String nickname, String profileUrl, String code, City city,
-        LocalDateTime createdAt) {
+    public UserEntity(long id, String oauthIdentifier, String nickname, String profileUrl, String code, City city, AuthProvider authProvider, LocalDateTime createdAt) {
         this.id = id;
+        this.oauthIdentifier = oauthIdentifier;
         this.nickname = nickname;
         this.profileUrl = profileUrl;
         this.code = code;
         this.location = city;
+        this.provider = authProvider;
         this.createdAt = createdAt;
     }
 

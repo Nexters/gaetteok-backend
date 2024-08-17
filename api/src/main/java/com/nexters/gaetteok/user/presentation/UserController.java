@@ -1,7 +1,7 @@
 package com.nexters.gaetteok.user.presentation;
 
-import com.nexters.gaetteok.common.auth.UserInfo;
 import com.nexters.gaetteok.domain.User;
+import com.nexters.gaetteok.jwt.UserInfo;
 import com.nexters.gaetteok.user.application.UserApplication;
 import com.nexters.gaetteok.user.presentation.response.GetUserResponse;
 import com.nexters.gaetteok.user.presentation.response.UpdateUserLocationResponse;
@@ -10,11 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 

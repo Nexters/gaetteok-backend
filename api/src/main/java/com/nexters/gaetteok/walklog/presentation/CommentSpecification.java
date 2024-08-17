@@ -1,6 +1,6 @@
 package com.nexters.gaetteok.walklog.presentation;
 
-import com.nexters.gaetteok.common.auth.UserInfo;
+import com.nexters.gaetteok.jwt.UserInfo;
 import com.nexters.gaetteok.walklog.presentation.request.CreateCommentRequest;
 import com.nexters.gaetteok.walklog.presentation.response.CreateCommentResponse;
 import io.swagger.v3.oas.annotations.Operation;

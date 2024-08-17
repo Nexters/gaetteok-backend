@@ -1,6 +1,6 @@
 package com.nexters.gaetteok.walklog.presentation;
 
-import com.nexters.gaetteok.common.auth.UserInfo;
+import com.nexters.gaetteok.jwt.UserInfo;
 import com.nexters.gaetteok.walklog.presentation.request.CreateReactionRequest;
 import com.nexters.gaetteok.walklog.presentation.response.CreateReactionResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,7 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
-@Tag(name = "리액션 API", description = "산책 기록에 대한 리액션을 생성하고 삭제하는 API")
+@Tag(name = "Reaction", description = "산책 기록에 대한 리액션을 생성하고 삭제하는 API")
 public interface ReactionSpecification {
 
     @Operation(summary = "리액션 생성", description = "산책 기록에 대한 리액션을 생성합니다.")

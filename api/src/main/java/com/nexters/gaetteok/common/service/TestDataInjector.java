@@ -1,5 +1,6 @@
 package com.nexters.gaetteok.common.service;
 
+import com.nexters.gaetteok.domain.AuthProvider;
 import com.nexters.gaetteok.domain.Comment;
 import com.nexters.gaetteok.domain.WalkLog;
 import com.nexters.gaetteok.domain.WalkTime;
@@ -14,14 +15,15 @@ import com.nexters.gaetteok.walklog.mapper.WalkLogMapper;
 import com.nexters.gaetteok.weather.enums.City;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 @Slf4j
 @Service
@@ -52,21 +54,27 @@ public class TestDataInjector {
 
         UserEntity poppy = entityManager.merge(UserEntity.builder()
             .nickname("뽀삐")
+            .oauthIdentifier("kakao-token")
             .profileUrl("https://placehold.co/400.png")
             .code("1a2b3c")
             .city(City.SEJONG)
+            .authProvider(AuthProvider.KAKAO)
             .build());
         UserEntity choco = entityManager.merge(UserEntity.builder()
             .nickname("초코")
+            .oauthIdentifier("apple-token")
             .profileUrl("https://placehold.co/400.png")
             .code("4d5e6f")
             .city(City.SEOUL)
+            .authProvider(AuthProvider.APPLE)
             .build());
         UserEntity happy = entityManager.merge(UserEntity.builder()
             .nickname("해피")
+            .oauthIdentifier("happy-token")
             .profileUrl("https://placehold.co/400.png")
             .code("7g8h9i")
             .city(City.BUSAN)
+            .authProvider(AuthProvider.KAKAO)
             .build());
         log.info(
             "사용자 데이터 주입 뽀삐={} 초코={} 해피={}", UserMapper.toDomain(poppy), UserMapper.toDomain(choco),

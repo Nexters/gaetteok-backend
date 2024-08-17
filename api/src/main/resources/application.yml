@@ -35,3 +35,6 @@ weather:
 swagger:
   server:
     url: ${SWAGGER_SERVER_URL}
+
+jwt:
+  secret: ${JWT_SECRET}

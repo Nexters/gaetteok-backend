@@ -32,6 +32,7 @@ public class UserControllerTests extends AbstractControllerTests {
 
         // when
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/api/users", id)
+            .header("Authorization", "Bearer token")
             .contentType("application/json"));
 
         // then
@@ -54,6 +55,7 @@ public class UserControllerTests extends AbstractControllerTests {
         // when
         ResultActions resultActions = mockMvc.perform(
             MockMvcRequestBuilders.patch("/api/users/nickname")
+                .header("Authorization", "Bearer token")
                 .param("nickname", "test")
                 .contentType("application/json"));
 
@@ -78,6 +80,7 @@ public class UserControllerTests extends AbstractControllerTests {
         ResultActions resultActions = mockMvc.perform(
             MockMvcRequestBuilders.multipart(HttpMethod.PATCH, "/api/users/profile-image")
                 .file("file", "new-profile-image".getBytes())
+                .header("Authorization", "Bearer token")
                 .contentType(MediaType.MULTIPART_FORM_DATA));
 
         // then
@@ -101,6 +104,7 @@ public class UserControllerTests extends AbstractControllerTests {
         // when
         ResultActions resultActions = mockMvc.perform(
             MockMvcRequestBuilders.patch("/api/users/location")
+                .header("Authorization", "Bearer token")
                 .param("city", "SEOUL")
                 .contentType("application/json"));
 

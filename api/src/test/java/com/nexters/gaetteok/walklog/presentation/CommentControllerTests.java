@@ -35,6 +35,7 @@ public class CommentControllerTests extends AbstractControllerTests {
         // when
         ResultActions resultActions = mockMvc.perform(
             MockMvcRequestBuilders.post("/api/walk-logs/{id}/comments", comment.getWalkLogId())
+                .header("Authorization", "Bearer token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createCommentRequest))
         );
