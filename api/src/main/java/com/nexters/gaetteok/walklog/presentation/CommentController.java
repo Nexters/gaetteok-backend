@@ -1,7 +1,7 @@
 package com.nexters.gaetteok.walklog.presentation;
 
-import com.nexters.gaetteok.common.auth.UserInfo;
 import com.nexters.gaetteok.domain.Comment;
+import com.nexters.gaetteok.jwt.UserInfo;
 import com.nexters.gaetteok.walklog.application.CommentApplication;
 import com.nexters.gaetteok.walklog.presentation.request.CreateCommentRequest;
 import com.nexters.gaetteok.walklog.presentation.response.CreateCommentResponse;

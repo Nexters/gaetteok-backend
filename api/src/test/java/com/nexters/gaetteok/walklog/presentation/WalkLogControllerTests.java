@@ -51,6 +51,7 @@ public class WalkLogControllerTests extends AbstractControllerTests {
                     objectMapper.writeValueAsBytes(request)
                 ))
                 .file(new MockMultipartFile("photo", "photo".getBytes()))
+                .header("Authorization", "Bearer token")
                 .contentType(MediaType.MULTIPART_FORM_DATA));
 
         // then
@@ -90,6 +91,7 @@ public class WalkLogControllerTests extends AbstractControllerTests {
         // when
         ResultActions resultActions = mockMvc.perform(
             MockMvcRequestBuilders.get("/api/walk-logs/calendar")
+                .header("Authorization", "Bearer token")
                 .param("userId", "2")
                 .param("year", "2024")
                 .param("month", "8")
@@ -142,6 +144,7 @@ public class WalkLogControllerTests extends AbstractControllerTests {
         // when
         ResultActions resultActions = mockMvc.perform(
             MockMvcRequestBuilders.get("/api/walk-logs")
+                .header("Authorization", "Bearer token")
                 .param("userId", "2")
                 .param("cursorId", "15")
                 .param("pageSize", "10")
@@ -192,6 +195,7 @@ public class WalkLogControllerTests extends AbstractControllerTests {
         // when
         ResultActions resultActions = mockMvc.perform(
             MockMvcRequestBuilders.get("/api/walk-logs/me")
+                .header("Authorization", "Bearer token")
                 .param("year", String.valueOf(LocalDate.now().getYear()))
                 .param("month", String.valueOf(LocalDate.now().getMonthValue()))
                 .contentType(MediaType.APPLICATION_JSON));
@@ -233,6 +237,7 @@ public class WalkLogControllerTests extends AbstractControllerTests {
                     objectMapper.writeValueAsBytes(request)
                 ))
                 .file(new MockMultipartFile("photo", "photo".getBytes()))
+                .header("Authorization", "Bearer token")
                 .contentType(MediaType.MULTIPART_FORM_DATA));
 
         // then

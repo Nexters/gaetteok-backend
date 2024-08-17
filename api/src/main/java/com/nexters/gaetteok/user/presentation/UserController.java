@@ -1,7 +1,7 @@
 package com.nexters.gaetteok.user.presentation;
 
-import com.nexters.gaetteok.common.auth.UserInfo;
 import com.nexters.gaetteok.domain.User;
+import com.nexters.gaetteok.jwt.UserInfo;
 import com.nexters.gaetteok.user.application.UserApplication;
 import com.nexters.gaetteok.user.presentation.response.GetUserResponse;
 import com.nexters.gaetteok.user.presentation.response.UpdateUserLocationResponse;
@@ -10,11 +10,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Slf4j
 @RestController
@@ -37,6 +36,21 @@ public class UserController implements UserSpecification {
         log.info("[유저 닉네임 수정] userInfo={}, nickname={}", userInfo, nickname);
         User user = userApplication.updateNickname(userInfo.getUserId(), nickname);
         log.info("[유저 닉네임 수정 완료] user={}", user);
+        return ResponseEntity.ok(GetUserResponse.of(user));
+    }
+
+    @PatchMapping(
+        value = "/profile-image",
+        consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<GetUserResponse> updateProfile(
+        @RequestParam(name = "file") MultipartFile profileImage,
+        UserInfo userInfo
+    ) throws IOException {
+        log.info("[유저 프로필 수정] userInfo={}, profile={}", userInfo, profileImage);
+        User user = userApplication.updateProfile(userInfo.getUserId(), profileImage);
+        log.info("[유저 프로필 수정 완료] user={}", user);
         return ResponseEntity.ok(GetUserResponse.of(user));
     }
 

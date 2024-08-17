@@ -47,6 +47,7 @@ public class FriendControllerTests extends AbstractControllerTests {
         // when
         ResultActions resultActions = mockMvc.perform(
             MockMvcRequestBuilders.post("/api/friends")
+                .header("Authorization", "Bearer token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
 
@@ -79,6 +80,7 @@ public class FriendControllerTests extends AbstractControllerTests {
         // when
         ResultActions resultActions = mockMvc.perform(
             MockMvcRequestBuilders.get("/api/friends")
+                .header("Authorization", "Bearer token")
                 .queryParam("sort", "FRIEND_DESC")
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -94,6 +96,7 @@ public class FriendControllerTests extends AbstractControllerTests {
         // when
         ResultActions resultActions = mockMvc.perform(
             MockMvcRequestBuilders.delete("/api/friends/1")
+                .header("Authorization", "Bearer token")
                 .contentType(MediaType.APPLICATION_JSON));
 
         // then

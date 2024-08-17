@@ -1,6 +1,6 @@
 package com.nexters.gaetteok.user;
 
-import com.nexters.gaetteok.common.auth.UserInfo;
+import com.nexters.gaetteok.jwt.UserInfo;
 import com.nexters.gaetteok.user.constant.SortCondition;
 import com.nexters.gaetteok.user.presentation.request.CreateFriendRequest;
 import com.nexters.gaetteok.user.presentation.response.CreateFriendResponse;

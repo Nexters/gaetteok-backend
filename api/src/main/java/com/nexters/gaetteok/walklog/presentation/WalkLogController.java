@@ -1,7 +1,7 @@
 package com.nexters.gaetteok.walklog.presentation;
 
-import com.nexters.gaetteok.common.auth.UserInfo;
 import com.nexters.gaetteok.domain.WalkLog;
+import com.nexters.gaetteok.jwt.UserInfo;
 import com.nexters.gaetteok.walklog.application.WalkLogApplication;
 import com.nexters.gaetteok.walklog.presentation.request.CreateWalkLogRequest;
 import com.nexters.gaetteok.walklog.presentation.request.PatchWalkLogRequest;

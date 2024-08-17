@@ -3,7 +3,7 @@ spring:
     name: gaetteok
   jpa:
     hibernate:
-      ddl-auto: create-drop # 샘플 데이터 세팅을 위한 임시 조치 (FE에서 데이터 넣기 시작하면 빠져야 함)
+      ddl-auto: create # 샘플 데이터 세팅을 위한 임시 조치 (FE에서 데이터 넣기 시작하면 빠져야 함)
     database-platform: org.hibernate.dialect.MySQL8Dialect
   datasource:
     url: ${DB_URL}
@@ -35,3 +35,6 @@ weather:
 swagger:
   server:
     url: ${SWAGGER_SERVER_URL}
+
+jwt:
+  secret: ${JWT_SECRET}

@@ -1,8 +1,8 @@
 package com.nexters.gaetteok.user.presentation;
 
-import com.nexters.gaetteok.common.auth.UserInfo;
 import com.nexters.gaetteok.domain.Friend;
 import com.nexters.gaetteok.domain.FriendWalkStatus;
+import com.nexters.gaetteok.jwt.UserInfo;
 import com.nexters.gaetteok.user.FriendSpecification;
 import com.nexters.gaetteok.user.application.FriendApplication;
 import com.nexters.gaetteok.user.constant.SortCondition;
