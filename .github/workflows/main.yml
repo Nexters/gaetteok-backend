@@ -26,6 +26,9 @@ jobs:
           swagger.server.url: ${{ secrets.SWAGGER_SERVER_URL }}
           ncloud.accessKey: ${{ secrets.NCP_ACCESS_KEY }}
           ncloud.secretKey: ${{ secrets.NCP_SECRET_KEY }}
+          weather.apiKey: ${{ secrets.WEATHER_API_KEY }}
+          weather.apiPath: ${{ secrets.WEATHER_API_PATH }}
+          
 
       - name: Set up JDK 21
         uses: actions/setup-java@v3
