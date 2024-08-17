@@ -14,6 +14,9 @@ public class SignupRequest {
     @Schema(description = "로그인 토큰", example = "kakao_token")
     private String oauthIdentifier;
 
+    @Schema(description = "디바이스 토큰", example = "device_token")
+    private String deviceToken;
+
     @Schema(description = "사용자 닉네임", example = "닉네임")
     private String nickname;
 
@@ -27,8 +30,9 @@ public class SignupRequest {
     private AuthProvider provider;
 
     @Builder
-    public SignupRequest(String oauthIdentifier, String nickname, String profileUrl, City city, AuthProvider provider) {
+    public SignupRequest(String oauthIdentifier, String deviceToken, String nickname, String profileUrl, City city, AuthProvider provider) {
         this.oauthIdentifier = oauthIdentifier;
+        this.deviceToken = deviceToken;
         this.nickname = nickname;
         this.profileUrl = profileUrl;
         this.city = city;

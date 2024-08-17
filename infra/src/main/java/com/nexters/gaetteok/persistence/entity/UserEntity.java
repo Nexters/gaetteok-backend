@@ -26,6 +26,9 @@ public class UserEntity {
     @Column(name = "oauth_identifier", unique = true)
     private String oauthIdentifier;
 
+    @Column(name = "device_token")
+    private String deviceToken;
+
     private String nickname;
 
     private String profileUrl;
@@ -46,9 +49,10 @@ public class UserEntity {
     private LocalDateTime createdAt;
 
     @Builder
-    public UserEntity(long id, String oauthIdentifier, String nickname, String profileUrl, String code, City city, AuthProvider authProvider, LocalDateTime createdAt) {
+    public UserEntity(long id, String oauthIdentifier, String deviceToken, String nickname, String profileUrl, String code, City city, AuthProvider authProvider, LocalDateTime createdAt) {
         this.id = id;
         this.oauthIdentifier = oauthIdentifier;
+        this.deviceToken = deviceToken;
         this.nickname = nickname;
         this.profileUrl = profileUrl;
         this.code = code;

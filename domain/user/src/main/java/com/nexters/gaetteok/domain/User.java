@@ -12,6 +12,10 @@ public class User {
 
     private long id;
 
+    private String oauthIdentifier;
+
+    private String deviceToken;
+
     private String nickname;
 
     private String profileUrl;
@@ -27,6 +31,8 @@ public class User {
     @Builder
     public User(
         long id,
+        String oauthIdentifier,
+        String deviceToken,
         String nickname,
         String profileUrl,
         String code,
@@ -35,6 +41,8 @@ public class User {
         UserPushNotification userPushNotification
     ) {
         this.id = id;
+        this.oauthIdentifier = oauthIdentifier;
+        this.deviceToken = deviceToken;
         this.nickname = nickname;
         this.profileUrl = profileUrl;
         this.code = code;
@@ -53,6 +61,10 @@ public class User {
 
     public void updateLocation(String location) {
         this.location = location;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
     }
 
 }

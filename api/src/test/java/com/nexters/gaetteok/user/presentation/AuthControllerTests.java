@@ -25,6 +25,7 @@ public class AuthControllerTests extends AbstractControllerTests {
         // given
         SignupRequest request = SignupRequest.builder()
             .oauthIdentifier("kakao_token")
+            .deviceToken("device_token")
             .nickname("닉네임")
             .profileUrl("https://profile.com")
             .city(City.SEJONG)
@@ -46,13 +47,15 @@ public class AuthControllerTests extends AbstractControllerTests {
     @Test
     void login_existUser_success() throws Exception {
         // given
-        String token = "kakao_token";
+        String oauthIdentifier = "kakao_token";
+        String deviceToken = "device_token";
         String userToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NH0.1odevtEc20SuXWzNADHdiRvrRGCOUbGKme4n_JkJ5C8";
-        given(authApplication.getUserToken(anyString())).willReturn(Optional.of(token));
+        given(authApplication.getUserToken(anyString(), anyString())).willReturn(Optional.of(userToken));
 
         // when
         ResultActions resultActions = mockMvc.perform(get("/api/auth/login")
-            .param("oauthIdentifier", userToken));
+            .param("oauthIdentifier", oauthIdentifier)
+            .param("deviceToken", deviceToken));
 
         // then
         resultActions

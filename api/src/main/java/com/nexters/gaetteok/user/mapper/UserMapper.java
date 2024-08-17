@@ -9,6 +9,8 @@ public class UserMapper {
     public static User toDomain(UserEntity entity) {
         return User.builder()
             .id(entity.getId())
+            .oauthIdentifier(entity.getOauthIdentifier())
+            .deviceToken(entity.getDeviceToken())
             .nickname(entity.getNickname())
             .profileUrl(entity.getProfileUrl())
             .location(entity.getLocation().name())
@@ -20,6 +22,8 @@ public class UserMapper {
     public static UserEntity toEntity(User user) {
         return UserEntity.builder()
             .id(user.getId())
+            .oauthIdentifier(user.getOauthIdentifier())
+            .deviceToken(user.getDeviceToken())
             .nickname(user.getNickname())
             .profileUrl(user.getProfileUrl())
             .city(City.valueOf(user.getLocation()))
