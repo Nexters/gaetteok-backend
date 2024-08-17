@@ -214,7 +214,7 @@ public class WalkLogApplication {
         File file = null;
         if (photo != null && !photo.isEmpty()) {
             long startTime = System.currentTimeMillis();
-            file = imageUploader.uploadFiles(Collections.singletonList(photo), "walk-log/images")
+            file = imageUploader.uploadFiles(Collections.singletonList(photo), "walk-logs")
                 .get(0);
             log.info("파일 업로드 완료 (소요 시간: {})", System.currentTimeMillis() - startTime);
         }

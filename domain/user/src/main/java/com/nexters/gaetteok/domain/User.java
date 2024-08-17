@@ -47,6 +47,10 @@ public class User {
         this.nickname = nickname;
     }
 
+    public void updateProfile(String profile) {
+        this.profileUrl = profile;
+    }
+
     public void updateLocation(String location) {
         this.location = location;
     }
