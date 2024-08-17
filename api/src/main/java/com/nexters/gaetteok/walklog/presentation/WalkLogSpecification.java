@@ -3,6 +3,7 @@ package com.nexters.gaetteok.walklog.presentation;
 import com.nexters.gaetteok.jwt.UserInfo;
 import com.nexters.gaetteok.walklog.presentation.request.CreateWalkLogRequest;
 import com.nexters.gaetteok.walklog.presentation.request.PatchWalkLogRequest;
+import com.nexters.gaetteok.walklog.presentation.request.ReportWalkLogRequest;
 import com.nexters.gaetteok.walklog.presentation.response.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -111,5 +113,19 @@ public interface WalkLogSpecification {
         @Parameter(description = "산책 기록 사진") MultipartFile photo,
         @Parameter(hidden = true) UserInfo userInfo
     ) throws IOException;
+
+    @Operation(summary = "산책 기록 신고", description = "산책 기록을 신고합니다.")
+    @ApiResponse(
+        responseCode = "200",
+        description = "산책 기록 신고 성공",
+        content = @Content(
+            mediaType = MediaType.APPLICATION_JSON_VALUE,
+            schema = @Schema(implementation = ReportWalkLogResponse.class)
+        )
+    )
+    ResponseEntity<ReportWalkLogResponse> reportUser(
+        @RequestBody ReportWalkLogRequest request,
+        UserInfo userInfo
+    );
 
 }

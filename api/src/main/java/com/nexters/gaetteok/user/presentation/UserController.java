@@ -3,7 +3,9 @@ package com.nexters.gaetteok.user.presentation;
 import com.nexters.gaetteok.domain.User;
 import com.nexters.gaetteok.jwt.UserInfo;
 import com.nexters.gaetteok.user.application.UserApplication;
+import com.nexters.gaetteok.user.presentation.request.ReportUserRequest;
 import com.nexters.gaetteok.user.presentation.response.GetUserResponse;
+import com.nexters.gaetteok.user.presentation.response.ReportUserResponse;
 import com.nexters.gaetteok.user.presentation.response.UpdateUserLocationResponse;
 import com.nexters.gaetteok.weather.enums.City;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @RestController
@@ -22,6 +26,7 @@ import java.io.IOException;
 public class UserController implements UserSpecification {
 
     private final UserApplication userApplication;
+    private final AtomicInteger atomicInteger = new AtomicInteger(1);
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GetUserResponse> getUser(UserInfo userInfo) {
@@ -63,6 +68,13 @@ public class UserController implements UserSpecification {
         User user = userApplication.updateLocation(userInfo.getUserId(), city.name());
         log.info("[유저 위치 수정 완료] user={}", user);
         return ResponseEntity.ok(UpdateUserLocationResponse.of(user));
+    }
+
+    @PostMapping(value = "/report", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ReportUserResponse> reportUser(@RequestBody ReportUserRequest request,
+                                                         UserInfo userInfo) {
+        log.info("[유저 신고] userInfo={}, request={}", userInfo, request);
+        return ResponseEntity.ok(ReportUserResponse.of(atomicInteger.getAndIncrement(), LocalDateTime.now()));
     }
 
 }

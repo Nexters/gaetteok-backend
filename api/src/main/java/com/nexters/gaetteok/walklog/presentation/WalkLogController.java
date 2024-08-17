@@ -5,6 +5,7 @@ import com.nexters.gaetteok.jwt.UserInfo;
 import com.nexters.gaetteok.walklog.application.WalkLogApplication;
 import com.nexters.gaetteok.walklog.presentation.request.CreateWalkLogRequest;
 import com.nexters.gaetteok.walklog.presentation.request.PatchWalkLogRequest;
+import com.nexters.gaetteok.walklog.presentation.request.ReportWalkLogRequest;
 import com.nexters.gaetteok.walklog.presentation.response.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @RestController
@@ -24,6 +27,7 @@ import java.util.Map;
 public class WalkLogController implements WalkLogSpecification {
 
     private final WalkLogApplication walkLogApplication;
+    private final AtomicInteger atomicInteger = new AtomicInteger(1);
 
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreateWalkLogResponse> create(
@@ -108,6 +112,13 @@ public class WalkLogController implements WalkLogSpecification {
         WalkLog walkLog = walkLogApplication.update(id, userInfo.getUserId(), request, photo);
         log.info("[산책 기록 변경 완료] walkLog={}", walkLog);
         return ResponseEntity.ok(PatchWalkLogResponse.of(walkLog));
+    }
+
+    @PostMapping(value = "/report", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ReportWalkLogResponse> reportUser(@RequestBody ReportWalkLogRequest request,
+                                                            UserInfo userInfo) {
+        log.info("[유저 신고] userInfo={}, request={}", userInfo, request);
+        return ResponseEntity.ok(ReportWalkLogResponse.of(atomicInteger.getAndIncrement(), LocalDateTime.now()));
     }
 
 }

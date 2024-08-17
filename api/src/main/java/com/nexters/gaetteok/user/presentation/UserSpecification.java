@@ -1,7 +1,9 @@
 package com.nexters.gaetteok.user.presentation;
 
 import com.nexters.gaetteok.jwt.UserInfo;
+import com.nexters.gaetteok.user.presentation.request.ReportUserRequest;
 import com.nexters.gaetteok.user.presentation.response.GetUserResponse;
+import com.nexters.gaetteok.user.presentation.response.ReportUserResponse;
 import com.nexters.gaetteok.user.presentation.response.UpdateUserLocationResponse;
 import com.nexters.gaetteok.weather.enums.City;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -72,6 +75,20 @@ public interface UserSpecification {
     ResponseEntity<UpdateUserLocationResponse> updateLocation(
         @Parameter(description = "변경할 위치 정보", example = "SEOUL") City location,
         @Parameter(hidden = true) UserInfo userInfo
+    );
+
+    @Operation(summary = "유저 신고", description = "유저를 신고하는 API")
+    @ApiResponse(
+        responseCode = "200",
+        description = "유저 신고 성공",
+        content = @Content(
+            mediaType = MediaType.APPLICATION_JSON_VALUE,
+            schema = @Schema(implementation = ReportUserResponse.class)
+        )
+    )
+    ResponseEntity<ReportUserResponse> reportUser(
+        @RequestBody ReportUserRequest request,
+        UserInfo userInfo
     );
 
 }
