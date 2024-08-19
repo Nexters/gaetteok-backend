@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
 
-    public List<CommentEntity> findByWalkLogIdIn(List<Long> walkLogIds);
+    List<CommentEntity> findByWalkLogIdIn(List<Long> walkLogIds);
 
+    List<CommentEntity> findByWalkLogId(Long walkLogId);
 }

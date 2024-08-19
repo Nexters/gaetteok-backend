@@ -1,11 +1,11 @@
 package com.nexters.gaetteok.user.presentation.response;
 
 import com.nexters.gaetteok.domain.User;
+import com.nexters.gaetteok.weather.enums.City;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
 
 @Getter
 public class GetUserStatusResponse {
@@ -28,17 +28,22 @@ public class GetUserStatusResponse {
     @Schema(description = "메인 화면 이미지 URL", example = "https://main.com/wait.jpg")
     private final String mainScreenImageUrl;
 
+    @Schema(description = "유저 지역 정보", example = "SEOUL")
+    private final City location;
+
     @Schema(description = "유저 생성일", example = "2021-08-01T00:00:00")
     private final LocalDateTime createdAt;
 
     @Builder
-    public GetUserStatusResponse(long id, String nickname, String profileImageUrl, String code, boolean walkDone, String mainScreenImageUrl, LocalDateTime createdAt) {
+    public GetUserStatusResponse(long id, String nickname, String profileImageUrl, String code,
+        boolean walkDone, String mainScreenImageUrl, City location, LocalDateTime createdAt) {
         this.id = id;
         this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
         this.code = code;
         this.walkDone = walkDone;
         this.mainScreenImageUrl = mainScreenImageUrl;
+        this.location = location;
         this.createdAt = createdAt;
     }
 
@@ -50,6 +55,7 @@ public class GetUserStatusResponse {
             .code(user.getCode())
             .walkDone(walkDone)
             .mainScreenImageUrl(mainScreenImageUrl)
+            .location(City.valueOf(user.getLocation()))
             .createdAt(user.getCreatedAt())
             .build();
     }
