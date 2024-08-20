@@ -6,19 +6,32 @@ import com.nexters.gaetteok.walklog.application.WalkLogApplication;
 import com.nexters.gaetteok.walklog.presentation.request.CreateWalkLogRequest;
 import com.nexters.gaetteok.walklog.presentation.request.PatchWalkLogRequest;
 import com.nexters.gaetteok.walklog.presentation.request.ReportWalkLogRequest;
-import com.nexters.gaetteok.walklog.presentation.response.*;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
+import com.nexters.gaetteok.walklog.presentation.response.CreateWalkLogResponse;
+import com.nexters.gaetteok.walklog.presentation.response.GetWalkLogDetailResponse;
+import com.nexters.gaetteok.walklog.presentation.response.GetWalkLogListGroupByMonthResponse;
+import com.nexters.gaetteok.walklog.presentation.response.GetWalkLogListResponse;
+import com.nexters.gaetteok.walklog.presentation.response.PatchWalkLogResponse;
+import com.nexters.gaetteok.walklog.presentation.response.ReportWalkLogResponse;
+import com.nexters.gaetteok.walklog.presentation.response.WalkLogCalendarResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
@@ -72,7 +85,10 @@ public class WalkLogController implements WalkLogSpecification {
         return ResponseEntity.ok(GetWalkLogListResponse.of(walkLogList));
     }
 
-    @GetMapping(value = "/monthly", produces = MediaType.APPLICATION_JSON_VALUE, params = {"userId", "year", "month"})
+    @GetMapping(
+        value = "/monthly", produces = MediaType.APPLICATION_JSON_VALUE, params = {"userId", "year",
+        "month"}
+    )
     public ResponseEntity<GetWalkLogListGroupByMonthResponse> getListByUserIdAndMonth(
         @RequestParam long userId,
         @RequestParam int year,
@@ -84,21 +100,26 @@ public class WalkLogController implements WalkLogSpecification {
             WalkLog lastData = walkLogList.get(walkLogList.size() - 1);
             nextData = walkLogApplication.getNextData(lastData.getId());
         }
-        return ResponseEntity.ok(GetWalkLogListGroupByMonthResponse.of(year, month, nextData, walkLogList));
+        return ResponseEntity.ok(
+            GetWalkLogListGroupByMonthResponse.of(year, month, nextData, walkLogList));
     }
 
-    @GetMapping(value = "/me", produces = MediaType.APPLICATION_JSON_VALUE, params = {"year", "month"})
+    @GetMapping(
+        value = "/me", produces = MediaType.APPLICATION_JSON_VALUE, params = {"year", "month"}
+    )
     public ResponseEntity<GetWalkLogListGroupByMonthResponse> getMyList(
         @RequestParam int year,
         @RequestParam int month,
         UserInfo userInfo) {
-        List<WalkLog> walkLogList = walkLogApplication.getListByIdAndMonth(userInfo.getUserId(), year, month);
+        List<WalkLog> walkLogList = walkLogApplication.getListByIdAndMonth(
+            userInfo.getUserId(), year, month);
         WalkLog nextData = null;
         if (walkLogList.size() > 0) {
             WalkLog lastData = walkLogList.get(walkLogList.size() - 1);
             nextData = walkLogApplication.getNextData(lastData.getId());
         }
-        return ResponseEntity.ok(GetWalkLogListGroupByMonthResponse.of(year, month, nextData, walkLogList));
+        return ResponseEntity.ok(
+            GetWalkLogListGroupByMonthResponse.of(year, month, nextData, walkLogList));
     }
 
     @PatchMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -115,10 +136,22 @@ public class WalkLogController implements WalkLogSpecification {
     }
 
     @PostMapping(value = "/report", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ReportWalkLogResponse> reportUser(@RequestBody ReportWalkLogRequest request,
-                                                            UserInfo userInfo) {
+    public ResponseEntity<ReportWalkLogResponse> reportUser(
+        @RequestBody ReportWalkLogRequest request,
+        UserInfo userInfo) {
         log.info("[유저 신고] userInfo={}, request={}", userInfo, request);
-        return ResponseEntity.ok(ReportWalkLogResponse.of(atomicInteger.getAndIncrement(), LocalDateTime.now()));
+        return ResponseEntity.ok(
+            ReportWalkLogResponse.of(atomicInteger.getAndIncrement(), LocalDateTime.now()));
+    }
+
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GetWalkLogDetailResponse> getDetail(
+        @PathVariable long id,
+        UserInfo userInfo) {
+        WalkLog walkLog = walkLogApplication.getOneById(id, userInfo.getUserId());
+
+        return ResponseEntity.ok(
+            GetWalkLogDetailResponse.of(walkLog));
     }
 
 }

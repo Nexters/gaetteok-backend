@@ -10,13 +10,12 @@ import com.nexters.gaetteok.persistence.repository.UserPushNotificationRepositor
 import com.nexters.gaetteok.persistence.repository.UserRepository;
 import com.nexters.gaetteok.user.mapper.UserMapper;
 import com.nexters.gaetteok.user.mapper.UserPushNotificationMapper;
+import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +46,8 @@ public class UserApplication {
         UserEntity userEntity = userRepository.getById(userId);
         User user = UserMapper.toDomain(userEntity);
 
-        File newProfileImageFile = imageUploader.uploadFiles(List.of(profileImage), "profiles").getFirst();
+        File newProfileImageFile = imageUploader.uploadFiles(List.of(profileImage), "profiles")
+            .get(0);
         user.updateProfile(newProfileImageFile.getUploadFileUrl());
         userEntity = userRepository.save(UserMapper.toEntity(user));
         return UserMapper.toDomain(userEntity);
@@ -72,11 +72,14 @@ public class UserApplication {
 
     @Transactional
     public UserPushNotification updatePushNotificationTime(long id, int timeToBeUpdated) {
-        UserPushNotificationEntity userPushNotificationEntity = userPushNotificationRepository.findByUserId(id);
-        UserPushNotification userPushNotification = UserPushNotificationMapper.toDomain(userPushNotificationEntity);
+        UserPushNotificationEntity userPushNotificationEntity = userPushNotificationRepository.findByUserId(
+            id);
+        UserPushNotification userPushNotification = UserPushNotificationMapper.toDomain(
+            userPushNotificationEntity);
         userPushNotification.setPushNotificationTime(timeToBeUpdated);
 
-        userPushNotificationEntity = userPushNotificationRepository.save(UserPushNotificationMapper.toEntity(userPushNotification));
+        userPushNotificationEntity = userPushNotificationRepository.save(
+            UserPushNotificationMapper.toEntity(userPushNotification));
         return UserPushNotificationMapper.toDomain(userPushNotificationEntity);
     }
 
