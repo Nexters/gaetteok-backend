@@ -9,6 +9,7 @@ public class CommentMapper {
     public static Comment toDomain(CommentEntity commentEntity, UserEntity userEntity) {
         return Comment.builder()
             .id(commentEntity.getId())
+            .writerId(userEntity.getId())
             .writerNickname(userEntity.getNickname())
             .writerProfileImageUrl(userEntity.getProfileUrl())
             .content(commentEntity.getContent())

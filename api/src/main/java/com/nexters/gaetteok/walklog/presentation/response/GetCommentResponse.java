@@ -1,7 +1,6 @@
 package com.nexters.gaetteok.walklog.presentation.response;
 
-import com.nexters.gaetteok.domain.Reaction;
-import com.nexters.gaetteok.domain.ReactionType;
+import com.nexters.gaetteok.domain.Comment;
 import com.nexters.gaetteok.jwt.UserInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -10,10 +9,13 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class GetReactionResponse {
+public class GetCommentResponse {
 
-    @Schema(description = "리액션 ID", example = "1")
+    @Schema(description = "댓글 ID", example = "1")
     private long id;
+
+    @Schema(description = "댓글 내용", example = "댓글 내용")
+    private String content;
 
     @Schema(description = "작성자 ID", example = "1")
     private long writerId;
@@ -23,9 +25,6 @@ public class GetReactionResponse {
 
     @Schema(description = "작성자 프로필 이미지 URL", example = "https://gaetteok.com/profile.jpg")
     private String writerProfileImageUrl;
-
-    @Schema(description = "리액션 타입", example = "LIKE")
-    private ReactionType reactionType;
 
     @Schema(description = "산책 기록 ID", example = "1")
     private long walkLogId;
@@ -37,28 +36,28 @@ public class GetReactionResponse {
     private LocalDateTime createdAt;
 
     @Builder
-    public GetReactionResponse(long id, long writerId, String writerNickname, String writerProfileImageUrl,
-                               ReactionType reactionType, long walkLogId, boolean isMe, LocalDateTime createdAt) {
+    public GetCommentResponse(long id, String content, long writerId, String writerNickname, String writerProfileImageUrl,
+                              long walkLogId, boolean isMe, LocalDateTime createdAt) {
         this.id = id;
+        this.content = content;
         this.writerId = writerId;
         this.writerNickname = writerNickname;
         this.writerProfileImageUrl = writerProfileImageUrl;
-        this.reactionType = reactionType;
         this.walkLogId = walkLogId;
         this.isMe = isMe;
         this.createdAt = createdAt;
     }
 
-    public static GetReactionResponse of(Reaction reaction, UserInfo userInfo) {
-        return GetReactionResponse.builder()
-            .id(reaction.getId())
-            .writerId(reaction.getWriterId())
-            .writerNickname(reaction.getWriterNickname())
-            .writerProfileImageUrl(reaction.getWriterProfileImageUrl())
-            .reactionType(reaction.getReactionType())
-            .walkLogId(reaction.getWalkLogId())
-            .isMe(reaction.getWriterId() == userInfo.getUserId())
-            .createdAt(reaction.getCreatedAt())
+    public static GetCommentResponse of(Comment comment, UserInfo userInfo) {
+        return GetCommentResponse.builder()
+            .id(comment.getId())
+            .content(comment.getContent())
+            .writerId(comment.getWriterId())
+            .writerNickname(comment.getWriterNickname())
+            .writerProfileImageUrl(comment.getWriterProfileImageUrl())
+            .walkLogId(comment.getWalkLogId())
+            .isMe(comment.getWriterId() == userInfo.getUserId())
+            .createdAt(comment.getCreatedAt())
             .build();
     }
 

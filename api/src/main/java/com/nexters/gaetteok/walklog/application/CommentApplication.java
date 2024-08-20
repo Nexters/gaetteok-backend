@@ -20,13 +20,13 @@ public class CommentApplication {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public Comment create(long writerId, long walkLogId, CreateCommentRequest request) {
-        UserEntity userEntity = userRepository.findById(writerId)
-            .orElseThrow(() -> new RuntimeException("User with id " + writerId + " not found"));
+    public Comment create(long userId, long walkLogId, CreateCommentRequest request) {
+        UserEntity userEntity = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("User with id " + userId + " not found"));
         CommentEntity commentEntity = CommentEntity.builder()
             .walkLogId(walkLogId)
             .content(request.getContent())
-            .writerId(writerId)
+            .userId(userId)
             .build();
 
         CommentEntity savedEntity = commentRepository.save(commentEntity);
@@ -38,15 +38,15 @@ public class CommentApplication {
     public Comment update(long commentId, UpdateCommentRequest request) {
         CommentEntity commentEntity = commentRepository.findById(commentId)
             .orElseThrow(() -> new RuntimeException("Comment with id " + commentId + " not found"));
-        UserEntity userEntity = userRepository.findById(commentEntity.getWriterId())
+        UserEntity userEntity = userRepository.findById(commentEntity.getUserId())
             .orElseThrow(() -> new RuntimeException(
-                "User with id " + commentEntity.getWriterId() + " not found"));
+                "User with id " + commentEntity.getUserId() + " not found"));
 
         CommentEntity updatedCommentEntity = CommentEntity.builder()
             .id(commentEntity.getId())
             .walkLogId(commentEntity.getWalkLogId())
             .content(request.getContent())
-            .writerId(commentEntity.getWriterId())
+            .userId(commentEntity.getUserId())
             .build();
 
         CommentEntity savedEntity = commentRepository.save(updatedCommentEntity);

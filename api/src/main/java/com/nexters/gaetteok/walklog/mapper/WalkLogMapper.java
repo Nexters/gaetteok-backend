@@ -13,6 +13,7 @@ public class WalkLogMapper {
             .title(entity.getTitle())
             .content(entity.getContent())
             .walkTime(entity.getWalkTime())
+            .writerId(writer.getId())
             .writerNickname(writer.getNickname())
             .writerProfileImageUrl(writer.getProfileUrl())
             .createdAt(entity.getCreatedAt())
