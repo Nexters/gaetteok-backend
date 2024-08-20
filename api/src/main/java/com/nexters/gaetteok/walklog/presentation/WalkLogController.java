@@ -6,19 +6,24 @@ import com.nexters.gaetteok.walklog.application.WalkLogApplication;
 import com.nexters.gaetteok.walklog.presentation.request.CreateWalkLogRequest;
 import com.nexters.gaetteok.walklog.presentation.request.PatchWalkLogRequest;
 import com.nexters.gaetteok.walklog.presentation.request.ReportWalkLogRequest;
-import com.nexters.gaetteok.walklog.presentation.response.*;
+import com.nexters.gaetteok.walklog.presentation.response.CreateWalkLogResponse;
+import com.nexters.gaetteok.walklog.presentation.response.GetWalkLogDetailResponse;
+import com.nexters.gaetteok.walklog.presentation.response.GetWalkLogListGroupByMonthResponse;
+import com.nexters.gaetteok.walklog.presentation.response.GetWalkLogListResponse;
+import com.nexters.gaetteok.walklog.presentation.response.PatchWalkLogResponse;
+import com.nexters.gaetteok.walklog.presentation.response.ReportWalkLogResponse;
+import com.nexters.gaetteok.walklog.presentation.response.WalkLogCalendarResponse;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @RestController
@@ -135,7 +140,7 @@ public class WalkLogController implements WalkLogSpecification {
     public ResponseEntity<GetWalkLogDetailResponse> getDetail(
         @PathVariable long id,
         UserInfo userInfo) {
-        WalkLog walkLog = walkLogApplication.getOneById(id, userInfo.getUserId());
+        WalkLog walkLog = walkLogApplication.getOneById(id);
 
         return ResponseEntity.ok(
             GetWalkLogDetailResponse.of(walkLog, userInfo));
