@@ -21,6 +21,8 @@ public class WalkLog {
 
     private WalkTime walkTime;
 
+    private long writerId;
+
     private String writerNickname;
 
     private String writerProfileImageUrl;
@@ -33,12 +35,13 @@ public class WalkLog {
 
     @Builder
     public WalkLog(long id, String photoUrl, String title, String content, WalkTime walkTime,
-        String writerNickname, String writerProfileImageUrl, LocalDateTime createdAt) {
+                   long writerId, String writerNickname, String writerProfileImageUrl, LocalDateTime createdAt) {
         this.id = id;
         this.photoUrl = photoUrl;
         this.title = title;
         this.content = content;
         this.walkTime = walkTime;
+        this.writerId = writerId;
         this.writerNickname = writerNickname;
         this.writerProfileImageUrl = writerProfileImageUrl;
         this.createdAt = createdAt;

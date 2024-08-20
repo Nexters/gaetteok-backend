@@ -23,6 +23,8 @@ import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class WalkLogControllerTests extends AbstractControllerTests {
@@ -242,6 +244,20 @@ public class WalkLogControllerTests extends AbstractControllerTests {
 
         // then
         resultActions.andExpect(status().isOk());
+    }
+
+    @Test
+    void delete_correctId_success() throws Exception {
+        // given
+        long id = 1;
+        doNothing().when(walkLogApplication).delete(anyLong(), anyLong());
+
+        // when
+        ResultActions resultActions = mockMvc.perform(delete("/api/walk-logs/{id}", id)
+            .header("Authorization", "Bearer token"));
+
+        // then
+        resultActions.andExpect(status().isNoContent());
     }
 
 }

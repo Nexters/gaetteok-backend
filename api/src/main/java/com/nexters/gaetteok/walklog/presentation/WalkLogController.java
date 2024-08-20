@@ -6,32 +6,19 @@ import com.nexters.gaetteok.walklog.application.WalkLogApplication;
 import com.nexters.gaetteok.walklog.presentation.request.CreateWalkLogRequest;
 import com.nexters.gaetteok.walklog.presentation.request.PatchWalkLogRequest;
 import com.nexters.gaetteok.walklog.presentation.request.ReportWalkLogRequest;
-import com.nexters.gaetteok.walklog.presentation.response.CreateWalkLogResponse;
-import com.nexters.gaetteok.walklog.presentation.response.GetWalkLogDetailResponse;
-import com.nexters.gaetteok.walklog.presentation.response.GetWalkLogListGroupByMonthResponse;
-import com.nexters.gaetteok.walklog.presentation.response.GetWalkLogListResponse;
-import com.nexters.gaetteok.walklog.presentation.response.PatchWalkLogResponse;
-import com.nexters.gaetteok.walklog.presentation.response.ReportWalkLogResponse;
-import com.nexters.gaetteok.walklog.presentation.response.WalkLogCalendarResponse;
+import com.nexters.gaetteok.walklog.presentation.response.*;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
@@ -151,7 +138,15 @@ public class WalkLogController implements WalkLogSpecification {
         WalkLog walkLog = walkLogApplication.getOneById(id, userInfo.getUserId());
 
         return ResponseEntity.ok(
-            GetWalkLogDetailResponse.of(walkLog));
+            GetWalkLogDetailResponse.of(walkLog, userInfo));
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(
+        @PathVariable long id,
+        UserInfo userInfo) {
+        walkLogApplication.delete(id, userInfo.getUserId());
+        return ResponseEntity.noContent().build();
     }
 
 }

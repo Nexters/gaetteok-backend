@@ -1,10 +1,11 @@
 package com.nexters.gaetteok.persistence.repository;
 
 import com.nexters.gaetteok.persistence.entity.ReactionEntity;
-import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ReactionRepository extends JpaRepository<ReactionEntity, Long> {
+import java.util.List;
+
+public interface ReactionRepository extends JpaRepository<ReactionEntity, Long>, CustomReactionRepository {
 
     default ReactionEntity getById(long reactionId) {
         return findById(reactionId)
@@ -13,7 +14,5 @@ public interface ReactionRepository extends JpaRepository<ReactionEntity, Long> 
     }
 
     List<ReactionEntity> findByWalkLogIdIn(List<Long> walkLogIds);
-
-    List<ReactionEntity> findByWalkLogId(Long walkLogId);
 
 }

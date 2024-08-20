@@ -1,16 +1,11 @@
 package com.nexters.gaetteok.common.service;
 
-import com.nexters.gaetteok.domain.AuthProvider;
-import com.nexters.gaetteok.domain.Comment;
-import com.nexters.gaetteok.domain.WalkLog;
-import com.nexters.gaetteok.domain.WalkTime;
-import com.nexters.gaetteok.persistence.entity.CommentEntity;
-import com.nexters.gaetteok.persistence.entity.FriendEntity;
-import com.nexters.gaetteok.persistence.entity.UserEntity;
-import com.nexters.gaetteok.persistence.entity.WalkLogEntity;
+import com.nexters.gaetteok.domain.*;
+import com.nexters.gaetteok.persistence.entity.*;
 import com.nexters.gaetteok.user.mapper.FriendMapper;
 import com.nexters.gaetteok.user.mapper.UserMapper;
 import com.nexters.gaetteok.walklog.mapper.CommentMapper;
+import com.nexters.gaetteok.walklog.mapper.ReactionMapper;
 import com.nexters.gaetteok.walklog.mapper.WalkLogMapper;
 import com.nexters.gaetteok.weather.enums.City;
 import jakarta.persistence.EntityManager;
@@ -120,6 +115,7 @@ public class TestDataInjector {
         };
         List<WalkLog> walkLogList = new ArrayList<>();
         List<Comment> comments = new ArrayList<>();
+        List<Reaction> reactions = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             WalkLogEntity walkLogEntity = entityManager.merge(WalkLogEntity.builder()
                 .userId(poppy.getId())
@@ -132,15 +128,35 @@ public class TestDataInjector {
             walkLogList.add(WalkLogMapper.toDomain(walkLogEntity, poppy));
 
             CommentEntity commentEntity = entityManager.merge(CommentEntity.builder()
-                .writerId(poppy.getId())
+                .userId(poppy.getId())
                 .content("오늘 산책 지리더라")
                 .walkLogId(walkLogEntity.getId())
                 .createdAt(LocalDateTime.now().minusDays(20 - i))
                 .build());
+            CommentEntity friendCommentEntity = entityManager.merge(CommentEntity.builder()
+                .userId(choco.getId())
+                .content("개기여워~")
+                .walkLogId(walkLogEntity.getId())
+                .createdAt(LocalDateTime.now().minusDays(20 - i))
+                .build());
             comments.add(CommentMapper.toDomain(commentEntity, poppy));
+            comments.add(CommentMapper.toDomain(friendCommentEntity, choco));
+            ReactionEntity reactionEntity = entityManager.merge(ReactionEntity.builder()
+                .userId(poppy.getId())
+                .walkLogId(walkLogEntity.getId())
+                .reactionType(ReactionType.LIKE)
+                .build());
+            ReactionEntity friendReactionEntity = entityManager.merge(ReactionEntity.builder()
+                .userId(happy.getId())
+                .walkLogId(walkLogEntity.getId())
+                .reactionType(ReactionType.IMPRESSIVE)
+                .build());
+            reactions.add(ReactionMapper.toDomain(reactionEntity, poppy));
+            reactions.add(ReactionMapper.toDomain(friendReactionEntity, happy));
         }
         log.info("뽀삐 산책 기록 저장: {}", walkLogList);
         log.info("뽀삐 산책 기록에 대한 댓글 저장: {}", comments);
+        log.info("뽀삐 산책 기록에 대한 반응 저장: {}", reactions);
 
         WalkLogEntity chocoWalkLog = entityManager.merge(WalkLogEntity.builder()
             .userId(choco.getId())

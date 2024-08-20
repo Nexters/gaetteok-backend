@@ -51,6 +51,7 @@ public class CustomWalkLogRepositoryImpl implements CustomWalkLogRepository {
                 walkLogEntity.title,
                 walkLogEntity.content,
                 walkLogEntity.walkTime,
+                userEntity.id,
                 userEntity.nickname,
                 userEntity.profileUrl,
                 walkLogEntity.createdAt
@@ -76,6 +77,7 @@ public class CustomWalkLogRepositoryImpl implements CustomWalkLogRepository {
                 walkLogEntity.title,
                 walkLogEntity.content,
                 walkLogEntity.walkTime,
+                userEntity.id,
                 userEntity.nickname,
                 userEntity.profileUrl,
                 walkLogEntity.createdAt

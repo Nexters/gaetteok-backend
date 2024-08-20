@@ -6,6 +6,7 @@ import com.nexters.gaetteok.domain.WalkLog;
 import com.nexters.gaetteok.image.model.File;
 import com.nexters.gaetteok.image.service.ImageUploader;
 import com.nexters.gaetteok.persistence.entity.CommentEntity;
+import com.nexters.gaetteok.persistence.entity.ReactionEntity;
 import com.nexters.gaetteok.persistence.entity.UserEntity;
 import com.nexters.gaetteok.persistence.entity.WalkLogEntity;
 import com.nexters.gaetteok.persistence.repository.CommentRepository;
@@ -17,21 +18,17 @@ import com.nexters.gaetteok.walklog.mapper.ReactionMapper;
 import com.nexters.gaetteok.walklog.mapper.WalkLogMapper;
 import com.nexters.gaetteok.walklog.presentation.request.CreateWalkLogRequest;
 import com.nexters.gaetteok.walklog.presentation.request.PatchWalkLogRequest;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -51,12 +48,22 @@ public class WalkLogApplication {
                 walkLogEntity.getCreatedAt().getDayOfMonth();
     }
 
-    private void setComments(List<WalkLog> walkLogs, Map<Long, UserEntity> userEntityMap) {
-        List<Long> walkLogIds = walkLogs.stream().map(WalkLog::getId).toList();
+    private void setComments(List<WalkLog> walkLogs, List<Long> walkLogIds) {
+        List<Long> writerIds = commentRepository.findByWalkLogIdIn(walkLogIds)
+            .stream().map(
+                CommentEntity::getUserId
+            )
+            .toList();
+
+        Map<Long, UserEntity> userEntityMap = userRepository.findAllById(writerIds)
+            .stream().collect(
+                Collectors.toMap(UserEntity::getId, user -> user)
+            );
+
         Map<Long, List<Comment>> commentMap = commentRepository.findByWalkLogIdIn(walkLogIds)
             .stream().map(commentEntity -> CommentMapper.toDomain(
                 commentEntity,
-                userEntityMap.get(commentEntity.getWriterId())
+                userEntityMap.get(commentEntity.getUserId())
             ))
             .collect(Collectors.groupingBy(Comment::getWalkLogId));
 
@@ -65,8 +72,18 @@ public class WalkLogApplication {
         );
     }
 
-    private void setReactions(List<WalkLog> walkLogs, Map<Long, UserEntity> userEntityMap) {
-        List<Long> walkLogIds = walkLogs.stream().map(WalkLog::getId).toList();
+    private void setReactions(List<WalkLog> walkLogs, List<Long> walkLogIds) {
+        List<Long> writerIds = reactionRepository.findByWalkLogIdIn(walkLogIds)
+            .stream().map(
+                ReactionEntity::getUserId
+            )
+            .toList();
+
+        Map<Long, UserEntity> userEntityMap = userRepository.findAllById(writerIds)
+            .stream().collect(
+                Collectors.toMap(UserEntity::getId, user -> user)
+            );
+
         Map<Long, List<Reaction>> reactionMap = reactionRepository.findByWalkLogIdIn(walkLogIds)
             .stream().map(reactionEntity -> ReactionMapper.toDomain(
                 reactionEntity,
@@ -122,54 +139,12 @@ public class WalkLogApplication {
 
     @Transactional(readOnly = true)
     public List<WalkLog> getList(long userId, long cursorId, int pageSize) {
-        UserEntity me = userRepository.getById(userId);
-        List<WalkLog> walkLogs = walkLogRepository.getListOfMeAndMyFriend(
-            userId, cursorId, pageSize);
-
-        List<Long> walkLogIds = walkLogs.stream()
-            .map(WalkLog::getId)
-            .toList();
-
-        List<Long> writerIds = commentRepository.findByWalkLogIdIn(walkLogIds)
-            .stream().map(
-                CommentEntity::getWriterId
-            )
-            .toList();
-
-        Map<Long, UserEntity> userEntityMap = userRepository.findAllById(writerIds)
-            .stream().collect(
-                Collectors.toMap(UserEntity::getId, user -> user)
-            );
-
-        setComments(walkLogs, userEntityMap);
-        setReactions(walkLogs, userEntityMap);
-
-        return walkLogs;
+        return walkLogRepository.getListOfMeAndMyFriend(userId, cursorId, pageSize);
     }
 
     @Transactional(readOnly = true)
     public List<WalkLog> getListById(long userId, long cursorId, int pageSize) {
-        List<WalkLog> walkLogs = walkLogRepository.getListOnlyMe(userId, cursorId, pageSize);
-
-        List<Long> walkLogIds = walkLogs.stream()
-            .map(WalkLog::getId)
-            .toList();
-
-        List<Long> writerIds = commentRepository.findByWalkLogIdIn(walkLogIds)
-            .stream().map(
-                CommentEntity::getWriterId
-            )
-            .toList();
-
-        Map<Long, UserEntity> userEntityMap = userRepository.findAllById(writerIds)
-            .stream().collect(
-                Collectors.toMap(UserEntity::getId, user -> user)
-            );
-
-        setComments(walkLogs, userEntityMap);
-        setReactions(walkLogs, userEntityMap);
-
-        return walkLogs;
+        return walkLogRepository.getListOnlyMe(userId, cursorId, pageSize);
     }
 
     @Transactional(readOnly = true)
@@ -177,23 +152,13 @@ public class WalkLogApplication {
         UserEntity userEntity = userRepository.getById(userId);
         WalkLog walkLog = WalkLogMapper.toDomain(walkLogRepository.getById(walkLogId), userEntity);
 
-        List<Long> writerIds = commentRepository.findByWalkLogId(walkLog.getId())
-            .stream().map(
-                CommentEntity::getWriterId
-            )
-            .toList();
+        List<Comment> comments = commentRepository.findByWalkLogIdInWithUser(walkLogId);
+        List<Reaction> reactions = reactionRepository.findByWalkLogIdInWithUser(walkLogId);
 
-        Map<Long, UserEntity> userEntityMap = userRepository.findAllById(writerIds)
-            .stream().collect(
-                Collectors.toMap(UserEntity::getId, user -> user)
-            );
+        walkLog.setComments(comments);
+        walkLog.setReactions(reactions);
 
-        List<WalkLog> walkLogs = new ArrayList<>();
-        walkLogs.add(walkLog);
-        setComments(walkLogs, userEntityMap);
-        setReactions(walkLogs, userEntityMap);
-
-        return walkLogs.get(0);
+        return walkLog;
     }
 
     @Transactional(readOnly = true)
@@ -208,19 +173,8 @@ public class WalkLogApplication {
             .map(WalkLog::getId)
             .toList();
 
-        List<Long> writerIds = commentRepository.findByWalkLogIdIn(walkLogIds)
-            .stream().map(
-                CommentEntity::getWriterId
-            )
-            .toList();
-
-        Map<Long, UserEntity> userEntityMap = userRepository.findAllById(writerIds)
-            .stream().collect(
-                Collectors.toMap(UserEntity::getId, user -> user)
-            );
-
-        setComments(walkLogs, userEntityMap);
-        setReactions(walkLogs, userEntityMap);
+        setComments(walkLogs, walkLogIds);
+        setReactions(walkLogs, walkLogIds);
 
         return walkLogs;
     }
@@ -265,4 +219,14 @@ public class WalkLogApplication {
     public boolean isTodayWalkLogExists(long userId) {
         return walkLogRepository.isTodayWalkLogExists(userId, LocalDate.now());
     }
+
+    public void delete(long id, long userId) {
+        WalkLogEntity walkLog = walkLogRepository.getById(id);
+        if (walkLog.getUserId() != userId) {
+            log.warn("자신이 작성한 리액션만 삭제할 수 있습니다. 제거 요청자={}, 작성자={}", userId, walkLog.getUserId());
+            throw new IllegalArgumentException("자신이 작성한 리액션만 삭제할 수 있습니다.");
+        }
+        walkLogRepository.delete(walkLog);
+    }
+
 }

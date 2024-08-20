@@ -1,18 +1,13 @@
 package com.nexters.gaetteok.persistence.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(
@@ -36,20 +31,20 @@ public class CommentEntity {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    @Column(name = "writer_id")
-    private long writerId;
+    @Column(name = "user_id")
+    private long userId;
 
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @Builder
-    public CommentEntity(long id, String content, long writerId, long walkLogId,
-        LocalDateTime createdAt) {
+    public CommentEntity(long id, String content, long userId, long walkLogId,
+                         LocalDateTime createdAt) {
         this.id = id;
         this.walkLogId = walkLogId;
         this.content = content;
-        this.writerId = writerId;
+        this.userId = userId;
         this.createdAt = createdAt;
     }
 }
