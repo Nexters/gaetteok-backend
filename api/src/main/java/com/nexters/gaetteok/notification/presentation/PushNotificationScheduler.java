@@ -26,7 +26,6 @@ public class PushNotificationScheduler {
         int targetMinute = (now.getHour() * 60) + now.getMinute();
         userApplication.getPushNotificationByMinute(targetMinute).forEach(
             pushNotification -> {
-                log.info("{} 동작 시작", pushNotification.getUserId());
                 pushNotificationService.sendEncouragementNotification(pushNotification.getUserId());
             }
         );
