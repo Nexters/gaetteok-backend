@@ -212,7 +212,7 @@ public class WalkLogApplication {
             .title(request.getTitle() != null ? request.getTitle() : walkLog.getTitle())
             .content(request.getContent() != null ? request.getContent() : walkLog.getContent())
             .userId(userId)
-            .walkTime(walkLog.getWalkTime())
+            .walkTime(request.getWalkTime() != null ? request.getWalkTime() : walkLog.getWalkTime())
             .updatedAt(LocalDateTime.now())
             .build()
         );
