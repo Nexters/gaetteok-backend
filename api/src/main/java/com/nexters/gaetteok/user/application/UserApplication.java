@@ -70,6 +70,18 @@ public class UserApplication {
         return userPushNotification.getPushNotificationTime();
     }
 
+    @Transactional(readOnly = true)
+    public List<UserPushNotification> getPushNotificationByMinute(long minute) {
+        return userPushNotificationRepository.findByPushNotificationTime(
+                minute)
+            .stream()
+            .map(
+                userPushNotificationEntity -> UserPushNotificationMapper.toDomain(
+                    userPushNotificationEntity)
+            )
+            .toList();
+    }
+
     @Transactional
     public UserPushNotification updatePushNotificationTime(long id, int timeToBeUpdated) {
         UserPushNotificationEntity userPushNotificationEntity = userPushNotificationRepository.findByUserId(

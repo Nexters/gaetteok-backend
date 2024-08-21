@@ -42,3 +42,4 @@ docker/
 ### Spring ###
 application-local.yml
 /api/src/main/resources/static/docs/openapi3.json
+/infra/src/main/resources/firebase.json
