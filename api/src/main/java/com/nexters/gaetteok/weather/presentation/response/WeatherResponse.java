@@ -12,11 +12,15 @@ public class WeatherResponse {
     private Integer temp;
 
     @Schema(description = "날씨")
-    private Weather weather;
+    private MajorWeather weather;
+
+    @Schema(description = "날씨 관련 문구")
+    private String weatherMessage;
 
     @Builder
     public WeatherResponse(Integer temp, Weather weather) {
         this.temp = temp;
-        this.weather = weather;
+        this.weather = MajorWeather.from(weather);
+        this.weatherMessage = this.weather.getMessage();
     }
 }

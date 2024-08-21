@@ -1,18 +1,17 @@
 package com.nexters.gaetteok.user.presentation;
 
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import com.nexters.gaetteok.common.presentation.AbstractControllerTests;
 import com.nexters.gaetteok.domain.User;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.time.LocalDateTime;
-
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 public class UserControllerTests extends AbstractControllerTests {
@@ -26,6 +25,7 @@ public class UserControllerTests extends AbstractControllerTests {
             .nickname("test")
             .code("123456")
             .profileUrl("https://profile-image.jpg")
+            .location("SEOUL")
             .createdAt(LocalDateTime.now())
             .build();
         given(userApplication.getUser(anyLong())).willReturn(user);
@@ -48,6 +48,7 @@ public class UserControllerTests extends AbstractControllerTests {
             .nickname("test")
             .code("123456")
             .profileUrl("https://profile-image.jpg")
+            .location("SEOUL")
             .createdAt(LocalDateTime.now())
             .build();
         given(userApplication.updateNickname(anyLong(), anyString())).willReturn(user);
@@ -72,6 +73,7 @@ public class UserControllerTests extends AbstractControllerTests {
             .nickname("test")
             .code("123456")
             .profileUrl("https://profile-image.jpg")
+            .location("SEOUL")
             .createdAt(LocalDateTime.now())
             .build();
         given(userApplication.updateProfile(anyLong(), any())).willReturn(user);
@@ -97,6 +99,7 @@ public class UserControllerTests extends AbstractControllerTests {
             .code("123456")
             .location("Daegu")
             .profileUrl("https://profile-image.jpg")
+            .location("SEOUL")
             .createdAt(LocalDateTime.now())
             .build();
         given(userApplication.updateLocation(anyLong(), anyString())).willReturn(user);

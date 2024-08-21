@@ -128,4 +128,29 @@ public interface WalkLogSpecification {
         UserInfo userInfo
     );
 
+
+    @Operation(summary = "산책 기록 상세 조회", description = "산책 기록을 상세 조회합니다.")
+    @ApiResponse(
+        responseCode = "200",
+        description = "산채 기록 상세 조회 성공",
+        content = @Content(
+            mediaType = MediaType.APPLICATION_JSON_VALUE,
+            schema = @Schema(implementation = GetWalkLogDetailResponse.class)
+        )
+    )
+    ResponseEntity<GetWalkLogDetailResponse> getDetail(
+        @Parameter(description = "산책 기록 ID") long id,
+        @Parameter(hidden = true) UserInfo userInfo
+    ) throws IOException;
+
+    @Operation(summary = "산책 기록 삭제", description = "산책 기록을 삭제합니다.")
+    @ApiResponse(
+        responseCode = "204",
+        description = "산책 기록 삭제 성공"
+    )
+    ResponseEntity<Void> delete(
+        @Parameter(description = "산책 기록 ID") long id,
+        @Parameter(hidden = true) UserInfo userInfo
+    );
+
 }
