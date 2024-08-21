@@ -17,6 +17,9 @@ dependencies {
     // jwt
     implementation 'com.auth0:java-jwt:4.4.0'
 
+    // firebase
+    implementation group: 'com.google.firebase', name: 'firebase-admin', version: '8.1.0'
+
     implementation project(':domain:user')
     implementation project(':domain:walklog')
 
