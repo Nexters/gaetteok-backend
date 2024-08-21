@@ -18,6 +18,8 @@ jobs:
       - name: Create a firebase json file from secret
         run: |
           echo "${{ secrets.FIREBASE_JSON }}" > infra/src/main/resources/firebase.json
+          
+          cat infra/src/main/resources/firebase.json
 
       - name: Set Yaml
         uses: microsoft/variable-substitution@v1
