@@ -22,7 +22,6 @@ public class PushNotificationScheduler {
 
     @Scheduled(fixedDelay = 60000)
     public void run() {
-        log.info("스케쥴러 동작 시작");
         LocalDateTime now = LocalDateTime.now();
         int targetMinute = (now.getHour() * 60) + now.getMinute();
         userApplication.getPushNotificationByMinute(targetMinute).forEach(
