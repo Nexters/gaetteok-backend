@@ -1,4 +1,4 @@
-package com.nexters.gaetteok.notification.presentation;
+package com.nexters.gaetteok.user.presentation;
 
 import com.nexters.gaetteok.firebase.service.PushNotificationService;
 import com.nexters.gaetteok.user.application.UserApplication;

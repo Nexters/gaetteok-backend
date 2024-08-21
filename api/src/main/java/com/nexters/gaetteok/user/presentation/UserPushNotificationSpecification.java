@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
@@ -40,5 +41,18 @@ public interface UserPushNotificationSpecification {
         @Parameter(description = "알람시간. MMDD 형태의 숫자값", example = "0830") int pushNotificationTime,
         @Parameter(hidden = true) UserInfo userInfo
     );
+
+    @Operation(summary = "특정 사용자에게 산책 독려 알림 발송")
+    @ApiResponse(
+        responseCode = "200",
+        description = "사용자 푸시 알림 발송 성공",
+        content = @Content(
+            mediaType = MediaType.APPLICATION_JSON_VALUE,
+            schema = @Schema(implementation = Void.class)
+        )
+    )
+    ResponseEntity<Void> pushNotification(
+        @Parameter(description = "산책 독려 알림을 받을 계정의 ID") long targetUserId
+    ) throws BadRequestException;
 
 }
