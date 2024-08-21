@@ -47,7 +47,7 @@ public class UserApplication {
         User user = UserMapper.toDomain(userEntity);
 
         File newProfileImageFile = imageUploader.uploadFiles(List.of(profileImage), "profiles")
-            .getFirst();
+            .get(0);
         user.updateProfile(newProfileImageFile.getUploadFileUrl());
         userEntity = userRepository.save(UserMapper.toEntity(user));
         return UserMapper.toDomain(userEntity);

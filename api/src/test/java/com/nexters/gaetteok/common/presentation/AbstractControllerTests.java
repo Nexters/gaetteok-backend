@@ -1,6 +1,10 @@
 package com.nexters.gaetteok.common.presentation;
 
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.*;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexters.gaetteok.firebase.service.PushNotificationService;
 import com.nexters.gaetteok.image.service.ImageUploader;
 import com.nexters.gaetteok.jwt.JwtTokenValidator;
 import com.nexters.gaetteok.jwt.UserInfo;
@@ -17,10 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
 
 @WebMvcTest
 public class AbstractControllerTests {
@@ -60,6 +60,9 @@ public class AbstractControllerTests {
 
     @MockBean
     protected UserRepository userRepository;
+
+    @MockBean
+    protected PushNotificationService pushNotificationService;
 
     @BeforeEach
     void mockingTokenValidate() {
