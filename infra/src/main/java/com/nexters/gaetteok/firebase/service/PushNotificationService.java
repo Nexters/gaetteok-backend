@@ -7,6 +7,7 @@ import com.google.firebase.messaging.Notification;
 import com.nexters.gaetteok.persistence.entity.UserEntity;
 import com.nexters.gaetteok.persistence.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,16 +16,24 @@ public class PushNotificationService {
 
     private final UserRepository userRepository;
 
-    public void sendPickNotification(long userId) {
+    public void sendPickNotification(long userId) throws BadRequestException {
         UserEntity userEntity = userRepository.getById(userId);
+        if (userEntity.getDeviceToken() == null) {
+            throw new BadRequestException("device token should not be null!!");
+        }
+
         String title = "\uD83D\uDC48" + " " + userEntity.getNickname() + " " + "얼른 산책할까요?";
         String body = "오늘 산책하지 않았나요? 친구가 찔렀어요!";
 
         sendMessage(title, body, userEntity.getDeviceToken());
     }
 
-    public void sendEncouragementNotification(long userId) {
+    public void sendEncouragementNotification(long userId) throws BadRequestException {
         UserEntity userEntity = userRepository.getById(userId);
+        if (userEntity.getDeviceToken() == null) {
+            throw new BadRequestException("device token should not be null!!");
+        }
+
         String title = "\uD83D\uDC36 산책갈 시간이예요!";
         String body = userEntity.getNickname() + "와 산책나갈 준비 해볼까요?";
 
