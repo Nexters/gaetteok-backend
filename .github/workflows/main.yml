@@ -17,7 +17,7 @@ jobs:
 
       - name: Create a firebase json file from secret
         run: |
-          curl secrets.FIREBASE_JSON_URL > infra/src/main/resources/firebase.json
+          curl ${{ secrets.FIREBASE_JSON_URL }} > infra/src/main/resources/firebase.json
           
           cat infra/src/main/resources/firebase.json
 
