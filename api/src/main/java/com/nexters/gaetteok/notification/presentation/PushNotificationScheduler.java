@@ -5,6 +5,7 @@ import com.nexters.gaetteok.user.application.UserApplication;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -26,7 +27,12 @@ public class PushNotificationScheduler {
         int targetMinute = (now.getHour() * 60) + now.getMinute();
         userApplication.getPushNotificationByMinute(targetMinute).forEach(
             pushNotification -> {
-                pushNotificationService.sendEncouragementNotification(pushNotification.getUserId());
+                try {
+                    pushNotificationService.sendEncouragementNotification(
+                        pushNotification.getUserId());
+                } catch (BadRequestException e) {
+                    throw new RuntimeException(e);
+                }
             }
         );
     }
