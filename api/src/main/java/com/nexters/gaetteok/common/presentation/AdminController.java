@@ -28,7 +28,7 @@ public class AdminController implements AdminSpecification {
     private final AdminApplication adminApplication;
 
     @PostMapping(value = "/walk-logs", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> createWalkLogs(@RequestHeader(value = "Authorization", required = false) String token,
+    public ResponseEntity<Void> createWalkLogs(@RequestHeader(value = "Authorization") String token,
                                                @RequestPart CreateWalkLogAdminRequest request,
                                                @RequestPart(name = "photo") MultipartFile photo) throws IOException {
         if (!isValidToken(token)) {
@@ -41,7 +41,7 @@ public class AdminController implements AdminSpecification {
     }
 
     @PostMapping(value = "/comments", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> createComments(@RequestHeader(value = "Authorization", required = false) String token,
+    public ResponseEntity<Void> createComments(@RequestHeader(value = "Authorization") String token,
                                                @RequestBody CreateCommentAdminRequest request) {
         if (!isValidToken(token)) {
             log.info("[관리자용 댓글 생성] 잘못된 관리자 토큰: {}", token);
@@ -53,7 +53,7 @@ public class AdminController implements AdminSpecification {
     }
 
     @PostMapping(value = "/reactions", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> createReactions(@RequestHeader(value = "Authorization", required = false) String token,
+    public ResponseEntity<Void> createReactions(@RequestHeader(value = "Authorization") String token,
                                                 @RequestBody CreateReactionAdminRequest request) {
         if (!isValidToken(token)) {
             log.info("[관리자용 리액션 생성] 잘못된 관리자 토큰: {}", token);

@@ -4,6 +4,7 @@ import com.nexters.gaetteok.common.presentation.request.CreateCommentAdminReques
 import com.nexters.gaetteok.common.presentation.request.CreateReactionAdminRequest;
 import com.nexters.gaetteok.common.presentation.request.CreateWalkLogAdminRequest;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public interface AdminSpecification {
         description = "산책 기록 생성 성공"
     )
     ResponseEntity<Void> createWalkLogs(
-        String token,
+        @Parameter(hidden = true) String token,
         CreateWalkLogAdminRequest request,
         MultipartFile photo
     ) throws IOException;
@@ -31,7 +32,7 @@ public interface AdminSpecification {
         description = "댓글 생성 성공"
     )
     ResponseEntity<Void> createComments(
-        String token,
+        @Parameter(hidden = true) String token,
         CreateCommentAdminRequest request
     );
 
@@ -41,7 +42,7 @@ public interface AdminSpecification {
         description = "리액션 생성 성공"
     )
     ResponseEntity<Void> createReactions(
-        String token,
+        @Parameter(hidden = true) String token,
         CreateReactionAdminRequest request
     );
 
