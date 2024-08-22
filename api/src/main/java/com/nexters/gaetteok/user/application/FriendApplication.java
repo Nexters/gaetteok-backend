@@ -1,5 +1,6 @@
 package com.nexters.gaetteok.user.application;
 
+import com.nexters.gaetteok.common.exception.ResourceAlreadyExistsException;
 import com.nexters.gaetteok.domain.Friend;
 import com.nexters.gaetteok.domain.FriendWalkStatus;
 import com.nexters.gaetteok.persistence.entity.FriendEntity;
@@ -30,7 +31,7 @@ public class FriendApplication {
             .orElseThrow(
                 () -> new IllegalArgumentException("해당 친구 코드를 가진 사용자가 존재하지 않습니다. code: " + code));
         if (isAlreadyFriend(me.getId(), friend.getId())) {
-            throw new IllegalArgumentException("이미 친구인 사용자의 코드입니다. 친구: " + friend.getNickname());
+            throw new ResourceAlreadyExistsException("이미 친구인 사용자의 코드입니다. 친구: " + friend.getNickname());
         }
         FriendEntity meToFriend = friendRepository.save(FriendEntity.builder()
             .myUserId(me.getId())

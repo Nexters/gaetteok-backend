@@ -1,6 +1,7 @@
 package com.nexters.gaetteok.common.config;
 
 import com.nexters.gaetteok.common.exception.InvalidTokenException;
+import com.nexters.gaetteok.common.exception.ResourceAlreadyExistsException;
 import com.nexters.gaetteok.common.presentation.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<ErrorResponse> handleInvalidTokenException(InvalidTokenException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(ResourceAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleResourceAlreadyExistsException(ResourceAlreadyExistsException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(e.getMessage()));
     }
 
 }
