@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.util.StringUtils;
 
 @Getter
 @ToString
@@ -33,7 +34,7 @@ public class SignupRequest {
     public SignupRequest(String oauthIdentifier, String deviceToken, String nickname, String profileUrl, City city, AuthProvider provider) {
         this.oauthIdentifier = oauthIdentifier;
         this.deviceToken = deviceToken;
-        this.nickname = nickname;
+        this.nickname = StringUtils.hasText(nickname) ? nickname : "포포";
         this.profileUrl = profileUrl;
         this.city = city;
         this.provider = provider;
