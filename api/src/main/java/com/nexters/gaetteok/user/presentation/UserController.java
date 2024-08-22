@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,6 +46,10 @@ public class UserController implements UserSpecification {
         UserInfo userInfo
     ) {
         log.info("[유저 닉네임 수정] userInfo={}, nickname={}", userInfo, nickname);
+        if (!StringUtils.hasText(nickname)) {
+            log.info("빈 유저 닉네임 - 기본값(포포)으로 설정");
+            nickname = "포포";
+        }
         User user = userApplication.updateNickname(userInfo.getUserId(), nickname);
         log.info("[유저 닉네임 수정 완료] user={}", user);
         return ResponseEntity.ok(GetUserResponse.of(user));
