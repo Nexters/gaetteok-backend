@@ -43,17 +43,12 @@ public class WalkLogController implements WalkLogSpecification {
 
     @GetMapping(value = "/calendar", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WalkLogCalendarResponse> getCalendar(
-        @RequestParam(required = false, defaultValue = "0") long userId,
         @RequestParam int year,
         @RequestParam int month,
         UserInfo userInfo
     ) {
         Map<String, WalkLog> walkLogList;
-        if (userId > 0) {
-            walkLogList = walkLogApplication.getCalendar(userId, year, month);
-        } else {
-            walkLogList = walkLogApplication.getCalendar(userInfo.getUserId(), year, month);
-        }
+        walkLogList = walkLogApplication.getCalendar(userInfo.getUserId(), year, month);
         return ResponseEntity.ok(WalkLogCalendarResponse.of(walkLogList));
     }
 
