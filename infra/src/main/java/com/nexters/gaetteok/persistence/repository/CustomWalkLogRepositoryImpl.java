@@ -107,9 +107,9 @@ public class CustomWalkLogRepositoryImpl implements CustomWalkLogRepository {
     }
 
     @Override
-    public WalkLogEntity getMaxIdLessThan(long walkLogId) {
+    public WalkLogEntity getMaxIdLessThan(long walkLogId, long userId) {
         return jpaQueryFactory.selectFrom(walkLogEntity)
-            .where(walkLogEntity.id.lt(walkLogId))
+            .where(walkLogEntity.id.lt(walkLogId), walkLogEntity.userId.eq(userId))
             .orderBy(walkLogEntity.id.desc())
             .fetchFirst();
     }

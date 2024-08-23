@@ -18,20 +18,17 @@ import com.nexters.gaetteok.walklog.mapper.ReactionMapper;
 import com.nexters.gaetteok.walklog.mapper.WalkLogMapper;
 import com.nexters.gaetteok.walklog.presentation.request.CreateWalkLogRequest;
 import com.nexters.gaetteok.walklog.presentation.request.PatchWalkLogRequest;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -183,8 +180,8 @@ public class WalkLogApplication {
         return walkLogs;
     }
 
-    public WalkLog getNextData(long walkLogId) {
-        WalkLogEntity entity = walkLogRepository.getMaxIdLessThan(walkLogId);
+    public WalkLog getNextData(long walkLogId, long userId) {
+        WalkLogEntity entity = walkLogRepository.getMaxIdLessThan(walkLogId, userId);
         if (entity == null) {
             return null;
         }
