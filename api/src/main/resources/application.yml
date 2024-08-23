@@ -42,3 +42,7 @@ swagger:
 
 jwt:
   secret: ${JWT_SECRET}
+
+pawpaw:
+  admin:
+    token: ${PAWPAW_ADMIN_TOKEN}
