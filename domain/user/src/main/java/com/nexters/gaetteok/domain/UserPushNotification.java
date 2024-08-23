@@ -10,7 +10,7 @@ public class UserPushNotification {
 
     private long userId;
 
-    private int pushNotificationTime;
+    private Integer pushNotificationTime;
 
     public void setPushNotificationTime(int pushNotificationTime) {
         this.pushNotificationTime = pushNotificationTime;

@@ -26,7 +26,7 @@ public class UserPushNotificationController implements UserPushNotificationSpeci
 
     @PatchMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GetUserPushNotificationResponse> update(
-        @RequestParam("time") int pushNotificationTime,
+        @RequestParam("time") Integer pushNotificationTime,
         UserInfo userInfo) {
         log.info("[푸시 알림 시간 변경] userInfo={}, pushNotificationTime={}", userInfo, pushNotificationTime);
         UserPushNotification userPushNotification = userApplication.updatePushNotificationTime(userInfo.getUserId(), pushNotificationTime);
