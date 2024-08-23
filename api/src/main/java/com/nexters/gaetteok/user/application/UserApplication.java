@@ -83,7 +83,7 @@ public class UserApplication {
     }
 
     @Transactional
-    public UserPushNotification updatePushNotificationTime(long id, int timeToBeUpdated) {
+    public UserPushNotification updatePushNotificationTime(long id, Integer timeToBeUpdated) {
         UserPushNotificationEntity userPushNotificationEntity = userPushNotificationRepository.findByUserId(
             id);
         UserPushNotification userPushNotification = UserPushNotificationMapper.toDomain(
