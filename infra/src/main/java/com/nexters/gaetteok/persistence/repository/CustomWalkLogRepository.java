@@ -16,7 +16,7 @@ public interface CustomWalkLogRepository {
 
     List<WalkLogEntity> getListByUserIdAndMonth(long userId, int year, int month);
 
-    WalkLogEntity getMaxIdLessThan(long walkLogId);
+    WalkLogEntity getMaxIdLessThan(long walkLogId, long userId);
 
     boolean isTodayWalkLogExists(long walkLogId, LocalDate date);
 
