@@ -37,7 +37,7 @@ public interface UserPushNotificationSpecification {
         )
     )
     ResponseEntity<GetUserPushNotificationResponse> update(
-        @Parameter(description = "알람시간. MMDD 형태의 숫자값", example = "0830") Integer pushNotificationTime,
+        @Parameter(description = "알람시간. 시/분을 분으로 환산한 값", example = "540은 아침 9시") Integer pushNotificationTime,
         @Parameter(hidden = true) UserInfo userInfo
     );
 
