@@ -63,7 +63,7 @@ public class UserApplication {
     }
 
     @Transactional(readOnly = true)
-    public int getPushNotificationTime(long id) {
+    public Integer getPushNotificationTime(long id) {
         UserPushNotificationEntity userPushNotification = userPushNotificationRepository.findByUserId(
             id);
 

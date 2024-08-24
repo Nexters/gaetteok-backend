@@ -6,14 +6,14 @@ import lombok.Getter;
 @Getter
 public class GetUserPushNotificationResponse {
 
-    private long pushNotificationTime;
+    private Integer pushNotificationTime;
 
     @Builder
-    public GetUserPushNotificationResponse(int pushNotificationTime) {
+    public GetUserPushNotificationResponse(Integer pushNotificationTime) {
         this.pushNotificationTime = pushNotificationTime;
     }
 
-    public static GetUserPushNotificationResponse of(int pushNotificationTime) {
+    public static GetUserPushNotificationResponse of(Integer pushNotificationTime) {
         return GetUserPushNotificationResponse.builder()
             .pushNotificationTime(pushNotificationTime)
             .build();
