@@ -8,7 +8,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -20,18 +24,22 @@ public class UserPushNotificationController implements UserPushNotificationSpeci
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GetUserPushNotificationResponse> get(UserInfo userInfo) {
-        int pushNotificationTime = userApplication.getPushNotificationTime(userInfo.getUserId());
+        Integer pushNotificationTime = userApplication.getPushNotificationTime(
+            userInfo.getUserId());
         return ResponseEntity.ok(GetUserPushNotificationResponse.of(pushNotificationTime));
     }
 
     @PatchMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GetUserPushNotificationResponse> update(
-        @RequestParam("time") Integer pushNotificationTime,
+        @RequestParam(value = "time", required = false) Integer pushNotificationTime,
         UserInfo userInfo) {
-        log.info("[푸시 알림 시간 변경] userInfo={}, pushNotificationTime={}", userInfo, pushNotificationTime);
-        UserPushNotification userPushNotification = userApplication.updatePushNotificationTime(userInfo.getUserId(), pushNotificationTime);
+        log.info(
+            "[푸시 알림 시간 변경] userInfo={}, pushNotificationTime={}", userInfo, pushNotificationTime);
+        UserPushNotification userPushNotification = userApplication.updatePushNotificationTime(
+            userInfo.getUserId(), pushNotificationTime);
         log.info("[푸시 알림 시간 변경 완료] userPushNotification={}", userPushNotification);
-        return ResponseEntity.ok(GetUserPushNotificationResponse.of(userPushNotification.getPushNotificationTime()));
+        return ResponseEntity.ok(
+            GetUserPushNotificationResponse.of(userPushNotification.getPushNotificationTime()));
     }
 
 }

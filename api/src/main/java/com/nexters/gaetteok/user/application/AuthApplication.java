@@ -3,15 +3,16 @@ package com.nexters.gaetteok.user.application;
 import com.nexters.gaetteok.domain.User;
 import com.nexters.gaetteok.jwt.JwtTokenGenerator;
 import com.nexters.gaetteok.persistence.entity.UserEntity;
+import com.nexters.gaetteok.persistence.entity.UserPushNotificationEntity;
+import com.nexters.gaetteok.persistence.repository.UserPushNotificationRepository;
 import com.nexters.gaetteok.persistence.repository.UserRepository;
 import com.nexters.gaetteok.user.mapper.UserMapper;
 import com.nexters.gaetteok.user.presentation.request.SignupRequest;
+import java.util.Optional;
+import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
-import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -19,20 +20,25 @@ public class AuthApplication {
 
     private final JwtTokenGenerator tokenGenerator;
     private final UserRepository userRepository;
+    private final UserPushNotificationRepository userPushNotificationRepository;
 
     private static final int MAX_ATTEMPT = 10;
     private static final int USER_CODE_LENGTH = 6;
 
     @Transactional
     public String signup(SignupRequest request) {
-        Optional<UserEntity> userEntityOptional = userRepository.findByOauthIdentifier(request.getOauthIdentifier());
+        Optional<UserEntity> userEntityOptional = userRepository.findByOauthIdentifier(
+            request.getOauthIdentifier());
         UserEntity userEntity = userEntityOptional.orElseGet(() -> createUser(request));
+        userPushNotificationRepository.save(
+            new UserPushNotificationEntity(null, userEntity.getId(), null));
         return tokenGenerator.generateToken(UserMapper.toDomain(userEntity));
     }
 
     @Transactional
     public Optional<String> getUserToken(String oauthIdentifier, String deviceToken) {
-        Optional<UserEntity> userEntityOptional = userRepository.findByOauthIdentifier(oauthIdentifier);
+        Optional<UserEntity> userEntityOptional = userRepository.findByOauthIdentifier(
+            oauthIdentifier);
         if (userEntityOptional.isEmpty()) {
             return Optional.empty();
         }

@@ -12,12 +12,12 @@ public class UserPushNotification {
 
     private Integer pushNotificationTime;
 
-    public void setPushNotificationTime(int pushNotificationTime) {
+    public void setPushNotificationTime(Integer pushNotificationTime) {
         this.pushNotificationTime = pushNotificationTime;
     }
 
     @Builder
-    public UserPushNotification(long id, long userId, int pushNotificationTime) {
+    public UserPushNotification(long id, long userId, Integer pushNotificationTime) {
         this.id = id;
         this.userId = userId;
         this.pushNotificationTime = pushNotificationTime;
