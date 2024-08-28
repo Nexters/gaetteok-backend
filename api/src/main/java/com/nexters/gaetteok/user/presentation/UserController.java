@@ -85,7 +85,7 @@ public class UserController implements UserSpecification {
     public ResponseEntity<ReportUserResponse> reportUser(@RequestBody ReportUserRequest request,
                                                          UserInfo userInfo) {
         log.info("[유저 신고] userInfo={}, request={}", userInfo, request);
-        return ResponseEntity.ok(ReportUserResponse.of(atomicInteger.getAndIncrement(), LocalDateTime.now()));
+        return ResponseEntity.ok(ReportUserResponse.of(atomicInteger.getAndIncrement(), request.getReason(), LocalDateTime.now()));
     }
 
 }
