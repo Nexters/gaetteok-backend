@@ -7,7 +7,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class ReportWalkLogResponse {
+public class ReportCommentResponse {
 
     @Schema(description = "신고 ID", example = "1")
     private long id;
@@ -19,14 +19,14 @@ public class ReportWalkLogResponse {
     private LocalDateTime createdAt;
 
     @Builder
-    public ReportWalkLogResponse(long id, String reason, LocalDateTime createdAt) {
+    public ReportCommentResponse(long id, String reason, LocalDateTime createdAt) {
         this.id = id;
         this.reason = reason;
         this.createdAt = createdAt;
     }
 
-    public static ReportWalkLogResponse of(long id, String reason, LocalDateTime createdAt) {
-        return ReportWalkLogResponse.builder()
+    public static ReportCommentResponse of(long id, String reason, LocalDateTime createdAt) {
+        return ReportCommentResponse.builder()
             .id(id)
             .reason(reason)
             .createdAt(createdAt)

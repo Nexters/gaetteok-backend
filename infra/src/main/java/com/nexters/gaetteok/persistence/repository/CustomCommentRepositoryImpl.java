@@ -30,9 +30,27 @@ public class CustomCommentRepositoryImpl implements CustomCommentRepository {
             ))
             .from(commentEntity)
             .join(userEntity).on(commentEntity.userId.eq(userEntity.id))
-            .where(commentEntity.walkLogId.eq(walkLogId))
+            .where(commentEntity.walkLogId.eq(walkLogId), commentEntity.deleted.isFalse())
             .orderBy(commentEntity.id.asc())
             .fetch();
+    }
+
+    @Override
+    public long deleteByUserId(long userId) {
+        return queryFactory
+            .update(commentEntity)
+            .set(commentEntity.deleted, true)
+            .where(commentEntity.userId.eq(userId))
+            .execute();
+    }
+
+    @Override
+    public long restoreByUserId(long userId) {
+        return queryFactory
+            .update(commentEntity)
+            .set(commentEntity.deleted, false)
+            .where(commentEntity.userId.eq(userId))
+            .execute();
     }
 
 }

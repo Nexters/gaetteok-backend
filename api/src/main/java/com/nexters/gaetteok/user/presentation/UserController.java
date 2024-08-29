@@ -85,7 +85,21 @@ public class UserController implements UserSpecification {
     public ResponseEntity<ReportUserResponse> reportUser(@RequestBody ReportUserRequest request,
                                                          UserInfo userInfo) {
         log.info("[유저 신고] userInfo={}, request={}", userInfo, request);
-        return ResponseEntity.ok(ReportUserResponse.of(atomicInteger.getAndIncrement(), LocalDateTime.now()));
+        return ResponseEntity.ok(ReportUserResponse.of(atomicInteger.getAndIncrement(), request.getReason(), LocalDateTime.now()));
+    }
+
+    @DeleteMapping(value = "")
+    public ResponseEntity<Void> deleteUser(UserInfo userInfo) {
+        log.info("[유저 삭제] userInfo={}", userInfo);
+        userApplication.deleteUser(userInfo);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping(value = "/restore/{userId}")
+    public ResponseEntity<Void> restoreUser(@PathVariable long userId) {
+        log.info("[유저 복구] userId={}", userId);
+        userApplication.restoreUser(userId);
+        return ResponseEntity.noContent().build();
     }
 
 }

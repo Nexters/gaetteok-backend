@@ -68,7 +68,14 @@ public class WalkLogApplication {
             .collect(Collectors.groupingBy(Comment::getWalkLogId));
 
         walkLogs.forEach(
-            walkLog -> walkLog.setComments(commentMap.get(walkLog.getId()))
+            walkLog -> {
+                List<Comment> comments = commentMap.get(walkLog.getId());
+                if (comments != null) {
+                    walkLog.setComments(comments.stream()
+                        .sorted(Comparator.comparing(Comment::getCreatedAt).reversed())
+                        .toList());
+                }
+            }
         );
     }
 
@@ -92,7 +99,14 @@ public class WalkLogApplication {
             .collect(Collectors.groupingBy(Reaction::getWalkLogId));
 
         walkLogs.forEach(
-            walkLog -> walkLog.setReactions(reactionMap.get(walkLog.getId()))
+            walkLog -> {
+                List<Reaction> reactions = reactionMap.get(walkLog.getId());
+                if (reactions != null) {
+                    walkLog.setReactions(reactions.stream()
+                        .sorted(Comparator.comparing(Reaction::getCreatedAt))
+                        .toList());
+                }
+            }
         );
     }
 
@@ -139,12 +153,16 @@ public class WalkLogApplication {
 
     @Transactional(readOnly = true)
     public List<WalkLog> getList(long userId, long cursorId, int pageSize) {
-        return walkLogRepository.getListOfMeAndMyFriend(userId, cursorId, pageSize);
+        return walkLogRepository.getListOfMeAndMyFriend(userId, cursorId, pageSize).stream()
+            .sorted(Comparator.comparing(WalkLog::getCreatedAt))
+            .toList();
     }
 
     @Transactional(readOnly = true)
     public List<WalkLog> getListById(long userId, long cursorId, int pageSize) {
-        return walkLogRepository.getListOnlyMe(userId, cursorId, pageSize);
+        return walkLogRepository.getListOnlyMe(userId, cursorId, pageSize).stream()
+            .sorted(Comparator.comparing(WalkLog::getCreatedAt))
+            .toList();
     }
 
     @Transactional(readOnly = true)
@@ -168,6 +186,7 @@ public class WalkLogApplication {
         List<WalkLog> walkLogs = walkLogRepository.getListByUserIdAndMonth(userId, year, month)
             .stream()
             .map(walkLogEntity -> WalkLogMapper.toDomain(walkLogEntity, me))
+            .sorted(Comparator.comparing(WalkLog::getCreatedAt))
             .toList();
 
         List<Long> walkLogIds = walkLogs.stream()

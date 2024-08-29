@@ -4,24 +4,19 @@ import com.nexters.gaetteok.jwt.UserInfo;
 import com.nexters.gaetteok.walklog.presentation.request.CreateWalkLogRequest;
 import com.nexters.gaetteok.walklog.presentation.request.PatchWalkLogRequest;
 import com.nexters.gaetteok.walklog.presentation.request.ReportWalkLogRequest;
-import com.nexters.gaetteok.walklog.presentation.response.CreateWalkLogResponse;
-import com.nexters.gaetteok.walklog.presentation.response.GetWalkLogDetailResponse;
-import com.nexters.gaetteok.walklog.presentation.response.GetWalkLogListGroupByMonthResponse;
-import com.nexters.gaetteok.walklog.presentation.response.GetWalkLogListResponse;
-import com.nexters.gaetteok.walklog.presentation.response.PatchWalkLogResponse;
-import com.nexters.gaetteok.walklog.presentation.response.ReportWalkLogResponse;
-import com.nexters.gaetteok.walklog.presentation.response.WalkLogCalendarResponse;
+import com.nexters.gaetteok.walklog.presentation.response.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.io.IOException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Tag(name = "WalkLog", description = "산책 기록 API")
 public interface WalkLogSpecification {
@@ -127,11 +122,10 @@ public interface WalkLogSpecification {
             schema = @Schema(implementation = ReportWalkLogResponse.class)
         )
     )
-    ResponseEntity<ReportWalkLogResponse> reportUser(
+    ResponseEntity<ReportWalkLogResponse> reportWalkLog(
         @RequestBody ReportWalkLogRequest request,
-        UserInfo userInfo
+        @Parameter(hidden = true) UserInfo userInfo
     );
-
 
     @Operation(summary = "산책 기록 상세 조회", description = "산책 기록을 상세 조회합니다.")
     @ApiResponse(

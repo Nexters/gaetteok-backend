@@ -47,4 +47,22 @@ public class CustomFriendRepositoryImpl implements CustomFriendRepository {
             .fetch();
     }
 
+    @Override
+    public long deleteByUserId(long userId) {
+        return jpaQueryFactory
+            .update(friendEntity)
+            .set(friendEntity.deleted, true)
+            .where(friendEntity.myUserId.eq(userId), friendEntity.friendUserId.eq(userId))
+            .execute();
+    }
+
+    @Override
+    public long restoreByUserId(long userId) {
+        return jpaQueryFactory
+            .update(friendEntity)
+            .set(friendEntity.deleted, false)
+            .where(friendEntity.myUserId.eq(userId), friendEntity.friendUserId.eq(userId))
+            .execute();
+    }
+
 }

@@ -45,8 +45,18 @@ public class WalkLogEntity {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    private boolean deleted;
+
     @Builder
-    public WalkLogEntity(long id, String photoUrl, String title, String content, WalkTime walkTime, long userId, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public WalkLogEntity(long id,
+                         String photoUrl,
+                         String title,
+                         String content,
+                         WalkTime walkTime,
+                         long userId,
+                         LocalDateTime createdAt,
+                         LocalDateTime updatedAt,
+                         boolean deleted) {
         this.id = id;
         this.photoUrl = photoUrl;
         this.title = title;
@@ -55,6 +65,7 @@ public class WalkLogEntity {
         this.userId = userId;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.deleted = deleted;
     }
 
 }

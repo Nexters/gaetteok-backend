@@ -2,22 +2,15 @@ package com.nexters.gaetteok.persistence.entity;
 
 import com.nexters.gaetteok.domain.AuthProvider;
 import com.nexters.gaetteok.weather.enums.City;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user")
@@ -55,10 +48,20 @@ public class UserEntity {
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
+    private boolean deleted;
+
+    public void delete() {
+        this.deleted = true;
+    }
+
+    public void restore() {
+        this.deleted = false;
+    }
+
     @Builder
     public UserEntity(long id, String oauthIdentifier, String deviceToken, String nickname,
         String profileUrl, String code, City city, AuthProvider authProvider,
-        LocalDateTime createdAt) {
+        LocalDateTime createdAt, boolean deleted) {
         this.id = id;
         this.oauthIdentifier = oauthIdentifier;
         this.deviceToken = deviceToken;
@@ -68,6 +71,7 @@ public class UserEntity {
         this.location = city;
         this.provider = authProvider;
         this.createdAt = createdAt;
+        this.deleted = deleted;
     }
 
 }
