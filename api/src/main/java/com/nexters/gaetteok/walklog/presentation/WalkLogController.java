@@ -118,12 +118,12 @@ public class WalkLogController implements WalkLogSpecification {
     }
 
     @PostMapping(value = "/report", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ReportWalkLogResponse> reportUser(
+    public ResponseEntity<ReportWalkLogResponse> reportWalkLog(
         @RequestBody ReportWalkLogRequest request,
         UserInfo userInfo) {
-        log.info("[유저 신고] userInfo={}, request={}", userInfo, request);
+        log.info("[산책 기록 신고] userInfo={}, request={}", userInfo, request);
         return ResponseEntity.ok(
-            ReportWalkLogResponse.of(atomicInteger.getAndIncrement(), LocalDateTime.now()));
+            ReportWalkLogResponse.of(atomicInteger.getAndIncrement(), request.getReason(), LocalDateTime.now()));
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

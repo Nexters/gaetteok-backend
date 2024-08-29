@@ -39,12 +39,14 @@ public class FriendEntity {
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
+    private boolean deleted;
     @Builder
-    public FriendEntity(long id, long myUserId, long friendUserId, LocalDateTime createdAt) {
+    public FriendEntity(long id, long myUserId, long friendUserId, LocalDateTime createdAt, boolean deleted) {
         this.id = id;
         this.myUserId = myUserId;
         this.friendUserId = friendUserId;
         this.createdAt = createdAt;
+        this.deleted = deleted;
     }
 
 }

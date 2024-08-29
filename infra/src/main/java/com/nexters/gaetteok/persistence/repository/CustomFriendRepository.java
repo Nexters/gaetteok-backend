@@ -9,4 +9,8 @@ public interface CustomFriendRepository {
 
     List<FriendWalkStatus> getFriendWalkStatus(long userId, LocalDate date);
 
+    long deleteByUserId(long userId);
+
+    long restoreByUserId(long userId);
+
 }

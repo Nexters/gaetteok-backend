@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -89,7 +90,21 @@ public interface UserSpecification {
     )
     ResponseEntity<ReportUserResponse> reportUser(
         @RequestBody ReportUserRequest request,
-        UserInfo userInfo
+        @Parameter(hidden = true) UserInfo userInfo
     );
+
+    @Operation(summary = "유저 삭제", description = "유저를 삭제하는 API")
+    @ApiResponse(
+        responseCode = "204",
+        description = "유저 삭제 완료"
+    )
+    ResponseEntity<Void> deleteUser(@Parameter(hidden = true) UserInfo userInfo);
+
+    @Operation(summary = "삭제된 유저 복구", description = "삭제된 유저를 복구하는 API")
+    @ApiResponse(
+        responseCode = "204",
+        description = "복구 완료"
+    )
+    ResponseEntity<Void> restoreUser(@PathVariable long userId);
 
 }

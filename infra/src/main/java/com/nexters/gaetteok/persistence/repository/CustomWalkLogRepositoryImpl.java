@@ -29,7 +29,8 @@ public class CustomWalkLogRepositoryImpl implements CustomWalkLogRepository {
             .where(
                 walkLogEntity.userId.eq(userId),
                 walkLogEntity.createdAt.after(LocalDateTime.of(year, month, 1, 0, 0)),
-                walkLogEntity.createdAt.before(LocalDateTime.of(year, month + 1, 1, 0, 0))
+                walkLogEntity.createdAt.before(LocalDateTime.of(year, month + 1, 1, 0, 0)),
+                walkLogEntity.deleted.isFalse()
             )
             .fetch();
     }
@@ -39,7 +40,7 @@ public class CustomWalkLogRepositoryImpl implements CustomWalkLogRepository {
         List<Long> friendIdList = jpaQueryFactory
             .select(friendEntity.friendUserId)
             .from(friendEntity)
-            .where(friendEntity.myUserId.eq(userId))
+            .where(friendEntity.myUserId.eq(userId), friendEntity.deleted.isFalse())
             .fetch();
         // 피드에는 나도 포함
         friendIdList.add(userId);
@@ -61,7 +62,8 @@ public class CustomWalkLogRepositoryImpl implements CustomWalkLogRepository {
             .on(userEntity.id.eq(walkLogEntity.userId))
             .where(
                 cursorId > 0 ? walkLogEntity.id.lt(cursorId) : null,
-                userEntity.id.in(friendIdList)
+                userEntity.id.in(friendIdList),
+                walkLogEntity.deleted.isFalse()
             )
             .limit(pageSize)
             .orderBy(walkLogEntity.id.desc())
@@ -87,7 +89,8 @@ public class CustomWalkLogRepositoryImpl implements CustomWalkLogRepository {
             .on(userEntity.id.eq(walkLogEntity.userId))
             .where(
                 cursorId > 0 ? walkLogEntity.id.lt(cursorId) : null,
-                userEntity.id.eq(userId)
+                userEntity.id.eq(userId),
+                walkLogEntity.deleted.isFalse()
             )
             .limit(pageSize)
             .orderBy(walkLogEntity.id.desc())
@@ -100,7 +103,8 @@ public class CustomWalkLogRepositoryImpl implements CustomWalkLogRepository {
             .where(
                 walkLogEntity.userId.eq(userId),
                 walkLogEntity.createdAt.year().eq(year),
-                walkLogEntity.createdAt.month().eq(month)
+                walkLogEntity.createdAt.month().eq(month),
+                walkLogEntity.deleted.isFalse()
             )
             .orderBy(walkLogEntity.id.desc())
             .fetch();
@@ -109,7 +113,7 @@ public class CustomWalkLogRepositoryImpl implements CustomWalkLogRepository {
     @Override
     public WalkLogEntity getMaxIdLessThan(long walkLogId, long userId) {
         return jpaQueryFactory.selectFrom(walkLogEntity)
-            .where(walkLogEntity.id.lt(walkLogId), walkLogEntity.userId.eq(userId))
+            .where(walkLogEntity.id.lt(walkLogId), walkLogEntity.userId.eq(userId), walkLogEntity.deleted.isFalse())
             .orderBy(walkLogEntity.id.desc())
             .fetchFirst();
     }
@@ -121,12 +125,30 @@ public class CustomWalkLogRepositoryImpl implements CustomWalkLogRepository {
             .from(walkLogEntity)
             .where(
                 walkLogEntity.userId.eq(userId),
-                dateTimeOperation(LocalDate.class, Ops.DateTimeOps.DATE, walkLogEntity.createdAt).eq(date)
+                dateTimeOperation(LocalDate.class, Ops.DateTimeOps.DATE, walkLogEntity.createdAt).eq(date),
+                walkLogEntity.deleted.isFalse()
             )
             .fetchFirst();
 
         return id != null;
     }
 
+    @Override
+    public long deleteByUserId(long userId) {
+        return jpaQueryFactory
+            .update(walkLogEntity)
+            .set(walkLogEntity.deleted, true)
+            .where(walkLogEntity.userId.eq(userId))
+            .execute();
+    }
+
+    @Override
+    public long restoreByUserId(long userId) {
+        return jpaQueryFactory
+            .update(walkLogEntity)
+            .set(walkLogEntity.deleted, false)
+            .where(walkLogEntity.userId.eq(userId))
+            .execute();
+    }
 
 }
