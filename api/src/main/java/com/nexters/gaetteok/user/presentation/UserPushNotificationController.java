@@ -24,22 +24,25 @@ public class UserPushNotificationController implements UserPushNotificationSpeci
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GetUserPushNotificationResponse> get(UserInfo userInfo) {
-        Integer pushNotificationTime = userApplication.getPushNotificationTime(
+        UserPushNotification pushNotification = userApplication.getPushNotification(
             userInfo.getUserId());
-        return ResponseEntity.ok(GetUserPushNotificationResponse.of(pushNotificationTime));
+        return ResponseEntity.ok(GetUserPushNotificationResponse.of(pushNotification));
     }
 
     @PatchMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GetUserPushNotificationResponse> update(
-        @RequestParam(value = "time", required = false) Integer pushNotificationTime,
+        @RequestParam(value = "time") Integer pushNotificationTime,
+        @RequestParam(value = "isOn") boolean isOn,
         UserInfo userInfo) {
         log.info(
-            "[푸시 알림 시간 변경] userInfo={}, pushNotificationTime={}", userInfo, pushNotificationTime);
+            "[푸시 알림 시간, ON/OFF 변경] userInfo={}, pushNotificationTime={}", userInfo,
+            pushNotificationTime
+        );
         UserPushNotification userPushNotification = userApplication.updatePushNotificationTime(
-            userInfo.getUserId(), pushNotificationTime);
-        log.info("[푸시 알림 시간 변경 완료] userPushNotification={}", userPushNotification);
+            userInfo.getUserId(), pushNotificationTime, isOn);
+        log.info("[푸시 알림 시간, ON/OFF 변경 완료] userPushNotification={}", userPushNotification);
         return ResponseEntity.ok(
-            GetUserPushNotificationResponse.of(userPushNotification.getPushNotificationTime()));
+            GetUserPushNotificationResponse.of(userPushNotification));
     }
 
 }

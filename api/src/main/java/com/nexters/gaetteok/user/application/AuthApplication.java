@@ -31,7 +31,7 @@ public class AuthApplication {
             request.getOauthIdentifier());
         UserEntity userEntity = userEntityOptional.orElseGet(() -> createUser(request));
         userPushNotificationRepository.save(
-            new UserPushNotificationEntity(null, userEntity.getId(), null));
+            new UserPushNotificationEntity(null, userEntity.getId(), 0, false));
         return tokenGenerator.generateToken(UserMapper.toDomain(userEntity));
     }
 
