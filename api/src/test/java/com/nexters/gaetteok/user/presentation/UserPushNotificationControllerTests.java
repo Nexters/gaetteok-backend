@@ -47,7 +47,9 @@ public class UserPushNotificationControllerTests extends AbstractControllerTests
         ResultActions resultActions = mockMvc.perform(patch("/api/users/push-notification")
             .header("Authorization", "Bearer token")
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .param("time", String.valueOf(pushNotificationTime)));
+            .param("time", String.valueOf(pushNotificationTime))
+            .param("isOn", "false")
+        );
 
         // then
         resultActions.andExpect(status().isOk());
