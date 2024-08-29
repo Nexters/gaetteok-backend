@@ -29,6 +29,7 @@ public class UserApplication {
     private final UserRepository userRepository;
     private final UserPushNotificationRepository userPushNotificationRepository;
 
+    private final FriendRepository friendRepository;
     private final WalkLogRepository walkLogRepository;
     private final CommentRepository commentRepository;
     private final ReactionRepository reactionRepository;
@@ -107,11 +108,13 @@ public class UserApplication {
         long userId = userInfo.getUserId();
         UserEntity userEntity = userRepository.getById(userId);
         userEntity.delete();
+        long deletedFriendCount = friendRepository.deleteByUserId(userId);
         long deletedWalkLogCount = walkLogRepository.deleteByUserId(userId);
         long deletedCommentCount = commentRepository.deleteByUserId(userId);
         long deletedReactionCount = reactionRepository.deleteByUserId(userId);
-        log.info("사용자 {} 삭제 - 삭제된 산책 기록 수: {}, 댓글 수: {}, 리액션 수: {}",
+        log.info("사용자 {} 삭제 - 삭제된 친구 관계 수: {}, 산책 기록 수: {}, 댓글 수: {}, 리액션 수: {}",
             userInfo,
+            deletedFriendCount,
             deletedWalkLogCount,
             deletedCommentCount,
             deletedReactionCount
@@ -122,11 +125,13 @@ public class UserApplication {
     public void restoreUser(long userId) {
         UserEntity userEntity = userRepository.getById(userId);
         userEntity.restore();
+        long restoreFriendCount = friendRepository.restoreByUserId(userId);
         long restoredWalkLogCount = walkLogRepository.restoreByUserId(userId);
         long restoredCommentCount = commentRepository.restoreByUserId(userId);
         long restoredReactionCount = reactionRepository.restoreByUserId(userId);
-        log.info("사용자 {} 복구 - 복구된 산책 기록 수: {}, 댓글 수: {}, 리액션 수: {}",
+        log.info("사용자 {} 복구 - 복구된 친구 관계 수: {}, 산책 기록 수: {}, 댓글 수: {}, 리액션 수: {}",
             userId,
+            restoreFriendCount,
             restoredWalkLogCount,
             restoredCommentCount,
             restoredReactionCount

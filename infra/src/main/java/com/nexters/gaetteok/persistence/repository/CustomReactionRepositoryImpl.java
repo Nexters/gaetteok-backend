@@ -30,7 +30,7 @@ public class CustomReactionRepositoryImpl implements CustomReactionRepository {
             ))
             .from(reactionEntity)
             .join(userEntity).on(reactionEntity.userId.eq(userEntity.id))
-            .where(reactionEntity.walkLogId.eq(walkLogId))
+            .where(reactionEntity.walkLogId.eq(walkLogId), reactionEntity.deleted.isFalse())
             .orderBy(reactionEntity.id.asc())
             .fetch();
     }

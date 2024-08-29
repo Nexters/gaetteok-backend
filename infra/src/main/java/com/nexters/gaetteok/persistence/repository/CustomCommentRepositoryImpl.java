@@ -30,7 +30,7 @@ public class CustomCommentRepositoryImpl implements CustomCommentRepository {
             ))
             .from(commentEntity)
             .join(userEntity).on(commentEntity.userId.eq(userEntity.id))
-            .where(commentEntity.walkLogId.eq(walkLogId))
+            .where(commentEntity.walkLogId.eq(walkLogId), commentEntity.deleted.isFalse())
             .orderBy(commentEntity.id.asc())
             .fetch();
     }
