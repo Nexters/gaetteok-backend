@@ -124,9 +124,8 @@ public interface WalkLogSpecification {
     )
     ResponseEntity<ReportWalkLogResponse> reportWalkLog(
         @RequestBody ReportWalkLogRequest request,
-        UserInfo userInfo
+        @Parameter(hidden = true) UserInfo userInfo
     );
-
 
     @Operation(summary = "산책 기록 상세 조회", description = "산책 기록을 상세 조회합니다.")
     @ApiResponse(
