@@ -35,4 +35,22 @@ public class CustomReactionRepositoryImpl implements CustomReactionRepository {
             .fetch();
     }
 
+    @Override
+    public long deleteByUserId(long userId) {
+        return queryFactory
+            .update(reactionEntity)
+            .set(reactionEntity.deleted, true)
+            .where(reactionEntity.userId.eq(userId))
+            .execute();
+    }
+
+    @Override
+    public long restoreByUserId(long userId) {
+        return queryFactory
+            .update(reactionEntity)
+            .set(reactionEntity.deleted, false)
+            .where(reactionEntity.userId.eq(userId))
+            .execute();
+    }
+
 }

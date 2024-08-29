@@ -8,4 +8,8 @@ public interface CustomCommentRepository {
 
     List<Comment> findByWalkLogIdInWithUser(long walkLogId);
 
+    long deleteByUserId(long userId);
+
+    long restoreByUserId(long userId);
+
 }

@@ -8,4 +8,8 @@ public interface CustomReactionRepository {
 
     List<Reaction> findByWalkLogIdInWithUser(long walkLogId);
 
+    long deleteByUserId(long userId);
+
+    long restoreByUserId(long userId);
+
 }

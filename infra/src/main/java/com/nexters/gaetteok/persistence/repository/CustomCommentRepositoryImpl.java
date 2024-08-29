@@ -35,4 +35,22 @@ public class CustomCommentRepositoryImpl implements CustomCommentRepository {
             .fetch();
     }
 
+    @Override
+    public long deleteByUserId(long userId) {
+        return queryFactory
+            .update(commentEntity)
+            .set(commentEntity.deleted, true)
+            .where(commentEntity.userId.eq(userId))
+            .execute();
+    }
+
+    @Override
+    public long restoreByUserId(long userId) {
+        return queryFactory
+            .update(commentEntity)
+            .set(commentEntity.deleted, false)
+            .where(commentEntity.userId.eq(userId))
+            .execute();
+    }
+
 }

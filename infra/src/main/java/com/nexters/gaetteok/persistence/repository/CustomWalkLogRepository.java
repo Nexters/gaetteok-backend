@@ -20,4 +20,8 @@ public interface CustomWalkLogRepository {
 
     boolean isTodayWalkLogExists(long walkLogId, LocalDate date);
 
+    long deleteByUserId(long userId);
+
+    long restoreByUserId(long userId);
+
 }

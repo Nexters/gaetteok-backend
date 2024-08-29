@@ -128,5 +128,22 @@ public class CustomWalkLogRepositoryImpl implements CustomWalkLogRepository {
         return id != null;
     }
 
+    @Override
+    public long deleteByUserId(long userId) {
+        return jpaQueryFactory
+            .update(walkLogEntity)
+            .set(walkLogEntity.deleted, true)
+            .where(walkLogEntity.userId.eq(userId))
+            .execute();
+    }
+
+    @Override
+    public long restoreByUserId(long userId) {
+        return jpaQueryFactory
+            .update(walkLogEntity)
+            .set(walkLogEntity.deleted, false)
+            .where(walkLogEntity.userId.eq(userId))
+            .execute();
+    }
 
 }

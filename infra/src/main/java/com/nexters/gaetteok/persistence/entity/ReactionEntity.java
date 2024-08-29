@@ -38,13 +38,21 @@ public class ReactionEntity {
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
+    private boolean deleted;
+
     @Builder
-    public ReactionEntity(long id, long userId, long walkLogId, ReactionType reactionType, LocalDateTime createdAt) {
+    public ReactionEntity(long id,
+                          long userId,
+                          long walkLogId,
+                          ReactionType reactionType,
+                          LocalDateTime createdAt,
+                          boolean deleted) {
         this.id = id;
         this.userId = userId;
         this.walkLogId = walkLogId;
         this.reactionType = reactionType;
         this.createdAt = createdAt;
+        this.deleted = deleted;
     }
 
 }
