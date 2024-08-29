@@ -68,9 +68,14 @@ public class WalkLogApplication {
             .collect(Collectors.groupingBy(Comment::getWalkLogId));
 
         walkLogs.forEach(
-            walkLog -> walkLog.setComments(commentMap.get(walkLog.getId()).stream()
-                .sorted(Comparator.comparing(Comment::getCreatedAt).reversed())
-                .toList())
+            walkLog -> {
+                List<Comment> comments = commentMap.get(walkLog.getId());
+                if (comments != null) {
+                    walkLog.setComments(comments.stream()
+                        .sorted(Comparator.comparing(Comment::getCreatedAt).reversed())
+                        .toList());
+                }
+            }
         );
     }
 
@@ -94,9 +99,14 @@ public class WalkLogApplication {
             .collect(Collectors.groupingBy(Reaction::getWalkLogId));
 
         walkLogs.forEach(
-            walkLog -> walkLog.setReactions(reactionMap.get(walkLog.getId()).stream()
-                .sorted(Comparator.comparing(Reaction::getCreatedAt))
-                .toList())
+            walkLog -> {
+                List<Reaction> reactions = reactionMap.get(walkLog.getId());
+                if (reactions != null) {
+                    walkLog.setReactions(reactions.stream()
+                        .sorted(Comparator.comparing(Reaction::getCreatedAt))
+                        .toList());
+                }
+            }
         );
     }
 
