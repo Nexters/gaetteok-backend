@@ -72,7 +72,8 @@ public class WalkLogApplication {
                 List<Comment> comments = commentMap.get(walkLog.getId());
                 if (comments != null) {
                     walkLog.setComments(comments.stream()
-                        .sorted(Comparator.comparing(Comment::getCreatedAt).reversed())
+                        // 댓글 - 오래된 순으로 정렬
+                        .sorted(Comparator.comparing(Comment::getCreatedAt))
                         .toList());
                 }
             }
@@ -103,7 +104,8 @@ public class WalkLogApplication {
                 List<Reaction> reactions = reactionMap.get(walkLog.getId());
                 if (reactions != null) {
                     walkLog.setReactions(reactions.stream()
-                        .sorted(Comparator.comparing(Reaction::getCreatedAt))
+                        // 리액션 - 최신 순으로 정렬
+                        .sorted(Comparator.comparing(Reaction::getCreatedAt).reversed())
                         .toList());
                 }
             }
@@ -137,7 +139,8 @@ public class WalkLogApplication {
         List<WalkLog> walkLogs = walkLogRepository.getCalendar(userId, year, month)
             .stream()
             .map(walkLogEntity -> WalkLogMapper.toDomain(walkLogEntity, me))
-            .sorted(Comparator.comparing(WalkLog::getCreatedAt))
+            // 산책 기록 - 최신 순으로 정렬
+            .sorted(Comparator.comparing(WalkLog::getCreatedAt).reversed())
             .toList();
 
         Map<String, WalkLog> calendar = new LinkedHashMap<>();
@@ -154,14 +157,16 @@ public class WalkLogApplication {
     @Transactional(readOnly = true)
     public List<WalkLog> getList(long userId, long cursorId, int pageSize) {
         return walkLogRepository.getListOfMeAndMyFriend(userId, cursorId, pageSize).stream()
-            .sorted(Comparator.comparing(WalkLog::getCreatedAt))
+            // 산책 기록 - 최신 순으로 정렬
+            .sorted(Comparator.comparing(WalkLog::getCreatedAt).reversed())
             .toList();
     }
 
     @Transactional(readOnly = true)
     public List<WalkLog> getListById(long userId, long cursorId, int pageSize) {
         return walkLogRepository.getListOnlyMe(userId, cursorId, pageSize).stream()
-            .sorted(Comparator.comparing(WalkLog::getCreatedAt))
+            // 산책 기록 - 최신 순으로 정렬
+            .sorted(Comparator.comparing(WalkLog::getCreatedAt).reversed())
             .toList();
     }
 
@@ -171,8 +176,14 @@ public class WalkLogApplication {
         UserEntity userEntity = userRepository.getById(walkLogEntity.getUserId());
         WalkLog walkLog = WalkLogMapper.toDomain(walkLogEntity, userEntity);
 
-        List<Comment> comments = commentRepository.findByWalkLogIdInWithUser(walkLogId);
-        List<Reaction> reactions = reactionRepository.findByWalkLogIdInWithUser(walkLogId);
+        List<Comment> comments = commentRepository.findByWalkLogIdInWithUser(walkLogId).stream()
+            // 댓글 - 오래된 순으로 정렬
+            .sorted(Comparator.comparing(Comment::getCreatedAt))
+            .toList();
+        List<Reaction> reactions = reactionRepository.findByWalkLogIdInWithUser(walkLogId).stream()
+            // 리액션 - 최신 순으로 정렬
+            .sorted(Comparator.comparing(Reaction::getCreatedAt).reversed())
+            .toList();
 
         walkLog.setComments(comments);
         walkLog.setReactions(reactions);
@@ -186,7 +197,8 @@ public class WalkLogApplication {
         List<WalkLog> walkLogs = walkLogRepository.getListByUserIdAndMonth(userId, year, month)
             .stream()
             .map(walkLogEntity -> WalkLogMapper.toDomain(walkLogEntity, me))
-            .sorted(Comparator.comparing(WalkLog::getCreatedAt))
+            // 산책 기록 - 최신 순으로 정렬
+            .sorted(Comparator.comparing(WalkLog::getCreatedAt).reversed())
             .toList();
 
         List<Long> walkLogIds = walkLogs.stream()
