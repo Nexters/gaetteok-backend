@@ -2,6 +2,7 @@ package com.nexters.gaetteok.domain;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class UserPushNotification {
@@ -10,17 +11,16 @@ public class UserPushNotification {
 
     private long userId;
 
-    private Integer pushNotificationTime;
+    @Setter private Integer pushNotificationTime;
 
-    public void setPushNotificationTime(Integer pushNotificationTime) {
-        this.pushNotificationTime = pushNotificationTime;
-    }
+    @Setter private boolean isOn;
 
     @Builder
-    public UserPushNotification(long id, long userId, Integer pushNotificationTime) {
+    public UserPushNotification(long id, long userId, Integer pushNotificationTime, boolean isOn) {
         this.id = id;
         this.userId = userId;
         this.pushNotificationTime = pushNotificationTime;
+        this.isOn = isOn;
     }
 
 }

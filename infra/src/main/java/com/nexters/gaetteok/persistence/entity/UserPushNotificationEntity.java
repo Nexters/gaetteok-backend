@@ -31,4 +31,7 @@ public class UserPushNotificationEntity {
 
     @Column(name = "push_notification_time")
     private Integer pushNotificationTime;
+
+    @Column(name = "is_on", columnDefinition = "boolean default false")
+    private boolean isOn;
 }

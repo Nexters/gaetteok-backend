@@ -71,11 +71,11 @@ public class UserApplication {
     }
 
     @Transactional(readOnly = true)
-    public Integer getPushNotificationTime(long id) {
+    public UserPushNotification getPushNotification(long id) {
         UserPushNotificationEntity userPushNotification = userPushNotificationRepository.findByUserId(
             id);
 
-        return userPushNotification.getPushNotificationTime();
+        return UserPushNotificationMapper.toDomain(userPushNotification);
     }
 
     @Transactional(readOnly = true)
@@ -91,12 +91,14 @@ public class UserApplication {
     }
 
     @Transactional
-    public UserPushNotification updatePushNotificationTime(long id, Integer timeToBeUpdated) {
+    public UserPushNotification updatePushNotificationTime(long id, Integer timeToBeUpdated,
+        boolean isOn) {
         UserPushNotificationEntity userPushNotificationEntity = userPushNotificationRepository.findByUserId(
             id);
         UserPushNotification userPushNotification = UserPushNotificationMapper.toDomain(
             userPushNotificationEntity);
         userPushNotification.setPushNotificationTime(timeToBeUpdated);
+        userPushNotification.setOn(isOn);
 
         userPushNotificationEntity = userPushNotificationRepository.save(
             UserPushNotificationMapper.toEntity(userPushNotification));
