@@ -82,6 +82,8 @@ public class WalkLogController implements WalkLogSpecification {
         if (!walkLogList.isEmpty()) {
             WalkLog lastData = walkLogList.getLast();
             nextData = walkLogApplication.getNextData(lastData.getId(), userId);
+        } else {
+            nextData = walkLogApplication.getNextData(year, month, userId);
         }
         return ResponseEntity.ok(
             GetWalkLogListGroupByMonthResponse.of(year, month, nextData, walkLogList));
@@ -100,6 +102,8 @@ public class WalkLogController implements WalkLogSpecification {
         if (walkLogList.size() > 0) {
             WalkLog lastData = walkLogList.get(walkLogList.size() - 1);
             nextData = walkLogApplication.getNextData(lastData.getId(), userInfo.getUserId());
+        } else {
+            nextData = walkLogApplication.getNextData(year, month, userInfo.getUserId());
         }
         return ResponseEntity.ok(
             GetWalkLogListGroupByMonthResponse.of(year, month, nextData, walkLogList));

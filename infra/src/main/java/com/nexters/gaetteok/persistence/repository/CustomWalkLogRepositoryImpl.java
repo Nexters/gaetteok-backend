@@ -119,6 +119,21 @@ public class CustomWalkLogRepositoryImpl implements CustomWalkLogRepository {
     }
 
     @Override
+    public WalkLogEntity getMaxIdLessThan(int year, int month, long userId) {
+        int nextYear = month > 1 ? year : year - 1;
+        int nextMonth = month > 1 ? month - 1 : 12;
+        return jpaQueryFactory.selectFrom(walkLogEntity)
+            .where(
+                walkLogEntity.createdAt.year().loe(nextYear),
+                walkLogEntity.createdAt.month().loe(nextMonth),
+                walkLogEntity.userId.eq(userId),
+                walkLogEntity.deleted.isFalse()
+            )
+            .orderBy(walkLogEntity.id.desc())
+            .fetchFirst();
+    }
+
+    @Override
     public boolean isTodayWalkLogExists(long userId, LocalDate date) {
         Long id = jpaQueryFactory
             .select(walkLogEntity.id)

@@ -230,6 +230,15 @@ public class WalkLogApplication {
         return WalkLogMapper.toDomain(entity, me);
     }
 
+    public WalkLog getNextData(int year, int month, long userId) {
+        WalkLogEntity entity = walkLogRepository.getMaxIdLessThan(year, month, userId);
+        if (entity == null) {
+            return null;
+        }
+        UserEntity me = userRepository.getById(entity.getUserId());
+        return WalkLogMapper.toDomain(entity, me);
+    }
+
     @Transactional
     public WalkLog update(long id, long userId, PatchWalkLogRequest request, MultipartFile photo)
         throws IOException {

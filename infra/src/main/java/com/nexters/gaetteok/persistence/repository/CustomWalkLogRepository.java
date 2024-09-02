@@ -18,6 +18,8 @@ public interface CustomWalkLogRepository {
 
     WalkLogEntity getMaxIdLessThan(long walkLogId, long userId);
 
+    WalkLogEntity getMaxIdLessThan(int year, int month, long userId);
+
     boolean isTodayWalkLogExists(long walkLogId, LocalDate date);
 
     long deleteByUserId(long userId);
