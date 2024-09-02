@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
@@ -78,8 +79,8 @@ public class WalkLogController implements WalkLogSpecification {
     ) {
         List<WalkLog> walkLogList = walkLogApplication.getListByIdAndMonth(userId, year, month);
         WalkLog nextData = null;
-        if (walkLogList.size() > 0) {
-            WalkLog lastData = walkLogList.get(walkLogList.size() - 1);
+        if (!walkLogList.isEmpty()) {
+            WalkLog lastData = walkLogList.getLast();
             nextData = walkLogApplication.getNextData(lastData.getId(), userId);
         }
         return ResponseEntity.ok(
@@ -102,6 +103,16 @@ public class WalkLogController implements WalkLogSpecification {
         }
         return ResponseEntity.ok(
             GetWalkLogListGroupByMonthResponse.of(year, month, nextData, walkLogList));
+    }
+
+    @GetMapping(
+        value = "/me/today", produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<GetWalkLogResponse> getMyTodayWalkLog(UserInfo userInfo) {
+        Optional<WalkLog> walkLog = walkLogApplication.getTodayWalkLog(userInfo.getUserId());
+        return walkLog
+            .map(value -> ResponseEntity.ok(GetWalkLogResponse.of(value)))
+            .orElseGet(() -> ResponseEntity.noContent().build());
     }
 
     @PatchMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
