@@ -2,7 +2,8 @@ package com.nexters.gaetteok.notification.presentation;
 
 import com.nexters.gaetteok.firebase.service.PushNotificationService;
 import com.nexters.gaetteok.user.application.UserApplication;
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
@@ -23,7 +24,7 @@ public class PushNotificationScheduler {
 
     @Scheduled(fixedDelay = 60000)
     public void run() {
-        LocalDateTime now = LocalDateTime.now();
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
         int targetMinute = (now.getHour() * 60) + now.getMinute();
         userApplication.getPushNotificationByMinute(targetMinute).forEach(
             pushNotification -> {
