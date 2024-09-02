@@ -211,6 +211,16 @@ public class WalkLogApplication {
         return walkLogs;
     }
 
+    @Transactional(readOnly = true)
+    public Optional<WalkLog> getTodayWalkLog(long userId) {
+        UserEntity me = userRepository.getById(userId);
+        WalkLogEntity walkLog = walkLogRepository.findRecentWalkLogByUserIdAndDate(userId, LocalDate.now());
+        if (walkLog == null) {
+            return Optional.empty();
+        }
+        return Optional.of(WalkLogMapper.toDomain(walkLog, me));
+    }
+
     public WalkLog getNextData(long walkLogId, long userId) {
         WalkLogEntity entity = walkLogRepository.getMaxIdLessThan(walkLogId, userId);
         if (entity == null) {

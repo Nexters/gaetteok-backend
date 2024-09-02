@@ -24,4 +24,6 @@ public interface CustomWalkLogRepository {
 
     long restoreByUserId(long userId);
 
+    WalkLogEntity findRecentWalkLogByUserIdAndDate(long userId, LocalDate date);
+
 }

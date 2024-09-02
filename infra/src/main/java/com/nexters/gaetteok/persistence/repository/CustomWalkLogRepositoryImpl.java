@@ -151,4 +151,17 @@ public class CustomWalkLogRepositoryImpl implements CustomWalkLogRepository {
             .execute();
     }
 
+    @Override
+    public WalkLogEntity findRecentWalkLogByUserIdAndDate(long userId, LocalDate date) {
+        return jpaQueryFactory
+            .selectFrom(walkLogEntity)
+            .where(
+                walkLogEntity.userId.eq(userId),
+                dateTimeOperation(LocalDate.class, Ops.DateTimeOps.DATE, walkLogEntity.createdAt).eq(date),
+                walkLogEntity.deleted.isFalse()
+            )
+            .orderBy(walkLogEntity.createdAt.desc())
+            .fetchFirst();
+    }
+
 }

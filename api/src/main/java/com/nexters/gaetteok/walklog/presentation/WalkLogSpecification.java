@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -96,6 +97,23 @@ public interface WalkLogSpecification {
         @Parameter(description = "월") int month,
         @Parameter(hidden = true) UserInfo userInfo
     );
+
+    @Operation(summary = "내 오늘의 산책 기록 조회", description = "내 오늘의 산책 기록을 조회합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "내 오늘의 산책 기록 존재",
+            content = @Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = GetWalkLogResponse.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "204",
+            description = "내 오늘의 산책 기록 없음"
+        )
+    })
+    ResponseEntity<GetWalkLogResponse> getMyTodayWalkLog(@Parameter(hidden = true) UserInfo userInfo);
 
     @Operation(summary = "산책 기록 변경", description = "산책 기록을 변경합니다.")
     @ApiResponse(
